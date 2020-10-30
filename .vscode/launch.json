@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - App.java",
+            "name": "Debug (Launch) - DriverTest",
             "request": "launch",
-            "mainClass": "App"
+            "mainClass": "DriverTest"
         },
         {
             "type": "java",
