@@ -5,4 +5,20 @@ package models;
 
 public class Degree {
     
+    private String code;
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public Degree () {}
+
+    public Degree (String code) {
+        this.code = code;
+    }
+
 }
