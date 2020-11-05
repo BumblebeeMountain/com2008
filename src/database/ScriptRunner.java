@@ -6,10 +6,7 @@
 
 package database;
 
-import java.io.*;
 import java.sql.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ScriptRunner {
 

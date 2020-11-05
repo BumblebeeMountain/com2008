@@ -3,10 +3,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Setup",
+            "name": "Database Setup",
             "request": "launch",
-            "mainClass": "database.Setup",
-            "projectName": "com2008_8b977ed9"
+            "mainClass": "database.Setup"
         },
         {
             "type": "java",
