@@ -7,9 +7,9 @@ public class Registration {
 
     // instance variables
 
-    public String level;
-    public String period;
-    public Date startDate;
+    private String level;
+    private String period;
+    private Date startDate;
 
     // getters & setters
 

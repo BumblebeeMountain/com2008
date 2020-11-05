@@ -6,10 +6,10 @@ public class DegreeModule {
 
     // instance variables
 
-    public String degreeCode;
-    public String moduleCode;
-    public Boolean core;
-    public int level;
+    private String degreeCode;
+    private String moduleCode;
+    private Boolean core;
+    private int level;
 
     // getters & setters
 
