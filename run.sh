@@ -15,11 +15,13 @@ export CLASSPATH=$path/src/;
 # delete all classfiles
 rm $(find bin/ -name *.class);
 
-# javac -d bin -source 1.8 -target 1.8 src/assignment2020/Assignment.java;
-javac -d bin --release 8 src/App.java;
+# javac -d bin --release 8 src/App.java;
+javac -d bin --release 8 src/database/Setup.java;
 
 # class path is both the binaries, and the lib directories
 export CLASSPATH=$path/bin/:$path/lib/*;
 
-java App;
+# java App;
+java database.Setup;
 
+export CLASSPATH=$path/src/;
