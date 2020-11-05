@@ -1,0 +1,30 @@
+package controllers;
+
+import exceptions.ExistingRecordException;
+import exceptions.GeneralProcessingException;
+import exceptions.NoRecordException;
+import models.Department;
+
+public class DepartmentController {
+    
+    public static Department[] getAllDepartments()
+    throws GeneralProcessingException {
+        return null;
+    }
+
+    public static Department getDepartment(String departmentCode)
+    throws GeneralProcessingException, NoRecordException {
+        return null;
+    }
+
+    public static void createDepartment(String departmentCode, String departmentName)
+    throws GeneralProcessingException, ExistingRecordException {
+
+    }
+
+    public static void removeDepartment(String departmentCode)
+    throws GeneralProcessingException {
+
+    }
+    
+}
