@@ -18,12 +18,6 @@
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Database Setup",
-            "request": "launch",
-            "mainClass": "${workspaceFolder}/src/database/Setup.java"
         }
     ]
 }
