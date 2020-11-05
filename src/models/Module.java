@@ -6,8 +6,8 @@ public class Module {
 
     // instance variables
 
-    public String name;
-    public String code;
+    private String name;
+    private String code;
     private int credits;
     private String teachingPeriod;
 

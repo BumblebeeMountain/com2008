@@ -2,14 +2,23 @@
 
 package models;
 
-public class Student extends User {
+public class Student {
 
     // instance variables
 
-    public int registrationNumber;
-    public String personalTutor;
+    private int userID;
+    private int registrationNumber;
+    private String personalTutor;
 
     // getters & setters
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public int getUserID() {
+        return this.userID;
+    }
 
     public void setRegistrationNumber(int registrationNumber) {
         this.registrationNumber = registrationNumber;
@@ -26,11 +35,11 @@ public class Student extends User {
     public String getPersonalTutor() {
         return this.personalTutor;
     }
-    
+
     // constructor
 
     public Student (int userID, int registrationNumber, String personalTutor) {
-        super(userID, email, title, forename, surname, password, accountType);
+        this.userID = userID;
         this.registrationNumber = registrationNumber;
         this.personalTutor = personalTutor;
     }

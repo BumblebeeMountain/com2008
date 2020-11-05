@@ -7,10 +7,10 @@ public class Degree {
     
     // instance variables
 
-    public String name;
+    private String name;
     private String code;
-    public Boolean hasYearInIndustry;
-    public int maxLevel;
+    private Boolean hasYearInIndustry;
+    private int maxLevel;
 
     // getters & setters
 

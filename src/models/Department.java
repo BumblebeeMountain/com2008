@@ -6,8 +6,8 @@ public class Department {
 
     // instance variables
 
-    public String name;
-    public String code;
+    private String name;
+    private String code;
 
     // getters & setters
 
