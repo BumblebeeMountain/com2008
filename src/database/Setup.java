@@ -1,5 +1,3 @@
-// James script that will nuke the db and reset all the tables and insert test data
-
 package database;
 
 import java.sql.*;
@@ -31,7 +29,7 @@ public class Setup {
             createSelectedModuleTable();
             createDegreeModuleTable();
             createDepartmentTable();
-            createDegreeDepartementTable();
+            createDegreeDepartmentTable();
 
 
         } catch (Exception ex) {
@@ -71,8 +69,8 @@ public class Setup {
         }
         finally {
             if (stmt != null) stmt.close();
-            return false;
         }
+        return false;
     }
 
     public static boolean tableExists(String tableName) throws SQLException {
@@ -104,8 +102,8 @@ public class Setup {
             throw ex;
         } finally {
             if (pstmt != null) pstmt.close();
-            return tables;
         }
+        return tables;
 
     }
 
@@ -216,7 +214,7 @@ public class Setup {
         createTable(command);
     }
 
-    private static void createDegreeDepartementTable() throws SQLException {
+    private static void createDegreeDepartmentTable() throws SQLException {
         String command = "CREATE TABLE DegreeDepartment (" +
                         "departmentCode VARCHAR(16) NOT NULL, " +
                         "degreeCode VARCHAR(16) NOT NULL, " +

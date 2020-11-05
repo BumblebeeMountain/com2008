@@ -3,15 +3,27 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - DriverTest",
+            "name": "Driver Test",
             "request": "launch",
             "mainClass": "DriverTest"
         },
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
+            "name": "Main App",
+            "request": "launch",
+            "mainClass": "App"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Database Setup",
+            "request": "launch",
+            "mainClass": "${workspaceFolder}/src/database/Setup.java"
         }
     ]
 }
