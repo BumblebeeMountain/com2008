@@ -18,19 +18,22 @@ public class DepartmentController {
 
         try {
 
-            // Example showing that duplicates cannot be made
-            try {
-                createDepartment("COM", "Computer Science");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM has already been inserted");
-            }
+            // // Example showing that duplicates cannot be made
+            // try {
+            //     createDepartment("COM", "Computer Science");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM has already been inserted");
+            // }
 
-            // Change these values to insert a new department
-            try {
-                createDepartment("DEP2", "Department 2");
-            } catch (ExistingRecordException e) {
-                System.out.println("Maybe try a different department!");
-            }
+            // // Change these values to insert a new department
+            // try {
+            //     createDepartment("DEP2", "Department 2");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("Maybe try a different department!");
+            // }
+
+            // Change this value to delete a department
+            removeDepartment("DEP1");
 
             // Output all the current departments
             Department[] arr = getAllDepartments();
@@ -199,7 +202,39 @@ public class DepartmentController {
 
     }
 
+    /**
+     * Remove a given department from the database
+     * @param departmentCode
+     * @throws GeneralProcessingException
+     */
     public static void removeDepartment(String departmentCode) throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM Department WHERE code = ?;");
+            pstmt.setString(1, departmentCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
