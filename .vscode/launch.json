@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - DepartmentController",
+            "request": "launch",
+            "mainClass": "controllers.DepartmentController",
+            "projectName": "com2008_8b977ed9"
+        },
+        {
+            "type": "java",
             "name": "Database Setup",
             "request": "launch",
             "mainClass": "database.Setup"
