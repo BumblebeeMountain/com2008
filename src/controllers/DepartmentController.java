@@ -10,6 +10,7 @@ import database.ConnectionManager;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
+import models.DegreeDepartment;
 import models.Department;
 
 public class DepartmentController {
@@ -18,22 +19,31 @@ public class DepartmentController {
 
         try {
 
-            // // Example showing that duplicates cannot be made
-            // try {
-            //     createDepartment("COM", "Computer Science");
-            // } catch (ExistingRecordException e) {
-            //     System.out.println("COM has already been inserted");
-            // }
+            // Example showing that duplicates cannot be made
+            try {
+                createDepartment("COM", "Computer Science");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM has already been inserted");
+            }
 
-            // // Change these values to insert a new department
-            // try {
-            //     createDepartment("DEP2", "Department 2");
-            // } catch (ExistingRecordException e) {
-            //     System.out.println("Maybe try a different department!");
-            // }
+            // Change these values to insert a new department
+            try {
+                createDepartment("DEP2", "Department 2");
+            } catch (ExistingRecordException e) {
+                System.out.println("Maybe try a different department!");
+            }
 
             // Change this value to delete a department
             removeDepartment("DEP1");
+
+            // try {
+            //     createDegreeDepartment("COM", "COMU01", true);
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM/COM001 has already been inserted");
+            // } 
+
+            // // // Delete a degree department
+            // removeDegreeDepartment("COM", "COMU01");
 
             // Output all the current departments
             Department[] arr = getAllDepartments();
@@ -238,13 +248,157 @@ public class DepartmentController {
 
     }
 
-    public static void createDegreeDepartment(String departmentCode, String degreeCode, Boolean lead)
-            throws GeneralProcessingException, ExistingRecordException {
+    /**
+     * Private method to check if there is a degree department link in place
+     * @param departmentCode
+     * @param degreeCode
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    private static DegreeDepartment getDegreeDepartment (String departmentCode, String degreeCode)
+    throws GeneralProcessingException, NoRecordException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        String depCode = null;
+        String degCode = null;
+        Boolean lead = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("SELECT * FROM DegreeDepartment WHERE departmentCode = ? AND degreeCode = ?;");
+            pstmt.setString(1, departmentCode);
+            pstmt.setString(2, degreeCode);
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // If it is null - there was nothing returned
+            if (res == null | !res.next()) throw new NoRecordException();
+
+            // Filter through the output
+            depCode = res.getString("departmentCode");
+            degCode = res.getString("degreeCode");
+            lead = res.getBoolean("isLead");
+
+        } catch (NoRecordException e) {
+
+            throw new NoRecordException(); // Caught and re-thrown if there are no records
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+                if (res != null) res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+        // Return a new object
+        return new DegreeDepartment(depCode, degCode, lead);
 
     }
 
+    /**
+     * Creates a degree department link
+     * @param departmentCode
+     * @param degreeCode
+     * @param lead
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
+    public static void createDegreeDepartment(String departmentCode, String degreeCode, Boolean lead)
+            throws GeneralProcessingException, ExistingRecordException {
+
+        // Check for an exisiting department link
+        Boolean departmentLinkExists = true;
+        try {
+            getDegreeDepartment(departmentCode, degreeCode);
+        } catch (GeneralProcessingException e) {
+            throw new GeneralProcessingException();
+        } catch (NoRecordException e) {
+            departmentLinkExists = false;
+        }
+        if (departmentLinkExists) throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("INSERT INTO DegreeDepartment VALUES (?, ?, ?);");
+            pstmt.setString(1, departmentCode);
+            pstmt.setString(2, degreeCode);
+            pstmt.setBoolean(3, lead);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+    }
+
+    /**
+     * Removes a department / degree link
+     * @param departmentCode
+     * @param degreeCode
+     * @throws GeneralProcessingException
+     */
     public static void removeDegreeDepartment(String departmentCode, String degreeCode)
             throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM DegreeDepartment WHERE departmentCode = ? AND degreeCode = ?;");
+            pstmt.setString(1, departmentCode);
+            pstmt.setString(2, degreeCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
