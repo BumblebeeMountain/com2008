@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Setup",
+            "request": "launch",
+            "mainClass": "database.Setup",
+            "projectName": "com2008_8b977ed9"
+        },
+        {
+            "type": "java",
             "name": "Driver Test",
             "request": "launch",
             "mainClass": "DriverTest"

@@ -26,5 +26,15 @@ public class DepartmentController {
     throws GeneralProcessingException {
 
     }
+
+    public static void createDegreeDepartment (String departmentCode, String degreeCode, Boolean lead)
+    throws GeneralProcessingException, ExistingRecordException {
+
+    }
+
+    public static void removeDegreeDepartment (String departmentCode, String degreeCode)
+    throws GeneralProcessingException {
+        
+    }
     
 }
