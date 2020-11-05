@@ -6,12 +6,22 @@ import java.sql.*;
 
 public class Setup {
 
+    private static final String tableNames[] = new String[] {
+        "SelectedModule",
+        "DegreeModule",
+        "Module",
+        "DegreeDepartment",
+        "Department",
+        "Registration",
+        "Degree",
+        "Student",
+        "User"
+    };
+
     public static void main(String[] args) {
         try {
 
             dropAllTables();
-
-            Thread.sleep(3000);
 
             createUserTable();
             createStudentTable();
@@ -23,7 +33,7 @@ public class Setup {
             createDepartmentTable();
             createDegreeDepartementTable();
 
-            printTables();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -43,30 +53,49 @@ public class Setup {
         }
     }
 
-    public static int dropAllTables() throws SQLException {
-        String[] tables = getTables();
-        int count = 0;
-        for (String table : tables) {
-            count += dropTable(table);
+    public static void dropAllTables() throws SQLException {
+        for (String tableName : tableNames) {
+            dropTable(tableName);
         }
-        return count;
     }
 
-    public static int dropTable(String tableName) throws SQLException {
-        int res = 0;
+    public static boolean dropTable(String tableName) throws SQLException {
+        Statement stmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
-            Statement stmt = con.createStatement();
-            res += stmt.executeUpdate("DROP TABLE " + tableName + " ;");
+            stmt = con.createStatement();
+            stmt.execute("DROP TABLE IF EXISTS " + tableName + ";");
+            return !tableExists(tableName);
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
         finally {
-            return res;
+            if (stmt != null) stmt.close();
+            return false;
+        }
+    }
+
+    public static boolean tableExists(String tableName) throws SQLException {
+        int tableCount = 0;
+        Statement stmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+            stmt = con.createStatement();
+            String command = String.format("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'team019' AND table_name = '%s'", tableName);
+            ResultSet res = stmt.executeQuery(command);
+            while (res.next()) {
+                tableCount = res.getInt(1);
+            }
+            return (tableCount == 1);
+        } finally {
+            if (stmt != null) stmt.close();
         }
     }
 
     public static String[] getTables() throws SQLException {
         String[] tables = new String[0];
+        PreparedStatement pstmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
-            PreparedStatement pstmt = con.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';",
+            pstmt = con.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';",
                     ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pstmt.executeQuery();
@@ -74,6 +103,7 @@ public class Setup {
         } catch (SQLException ex) {
             throw ex;
         } finally {
+            if (pstmt != null) pstmt.close();
             return tables;
         }
 
@@ -114,7 +144,7 @@ public class Setup {
     }
 
     private static void createRegistrationTable() throws SQLException {
-        String command = "CREATE TABLE Registation (" +
+        String command = "CREATE TABLE Registration (" +
                         "period CHAR(1) NOT NULL, " +
                         "studentRegistrationNumber INTEGER NOT NULL, " +
                         "level CHAR(1) NOT NULL, " +
@@ -158,8 +188,8 @@ public class Setup {
                         "secondAttemptResult FLOAT, " +
                         "PRIMARY KEY (moduleCode, studentRegistrationNumber, period), " +
                         "FOREIGN KEY (moduleCode) REFERENCES Module(code), " +
-                        "FOREIGN KEY (studentRegistrationNumber) REFERENCES Registation(studentRegistrationNumber), " +
-                        "FOREIGN KEY (period) REFERENCES Registation(period) " +
+                        "FOREIGN KEY (studentRegistrationNumber) REFERENCES Registration(studentRegistrationNumber), " +
+                        "FOREIGN KEY (period) REFERENCES Registration(period) " +
                         ");";
         createTable(command);
     }
