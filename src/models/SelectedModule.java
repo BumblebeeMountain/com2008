@@ -6,11 +6,11 @@ public class SelectedModule {
 
     // instance variables
 
-    public String moduleCode;
-    public int studentRegistrationNumber;
-    public int period;
-    public float firstAttemptResult;
-    public float secondAttemptResult;
+    private String moduleCode;
+    private int studentRegistrationNumber;
+    private int period;
+    private float firstAttemptResult;
+    private float secondAttemptResult;
 
     // getters & setters
 

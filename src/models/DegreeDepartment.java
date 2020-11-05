@@ -6,9 +6,9 @@ public class DegreeDepartment {
 
     // instance variables
 
-    public String departmentCode;
-    public String degreeCode;
-    public Boolean isLead;
+    private String departmentCode;
+    private String degreeCode;
+    private Boolean isLead;
 
     // getters & setters
 
