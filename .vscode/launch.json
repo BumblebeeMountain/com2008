@@ -3,6 +3,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Database Setup",
+            "request": "launch",
+            "mainClass": "database.Setup"
+        },
+        {
+            "type": "java",
             "name": "Driver Test",
             "request": "launch",
             "mainClass": "DriverTest"
