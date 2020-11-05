@@ -1,6 +1,8 @@
 package controllers;
 
+import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
+import exceptions.NoRecordException;
 import models.Module;
 
 public class ModuleController {
@@ -11,12 +13,12 @@ public class ModuleController {
     }
 
     public static Module getModule (String moduleCode)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, NoRecordException {
         return null;
     }
 
     public static void createModule (String moduleCode, String moduleName, Integer credits, String teachingPeriod)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, ExistingRecordException {
 
     }
 

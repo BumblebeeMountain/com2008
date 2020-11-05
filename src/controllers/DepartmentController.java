@@ -1,6 +1,8 @@
 package controllers;
 
+import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
+import exceptions.NoRecordException;
 import models.Department;
 
 public class DepartmentController {
@@ -11,12 +13,12 @@ public class DepartmentController {
     }
 
     public static Department getDepartment(String departmentCode)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, NoRecordException {
         return null;
     }
 
     public static void createDepartment(String departmentCode, String departmentName)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, ExistingRecordException {
 
     }
 

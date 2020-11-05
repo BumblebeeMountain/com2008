@@ -1,6 +1,8 @@
 package controllers;
 
+import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
+import exceptions.NoRecordException;
 import models.SelectedModule;
 
 public class SelectedModuleController {
@@ -10,8 +12,13 @@ public class SelectedModuleController {
         return null;
     } 
 
+    public static SelectedModule getSelectedModule (Integer registrationNumber, Character period, String moduleCode)
+    throws GeneralProcessingException, NoRecordException {
+        return null;
+    }
+
     public static void createSelectedModule(Integer registrationNumber, Character period, String moduleCode)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, ExistingRecordException {
 
     }
 
@@ -28,6 +35,11 @@ public class SelectedModuleController {
     public static void removeSelectedModule(Integer registrationNumber, Character period, String moduleCode)
     throws GeneralProcessingException {
         
+    }
+
+    public static Integer calculateOverallGrade(Integer registrationNumber, Character period)
+    throws GeneralProcessingException, NoRecordException {
+        return null;
     }
 
 }

@@ -1,7 +1,9 @@
 package controllers;
 
+import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.IncorrectLoginCredentialsException;
+import exceptions.NoRecordException;
 import models.Constants;
 import models.User;
 
@@ -13,12 +15,17 @@ public class UserController {
     }
 
     public static User getUser (String email) 
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, NoRecordException {
+        return null;
+    }
+
+    public static User getUserByID (Integer userID)
+    throws GeneralProcessingException, NoRecordException {
         return null;
     }
 
     public static void createUser (Constants.Title title, String firstname, String surname, String password, Constants.AccountType accountType)
-    throws GeneralProcessingException {
+    throws GeneralProcessingException, ExistingRecordException {
         
     }
 

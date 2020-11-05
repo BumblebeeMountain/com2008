@@ -24,4 +24,16 @@ public class Constants {
         MS
     }
 
+    public static enum DegreeClass {
+        FIRST_CLASS,
+        UPPER_SECOND,
+        LOWER_SECOND,
+        THIRD_CLASS,
+        DISTINCTION,
+        MERIT,
+        PASS_NON_HONOURS,
+        PASS,
+        FAIL
+    }
+
 }
