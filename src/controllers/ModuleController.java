@@ -124,12 +124,89 @@ public class ModuleController {
 
     }
 
+    /**
+     * Creates a given module
+     * @param moduleCode
+     * @param moduleName
+     * @param credits
+     * @param teachingPeriod
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void createModule(String moduleCode, String moduleName, Integer credits, String teachingPeriod)
             throws GeneralProcessingException, ExistingRecordException {
+
+        // Check for an exisiting department
+        Boolean moduleExists = true;
+        try {
+            getModule(moduleCode);
+        } catch (GeneralProcessingException e) {
+            throw new GeneralProcessingException();
+        } catch (NoRecordException e) {
+            moduleExists = false;
+        }
+        if (moduleExists) throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("INSERT INTO Module VALUES (?, ?, ?, ?);");
+            pstmt.setString(1, moduleCode);
+            pstmt.setString(2, moduleName);
+            pstmt.setInt(3, credits);
+            pstmt.setString(4, teachingPeriod);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
     public static void removeModule(String moduleCode) throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM Module WHERE code = ?;");
+            pstmt.setString(1, moduleCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
