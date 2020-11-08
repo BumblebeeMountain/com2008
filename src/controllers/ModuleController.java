@@ -179,6 +179,11 @@ public class ModuleController {
 
     }
 
+    /**
+     * Remove a given module
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     */
     public static void removeModule(String moduleCode) throws GeneralProcessingException {
 
         // Variables
