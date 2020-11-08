@@ -68,8 +68,60 @@ public class ModuleController {
 
     }
 
+    /**
+     * Get a given module, if it exists
+     */
     public static Module getModule(String moduleCode) throws GeneralProcessingException, NoRecordException {
-        return null;
+        
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        String code = null;
+        String name = null;
+        Integer credits = null;
+        String teachingPeriod = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ?;");
+            pstmt.setString(1, moduleCode);
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // If it is null - there was nothing returned
+            if (res == null | !res.next()) throw new NoRecordException();
+
+            // Filter through the output
+            code = res.getString("code");
+            name = res.getString("name");
+            credits = res.getInt("credits");
+            teachingPeriod = res.getString("teachingPeriod");
+
+        } catch (NoRecordException e) {
+
+            throw new NoRecordException(); // Caught and re-thrown if there are no records
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+                if (res != null) res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+        // Return a new department object
+        return new Module(name, code, credits, teachingPeriod);
+
     }
 
     public static void createModule(String moduleCode, String moduleName, Integer credits, String teachingPeriod)
