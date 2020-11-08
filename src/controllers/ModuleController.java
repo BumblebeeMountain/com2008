@@ -14,6 +14,37 @@ import models.Module;
 
 public class ModuleController {
 
+    public static void main (String[] args) {
+
+        try {
+
+            // Example showing that duplicates cannot be made
+            try {
+                createModule("COM1001", "Software Engineering", 20, "AUTUMN~SPRING");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1001 has already been inserted");
+            }
+
+            // Change these values to insert a new module
+            try {
+                createModule("COM1003", "Intro to CS 2", 20, "AUTUMN~SPRING");
+            } catch (ExistingRecordException e) {
+                System.out.println("Maybe try a different module!");
+            }
+
+            // Change this value to delete a department
+            removeModule("COM1002");
+
+            // Output all the current modules
+            Module[] arr = getAllModules();
+            for (Module m : arr) System.out.println(m);
+
+        } catch (GeneralProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Get an array of all the modules
      * 

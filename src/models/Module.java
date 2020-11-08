@@ -45,6 +45,10 @@ public class Module {
         return this.teachingPeriod;
     }
 
+    public String toString () {
+        return this.code + " > " + this.name + " > " + this.credits + " > " + this.teachingPeriod;
+    }
+
     // constructor
 
     public Module(String name, String code, int credits, String teachingPeriod) {
