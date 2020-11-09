@@ -45,7 +45,7 @@ public class RegistrationController {
                 Character level = res.getString("level").charAt(0);
                 Integer startYear = res.getInt("startYear");
                 String degreeCode = res.getString("degreeCode");
-                SelectedModule[] mods = getSelectedModules(registrationNumber, period);
+                SelectedModule[] mods = getStudentSelectedModules(registrationNumber, period);
                 regs.add(new Registration(registrationNumber, degreeCode, level, period, startYear, mods));
             }
 
@@ -109,7 +109,7 @@ public class RegistrationController {
             level = res.getString("level").charAt(0);
             startYear = res.getInt("startYear");
             degreeCode = res.getString("degreeCode");
-            mods = getSelectedModules(registrationNumber, period);
+            mods = getStudentSelectedModules(registrationNumber, period);
 
         } catch (NoRecordException e) {
 
@@ -149,7 +149,7 @@ public class RegistrationController {
      * @return
      * @throws GeneralProcessingException
      */
-    private static SelectedModule[] getSelectedModules (Integer registrationNumber, Character period) 
+    private static SelectedModule[] getStudentSelectedModules (Integer registrationNumber, Character period) 
     throws GeneralProcessingException {
         
         // Variables
