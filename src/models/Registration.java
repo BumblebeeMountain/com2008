@@ -8,26 +8,26 @@ public class Registration {
 
     private Integer registrationNumber;
     private String degreeCode;
-    private String level;
-    private String period;
+    private Character level;
+    private Character period;
     private Integer startYear;
     private SelectedModule[] selectedModules;
 
     // getters & setters
 
-    public void setLevel(String level) {
+    public void setLevel(Character level) {
         this.level = level;
     }
 
-    public String getLevel() {
+    public Character getLevel() {
         return this.level;
     }
 
-    public void setPeriod(String period) {
+    public void setPeriod(Character period) {
         this.period = period;
     }
 
-    public String getPeriod() {
+    public Character getPeriod() {
         return this.period;
     }
 
@@ -70,7 +70,7 @@ public class Registration {
 
     // constructor
 
-    public Registration(Integer registrationNumber, String degreeCode, String level, String period, Integer startYear,
+    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period, Integer startYear,
             SelectedModule[] selectedModules) {
         this.registrationNumber = registrationNumber;
         this.degreeCode = degreeCode;

@@ -86,11 +86,6 @@ public class Degree {
         return this.code + " > " + this.name;
     }
 
-    // Needs modifying to look at the U or P in the degree code
-    public Integer getLevelOfEntry () {
-        return 1;
-    }
-
     // constructor
 
     public Degree(String name, String code, Boolean hasYearInIndustry, int maxLevel, Department leadDepartment,
