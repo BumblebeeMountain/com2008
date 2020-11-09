@@ -42,7 +42,7 @@ public class DepartmentController {
             }
 
             // // // Delete a degree department
-            // removeDegreeDepartment("COM", "COMU01");
+            removeDegreeDepartment("COM", "COMU01");
 
             // Output all the current departments
             Department[] arr = getAllDepartments();
@@ -281,7 +281,7 @@ public class DepartmentController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.departmentCode WHERE departmentCode = ? AND degreeCode = ?;");
+            pstmt = con.prepareStatement("SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.degreeCode WHERE departmentCode = ? AND degreeCode = ?;");
             pstmt.setString(1, departmentCode);
             pstmt.setString(2, degreeCode);
 
