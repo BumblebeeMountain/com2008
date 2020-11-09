@@ -75,8 +75,8 @@ public class Registration {
 
     // constructor
 
-    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period, Integer startYear,
-            SelectedModule[] selectedModules) {
+    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period,
+            Integer startYear, SelectedModule[] selectedModules) {
         this.registrationNumber = registrationNumber;
         this.degreeCode = degreeCode;
         this.level = level;

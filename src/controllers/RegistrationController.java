@@ -72,13 +72,73 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Gets a single registration of a student, given a certain period
+     * @param registrationNumber
+     * @param period
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
     public static Registration getStudentRegistration(Integer registrationNumber, Character period)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+        
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        Character level = null;
+        Integer startYear = null;
+        String degreeCode = null;
+        SelectedModule[] mods = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("SELECT * FROM Registration WHERE studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.setString(2, period.toString());
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // If it is null - there was nothing returned
+            if (res == null | !res.next()) throw new NoRecordException();
+
+            // Filter through the output
+            level = res.getString("level").charAt(0);
+            startYear = res.getInt("startYear");
+            degreeCode = res.getString("degreeCode");
+            mods = getSelectedModules(registrationNumber, period);
+
+        } catch (NoRecordException e) {
+
+            throw new NoRecordException(); // Caught and re-thrown if there are no records
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+                if (res != null) res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+        // Return a new department object
+        return new Registration(registrationNumber, degreeCode, level, period, startYear, mods);
+
     }
 
     public static void createInitialRegistration(Integer registrationNumber, String degreeCode)
             throws GeneralProcessingException, ExistingRecordException {
+        
+        
 
     }
 
