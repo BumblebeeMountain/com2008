@@ -1,56 +1,35 @@
-// DegreeModule class is meant to link the Degree class and Module class
-
 package models;
 
-public class DegreeModule {
-
-    // instance variables
+public class DegreeModule extends Module {
 
     private String degreeCode;
-    private String moduleCode;
-    private Boolean core;
-    private int level;
+    private Boolean isCore;
 
-    // getters & setters
-
-    public void setModuleCode(String moduleCode) {
-        this.moduleCode = moduleCode;
-    }
-
-    public String getModuleCode() {
-        return this.moduleCode;
+    public String getDegreeCode() {
+        return this.degreeCode;
     }
 
     public void setDegreeCode(String degreeCode) {
         this.degreeCode = degreeCode;
     }
 
-    public String getDegreeCode() {
-        return this.degreeCode;
+    public Boolean getIsCore() {
+        return this.isCore;
     }
 
-    public void setCore(Boolean core) {
-        this.core = core;
+    public void setIsCore(Boolean isCore) {
+        this.isCore = isCore;
     }
 
-    public Boolean getCore() {
-        return this.core;
+    public String toString () {
+        return super.toString() + " > " + this.degreeCode + " > " + this.isCore;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getLevel() {
-        return this.level;
-    }
-
-    // constructor
-    
-    public DegreeModule (String moduleCode, String degreeCode, Boolean core, int level) {
-        this.moduleCode = moduleCode;
+    public DegreeModule(String name, String code, Integer credits, String teachingPeriod, String degreeCode,
+            Boolean isCore) {
+        super(name, code, credits, teachingPeriod);
         this.degreeCode = degreeCode;
-        this.core = core;
-        this.level = level;
+        this.isCore = isCore;
     }
+
 }

@@ -2,65 +2,41 @@
 
 package models;
 
-public class SelectedModule {
+public class SelectedModule extends Module {
 
     // instance variables
 
-    private String moduleCode;
-    private int studentRegistrationNumber;
-    private int period;
-    private float firstAttemptResult;
-    private float secondAttemptResult;
+    private Float firstAttemptResult;
+    private Float secondAttemptResult;
 
     // getters & setters
 
-    public void setModuleCode(String moduleCode) {
-        this.moduleCode = moduleCode;
-    }
-
-    public String getModuleCode() {
-        return this.moduleCode;
-    }
-
-    public void setStudentRegistrationNumber(int studentRegistrationNumber) {
-        this.studentRegistrationNumber = studentRegistrationNumber;
-    }
-
-    public int getStudentRegistrationNumber() {
-        return this.studentRegistrationNumber;
-    }
-
-    public void setPeriod(int period) {
-        this.period = period;
-    }
-
-    public int getPeriod() {
-        return this.period;
-    }
-
-    public void setFirstAttemptResult(float firstAttemptResult) {
+    public void setFirstAttemptResult(Float firstAttemptResult) {
         this.firstAttemptResult = firstAttemptResult;
     }
 
-    public float getFirstAttemptResult() {
+    public Float getFirstAttemptResult() {
         return firstAttemptResult;
     }
 
-    public void setSecondAttemptResult(float secondAttemptResult) {
+    public void setSecondAttemptResult(Float secondAttemptResult) {
         this.secondAttemptResult = secondAttemptResult;
     }
 
-    public float getSecondAttemptResult() {
+    public Float getSecondAttemptResult() {
         return secondAttemptResult;
+    }
+
+    public String toString() {
+        return super.toString() + " > 1st: " + this.firstAttemptResult + " > 2nd: " + this.secondAttemptResult;
     }
 
     // constructor
 
-    public SelectedModule (String moduleCode, int studentRegistrationNumber, int period, float firstAttemptResult, float secondAttemptResult) {
-        this.moduleCode = moduleCode;
-        this.studentRegistrationNumber = studentRegistrationNumber;
-        this.period = period;
-        this.firstAttemptResult = firstAttemptResult;
-        this.secondAttemptResult = secondAttemptResult;
+    public SelectedModule(String name, String code, Integer credits, String teachingPeriod, Float firstAttempt,
+            Float secondAttempt) {
+        super(name, code, credits, teachingPeriod);
+        this.firstAttemptResult = firstAttempt;
+        this.secondAttemptResult = secondAttempt;
     }
 }

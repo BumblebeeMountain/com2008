@@ -2,29 +2,23 @@
 
 package models;
 
-public class Student {
+import models.Constants.AccountType;
+import models.Constants.Title;
+
+public class Student extends User {
 
     // instance variables
 
-    private int userID;
-    private int registrationNumber;
+    private Integer registrationNumber;
     private String personalTutor;
 
     // getters & setters
 
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public int getUserID() {
-        return this.userID;
-    }
-
-    public void setRegistrationNumber(int registrationNumber) {
+    public void setRegistrationNumber(Integer registrationNumber) {
         this.registrationNumber = registrationNumber;
     }
 
-    public int getRegistrationNumber() {
+    public Integer getRegistrationNumber() {
         return this.registrationNumber;
     }
 
@@ -36,10 +30,14 @@ public class Student {
         return this.personalTutor;
     }
 
-    // constructor
+    public String toString() {
+        return super.toString() + " > " + this.registrationNumber;
+    }
 
-    public Student (int userID, int registrationNumber, String personalTutor) {
-        this.userID = userID;
+    // constructor
+    public Student(Integer userID, String email, Title title, String forename, String surname,
+            Integer registrationNumber, String personalTutor) {
+        super(userID, email, title, forename, surname, AccountType.STUDENT);
         this.registrationNumber = registrationNumber;
         this.personalTutor = personalTutor;
     }

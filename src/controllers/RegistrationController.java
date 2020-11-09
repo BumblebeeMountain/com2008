@@ -5,7 +5,6 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Registration;
 import models.SelectedModule;
-import models.Constants.DegreeClass;
 
 public class RegistrationController {
     
@@ -19,19 +18,15 @@ public class RegistrationController {
         return null;
     }
 
-    public static SelectedModule[] getStudentSelectedModules(Integer registrationNumber, Character period) 
-    throws GeneralProcessingException {
-        return null;
-    } 
-
-    public static SelectedModule getSelectedModule (Integer registrationNumber, Character period, String moduleCode)
-    throws GeneralProcessingException, NoRecordException {
-        return null;
-    }
-
     public static void createInitialRegistration(Integer registrationNumber, String degreeCode)
     throws GeneralProcessingException, ExistingRecordException {
 
+    }
+
+    // Private as is only for internal checks
+    private static SelectedModule getSelectedModule (Integer registrationNumber, Character period, String moduleCode)
+    throws GeneralProcessingException, NoRecordException {
+        return null;
     }
 
     public static void createSelectedModule(Integer registrationNumber, Character period, String moduleCode)
@@ -42,11 +37,6 @@ public class RegistrationController {
     public static void generateNextRegistration(Integer registrationNumber, Character level)
     throws GeneralProcessingException, ExistingRecordException {
 
-    }
-
-    public static DegreeClass calculateDegreeClassification (Integer registrationNumber)
-    throws GeneralProcessingException, NoRecordException {
-        return null;
     }
 
     public static Character getMostRecentPeriod (Integer registrationNumber)

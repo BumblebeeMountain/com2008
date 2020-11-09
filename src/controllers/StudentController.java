@@ -5,6 +5,7 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Degree;
 import models.Student;
+import models.Constants.DegreeClass;
 
 public class StudentController {
     
@@ -36,6 +37,11 @@ public class StudentController {
     public static void removeStudent (Integer registrationNumber) 
     throws GeneralProcessingException {
 
+    }
+
+    public static DegreeClass calculateDegreeClassification (Integer registrationNumber)
+    throws GeneralProcessingException, NoRecordException {
+        return null;
     }
 
 }

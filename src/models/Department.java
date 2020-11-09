@@ -27,13 +27,13 @@ public class Department {
         return this.code;
     }
 
-    public String toString () {
+    public String toString() {
         return this.code + " > " + this.name;
     }
 
     // constructor
 
-    public Department (String name, String code) {
+    public Department(String name, String code) {
         this.name = name;
         this.code = code;
     }
