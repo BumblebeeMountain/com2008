@@ -202,7 +202,7 @@ public class RegistrationController {
 
     }
 
-    public static SelectedModule getSelectedModule(Integer registrationNumber, Character period, String moduleCode)
+    private static SelectedModule getSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException, NoRecordException {
         return null;
     }
