@@ -5,6 +5,8 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Degree;
 import models.DegreeModule;
+import models.Department;
+import models.Module;
 
 public class DegreeController {
 
@@ -42,6 +44,27 @@ public class DegreeController {
 
     public static void removeDegreeModule(String degreeCode, String moduleCode) throws GeneralProcessingException {
 
+    }
+
+    // This is private as it is only for internal checks
+    private static Department getLeadDepartment(String degreeCode)
+            throws GeneralProcessingException, NoRecordException {
+        return null;
+    }
+
+    // This is private as it is only for internal checks
+    private static Department[] getPartnerDepartments(String degreeCode) throws GeneralProcessingException {
+        return null;
+    }
+
+    // This is private as it is only for internal checks
+    private static Module[] getCoreModules(String degreeCode) throws GeneralProcessingException {
+        return null;
+    }
+
+    // This is private as it is only for internal checks
+    private static Module[] getOptionalModules(String degreeCode) throws GeneralProcessingException {
+        return null;
     }
 
 }
