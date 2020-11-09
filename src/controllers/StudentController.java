@@ -19,7 +19,7 @@ public class StudentController {
         return null;
     }
 
-    public static Student getStudentByID(Integer userID) 
+    public static Student getStudentByEmail(String email) 
     throws GeneralProcessingException, NoRecordException {
         return null;
     }
@@ -29,9 +29,10 @@ public class StudentController {
         return null;
     }
 
-    public static void createStudent(Integer userID, String personalTutor)
+    // Needs to return the generated registration number
+    public static Integer createStudent(String email, String personalTutor)
     throws GeneralProcessingException, ExistingRecordException {
-
+        return null;
     }
 
     public static void removeStudent (Integer registrationNumber) 

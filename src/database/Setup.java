@@ -118,14 +118,13 @@ public class Setup {
 
     public static void createUserTable() throws SQLException {
         String command = "CREATE TABLE User (" +
-                        "userID INTEGER NOT NULL AUTO_INCREMENT, " +
                         "email VARCHAR(64) NOT NULL, " +
                         "title VARCHAR(16) NOT NULL, " +
                         "forename VARCHAR(64) NOT NULL, " +
                         "surname VARCHAR(32) NOT NULL, " +
                         "password VARCHAR(32) NOT NULL, " +
                         "accountType VARCHAR(16) NOT NULL, " +
-                        "PRIMARY KEY (userID) " +
+                        "PRIMARY KEY (email) " +
                         ");";
         createTable(command);
     }
@@ -133,10 +132,10 @@ public class Setup {
     public static void createStudentTable() throws SQLException {
         String command = "CREATE TABLE Student (" +
                         "registrationNumber INTEGER NOT NULL, " +
-                        "userID INTEGER NOT NULL, " +
+                        "email VARCHAR(64) NOT NULL, " +
                         "personalTutor VARCHAR(64) NOT NULL, " +
                         "PRIMARY KEY (registrationNumber), " +
-                        "FOREIGN KEY (userID) REFERENCES User(userID) " +
+                        "FOREIGN KEY (email) REFERENCES User(email) " +
                         ");";
         createTable(command);
     }

@@ -9,7 +9,6 @@ public class User {
 
     // instance variables
 
-    private Integer userID;
     private String email;
     private Title title;
     private String forename;
@@ -17,14 +16,6 @@ public class User {
     private AccountType accountType;
 
     // getters & setters
-
-    public void setUserID(Integer userID) {
-        this.userID = userID;
-    }
-
-    public Integer getUserID() {
-        return this.userID;
-    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -72,8 +63,7 @@ public class User {
 
     // constructor
 
-    public User(Integer userID, String email, Title title, String forename, String surname, AccountType accountType) {
-        this.userID = userID;
+    public User(String email, Title title, String forename, String surname, AccountType accountType) {
         this.email = email;
         this.title = title;
         this.forename = forename;
