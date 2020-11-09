@@ -8,7 +8,7 @@ public class Module {
 
     private String name;
     private String code;
-    private int credits;
+    private Integer credits;
     private String teachingPeriod;
 
     // getters & setters
@@ -29,11 +29,11 @@ public class Module {
         return this.code;
     }
 
-    public void setCredits(int credits) {
+    public void setCredits(Integer credits) {
         this.credits = credits;
     }
 
-    public int getCredits() {
+    public Integer getCredits() {
         return this.credits;
     }
 
@@ -45,13 +45,13 @@ public class Module {
         return this.teachingPeriod;
     }
 
-    public String toString () {
+    public String toString() {
         return this.code + " > " + this.name + " > " + this.credits + " > " + this.teachingPeriod;
     }
 
     // constructor
 
-    public Module(String name, String code, int credits, String teachingPeriod) {
+    public Module(String name, String code, Integer credits, String teachingPeriod) {
         this.name = name;
         this.code = code;
         this.credits = credits;

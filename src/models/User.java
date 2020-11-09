@@ -2,25 +2,27 @@
 
 package models;
 
+import models.Constants.AccountType;
+import models.Constants.Title;
+
 public class User {
 
     // instance variables
 
-    private int userID;
+    private Integer userID;
     private String email;
-    private String title;
+    private Title title;
     private String forename;
     private String surname;
-    private String password;
-    private String accountType;
+    private AccountType accountType;
 
     // getters & setters
 
-    public void setUserID(int userID) {
+    public void setUserID(Integer userID) {
         this.userID = userID;
     }
 
-    public int getUserID() {
+    public Integer getUserID() {
         return this.userID;
     }
 
@@ -32,11 +34,11 @@ public class User {
         return this.email;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 
-    public String getTitle() {
+    public Title getTitle() {
         return this.title;
     }
 
@@ -56,32 +58,26 @@ public class User {
         return this.surname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setAccountType(String accountType) {
+    public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
 
-    public String getAccountType() {
+    public AccountType getAccountType() {
         return this.accountType;
     }
 
+    public String toString() {
+        return this.email + " > " + this.forename + " > " + this.surname + " > " + this.accountType;
+    }
+
     // constructor
-    
-    public User(int userID, String email, String title, String forename, String surname, String password,
-            String accountType) {
+
+    public User(Integer userID, String email, Title title, String forename, String surname, AccountType accountType) {
         this.userID = userID;
         this.email = email;
         this.title = title;
         this.forename = forename;
         this.surname = surname;
-        this.password = password;
         this.accountType = accountType;
     }
 }
