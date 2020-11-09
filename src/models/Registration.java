@@ -64,14 +64,19 @@ public class Registration {
     }
 
     public String toString() {
-        return this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period + " > "
-                + this.startYear;
+        String returnString = "";
+        returnString += this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period
+                + " > " + this.startYear + System.lineSeparator();
+        for (SelectedModule m : this.selectedModules) {
+            returnString += "    - " + m.toString() + System.lineSeparator();
+        }
+        return returnString;
     }
 
     // constructor
 
-    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period, Integer startYear,
-            SelectedModule[] selectedModules) {
+    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period,
+            Integer startYear, SelectedModule[] selectedModules) {
         this.registrationNumber = registrationNumber;
         this.degreeCode = degreeCode;
         this.level = level;
