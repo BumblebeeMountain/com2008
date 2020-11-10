@@ -5,7 +5,9 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Degree;
 import models.Student;
+import models.User;
 import models.Constants.DegreeClass;
+import models.Constants.AccountType;
 
 public class StudentController {
     
@@ -14,7 +16,13 @@ public class StudentController {
         return null;
     }
 
+
     public static Student getStudent (Integer registrationNumber) 
+    throws GeneralProcessingException, NoRecordException {
+        return null;
+    }
+
+    public static Student getStudent(String email)
     throws GeneralProcessingException, NoRecordException {
         return null;
     }
@@ -43,6 +51,10 @@ public class StudentController {
     public static DegreeClass calculateDegreeClassification (Integer registrationNumber)
     throws GeneralProcessingException, NoRecordException {
         return null;
+    }
+
+    public static boolean isStudent(User user) {
+        return user.getAccountType() == AccountType.STUDENT;
     }
 
 }
