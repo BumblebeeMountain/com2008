@@ -36,4 +36,6 @@ public class Constants {
         FAIL
     }
 
+    public static String emailHost = "sheffield.ac.uk";
+
 }
