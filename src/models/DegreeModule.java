@@ -4,6 +4,7 @@ public class DegreeModule extends Module {
 
     private String degreeCode;
     private Boolean isCore;
+    private Character level;
 
     public String getDegreeCode() {
         return this.degreeCode;
@@ -25,11 +26,20 @@ public class DegreeModule extends Module {
         return super.toString() + " > " + this.degreeCode + " > " + this.isCore;
     }
 
+    public Character getLevel () {
+        return this.level;
+    }
+
+    public void setLevel (Character level) {
+        this.level = level;
+    }
+
     public DegreeModule(String name, String code, Integer credits, String teachingPeriod, String degreeCode,
-            Boolean isCore) {
+            Boolean isCore, Character level) {
         super(name, code, credits, teachingPeriod);
         this.degreeCode = degreeCode;
         this.isCore = isCore;
+        this.level = level;
     }
 
 }
