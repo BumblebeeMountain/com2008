@@ -35,14 +35,14 @@ public class DepartmentController {
             // Change this value to delete a department
             removeDepartment("DEP1");
 
-            try {
-            createDegreeDepartment("COM", "COMU01", true);
-            } catch (ExistingRecordException e) {
-            System.out.println("COM/COM001 has already been inserted");
-            }
+            // try {
+            // createDegreeDepartment("COM", "COMU01", true);
+            // } catch (ExistingRecordException e) {
+            // System.out.println("COM/COM001 has already been inserted");
+            // }
 
-            // // // Delete a degree department
-            removeDegreeDepartment("COM", "COMU01");
+            // // // // Delete a degree department
+            // removeDegreeDepartment("COM", "COMU01");
 
             // Output all the current departments
             Department[] arr = getAllDepartments();

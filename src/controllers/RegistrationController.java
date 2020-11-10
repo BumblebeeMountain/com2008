@@ -138,7 +138,46 @@ public class RegistrationController {
     public static void createInitialRegistration(Integer registrationNumber, String degreeCode)
             throws GeneralProcessingException, ExistingRecordException {
         
-        
+        // Check for an exisiting registration
+        Boolean registrationExists = true;
+        try {
+            getStudentRegistration(registrationNumber, 'A');
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            registrationExists = false;
+        }
+        if (registrationExists)
+            throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("INSERT INTO Department VALUES (?, ?);");
+            pstmt.setString(1, departmentCode);
+            pstmt.setString(2, departmentName);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
