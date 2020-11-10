@@ -28,7 +28,7 @@ public class Department {
     }
 
     public String toString() {
-        return this.code + " > " + this.name;
+        return "Dep:" + this.code + " > Name:" + this.name;
     }
 
     // constructor

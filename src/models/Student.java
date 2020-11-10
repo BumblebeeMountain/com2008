@@ -31,7 +31,7 @@ public class Student extends User {
     }
 
     public String toString() {
-        return super.toString() + " > " + this.registrationNumber;
+        return super.toString() + " > Reg no:" + this.registrationNumber;
     }
 
     // constructor

@@ -58,7 +58,7 @@ public class User {
     }
 
     public String toString() {
-        return this.email + " > " + this.forename + " > " + this.surname + " > " + this.accountType;
+        return "Email:" + this.email + " > Forename:" + this.forename + " > Surname:" + this.surname + " > Type:" + this.accountType;
     }
 
     // constructor

@@ -46,7 +46,7 @@ public class Module {
     }
 
     public String toString() {
-        return this.code + " > " + this.name + " > " + this.credits + " > " + this.teachingPeriod;
+        return "Mod:" + this.code + " > Name:" + this.name + " > Credits:" + this.credits + " > Period:" + this.teachingPeriod;
     }
 
     // constructor

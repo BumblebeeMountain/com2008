@@ -84,7 +84,7 @@ public class Degree {
 
     public String toString () {
         String returnString = "";
-        returnString += this.code + " > " + this.name + System.lineSeparator();
+        returnString += "Deg:" + this.code + " > Deg name:" + this.name + System.lineSeparator();
         returnString += "  Core modules" + System.lineSeparator();
         for (Module m : this.coreModules)
             returnString += "    - " + m.toString() + System.lineSeparator();
