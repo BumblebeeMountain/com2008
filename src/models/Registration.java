@@ -65,8 +65,9 @@ public class Registration {
 
     public String toString() {
         String returnString = "";
-        returnString += this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period
-                + " > " + this.startYear + System.lineSeparator();
+        returnString += "Reg No:" + this.registrationNumber + " > Deg:" + this.degreeCode + " > Level:" + this.level + " > Period:" + this.period
+                + " > Year:" + this.startYear + System.lineSeparator();
+        returnString += "  Selected modules" + System.lineSeparator();
         for (SelectedModule m : this.selectedModules) {
             returnString += "    - " + m.toString() + System.lineSeparator();
         }

@@ -4,16 +4,39 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.ArrayList;
 
 import database.ConnectionManager;
 import exceptions.ExistingRecordException;
+import exceptions.ForeignLinkMissingException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Registration;
 import models.SelectedModule;
 
 public class RegistrationController {
+
+    public static void main(String[] args) {
+
+        try {
+
+            try {
+                createInitialRegistration(2, "COMU01");
+            } catch (ExistingRecordException e) {
+                System.out.println("2/COMU01 has already been inserted");
+            }
+
+            // Output all the current registrations
+            Registration[] arr = getStudentRegistrations(2);
+            for (Registration r : arr)
+                System.out.println(r);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * Gets all the student registrations
@@ -74,6 +97,7 @@ public class RegistrationController {
 
     /**
      * Gets a single registration of a student, given a certain period
+     * 
      * @param registrationNumber
      * @param period
      * @return
@@ -82,7 +106,7 @@ public class RegistrationController {
      */
     public static Registration getStudentRegistration(Integer registrationNumber, Character period)
             throws GeneralProcessingException, NoRecordException {
-        
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -95,7 +119,8 @@ public class RegistrationController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Registration WHERE studentRegistrationNumber = ? AND period = ?;");
+            pstmt = con
+                    .prepareStatement("SELECT * FROM Registration WHERE studentRegistrationNumber = ? AND period = ?;");
             pstmt.setInt(1, registrationNumber);
             pstmt.setString(2, period.toString());
 
@@ -103,7 +128,8 @@ public class RegistrationController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null | !res.next()) throw new NoRecordException();
+            if (res == null | !res.next())
+                throw new NoRecordException();
 
             // Filter through the output
             level = res.getString("level").charAt(0);
@@ -121,9 +147,11 @@ public class RegistrationController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
-                if (res != null) res.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }
@@ -135,9 +163,16 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Create an initial student registration - requires that there be a student already made
+     * @param registrationNumber
+     * @param degreeCode
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void createInitialRegistration(Integer registrationNumber, String degreeCode)
-            throws GeneralProcessingException, ExistingRecordException {
-        
+            throws GeneralProcessingException, ExistingRecordException, ForeignLinkMissingException {
+
         // Check for an exisiting registration
         Boolean registrationExists = true;
         try {
@@ -150,6 +185,12 @@ public class RegistrationController {
         if (registrationExists)
             throw new ExistingRecordException();
 
+        // Work out the level of study
+        Character initialLevelOfStudy = '1';
+        if (degreeCode.charAt(3) == 'P')
+            initialLevelOfStudy = '4';
+        Integer currentYear = Year.now().getValue();
+
         // Variables
         PreparedStatement pstmt = null;
 
@@ -157,15 +198,19 @@ public class RegistrationController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("INSERT INTO Department VALUES (?, ?);");
-            pstmt.setString(1, departmentCode);
-            pstmt.setString(2, departmentName);
+            pstmt = con.prepareStatement("INSERT INTO Registration VALUES (?, ?, ?, ?, ?);");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.setString(2, new Character('A').toString());
+            pstmt.setString(3, initialLevelOfStudy.toString());
+            pstmt.setInt(4, currentYear);
+            pstmt.setString(5, degreeCode);
 
             // Execute the query
             pstmt.executeUpdate();
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
@@ -183,14 +228,15 @@ public class RegistrationController {
 
     /**
      * Get the selected modules for a given reg no and period
+     * 
      * @param registrationNumber
      * @param period
      * @return
      * @throws GeneralProcessingException
      */
-    private static SelectedModule[] getStudentSelectedModules (Integer registrationNumber, Character period) 
-    throws GeneralProcessingException {
-        
+    private static SelectedModule[] getStudentSelectedModules(Integer registrationNumber, Character period)
+            throws GeneralProcessingException {
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -200,7 +246,8 @@ public class RegistrationController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM SelectedModule INNER JOIN Module ON SelectedModule.moduleCode = Module.code WHERE studentRegistrationNumber = ? AND period = ?;");
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM SelectedModule INNER JOIN Module ON SelectedModule.moduleCode = Module.code WHERE studentRegistrationNumber = ? AND period = ?;");
             pstmt.setInt(1, registrationNumber);
             pstmt.setString(2, period.toString());
 

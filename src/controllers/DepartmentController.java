@@ -262,14 +262,15 @@ public class DepartmentController {
 
     /**
      * Private method to check if there is a degree department link in place
+     * 
      * @param departmentCode
      * @param degreeCode
      * @return
      * @throws GeneralProcessingException
      * @throws NoRecordException
      */
-    private static Department getDegreeDepartment (String departmentCode, String degreeCode)
-    throws GeneralProcessingException, NoRecordException {
+    private static Department getDegreeDepartment(String departmentCode, String degreeCode)
+            throws GeneralProcessingException, NoRecordException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -281,7 +282,8 @@ public class DepartmentController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.degreeCode WHERE departmentCode = ? AND degreeCode = ?;");
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.degreeCode WHERE departmentCode = ? AND degreeCode = ?;");
             pstmt.setString(1, departmentCode);
             pstmt.setString(2, degreeCode);
 
@@ -289,7 +291,8 @@ public class DepartmentController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null || !res.next()) throw new NoRecordException();
+            if (res == null || !res.next())
+                throw new NoRecordException();
 
             // Filter through the output
             degName = res.getString("name");
@@ -305,9 +308,11 @@ public class DepartmentController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
-                if (res != null) res.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }

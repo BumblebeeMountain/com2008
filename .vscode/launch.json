@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - RegistrationController",
+            "request": "launch",
+            "mainClass": "controllers.RegistrationController",
+            "projectName": "com2008_8b977ed9"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - ModuleController",
             "request": "launch",
             "mainClass": "controllers.ModuleController",
