@@ -37,19 +37,19 @@ public class Setup {
         }
     }
 
-    public static void printTables() {
-        String[] tables = new String[0];
-        try {
-            tables = getTables();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return;
-        }
+    // public static void printTables() {
+    //     String[] tables = new String[0];
+    //     try {
+    //         tables = getTables();
+    //     } catch (SQLException ex) {
+    //         ex.printStackTrace();
+    //         return;
+    //     }
 
-        for (String table : tables) {
-            System.out.println(table);
-        }
-    }
+    //     for (String table : tables) {
+    //         System.out.println(table);
+    //     }
+    // }
 
     public static void dropAllTables() throws SQLException {
         for (String tableName : tableNames) {
@@ -89,23 +89,23 @@ public class Setup {
         }
     }
 
-    public static String[] getTables() throws SQLException {
-        String[] tables = new String[0];
-        PreparedStatement pstmt = null;
-        try (Connection con = ConnectionManager.getConnection()) {
-            pstmt = con.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';",
-                    ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = pstmt.executeQuery();
-            tables = ResultSetToArray.convertToString(rs);
-        } catch (SQLException ex) {
-            throw ex;
-        } finally {
-            if (pstmt != null) pstmt.close();
-        }
-        return tables;
+    // public static String[] getTables() throws SQLException {
+    //     String[] tables = new String[0];
+    //     PreparedStatement pstmt = null;
+    //     try (Connection con = ConnectionManager.getConnection()) {
+    //         pstmt = con.prepareStatement("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';",
+    //                 ResultSet.TYPE_SCROLL_SENSITIVE,
+    //                 ResultSet.CONCUR_UPDATABLE);
+    //         ResultSet rs = pstmt.executeQuery();
+    //         tables = ResultSetToArray.convertToString(rs);
+    //     } catch (SQLException ex) {
+    //         throw ex;
+    //     } finally {
+    //         if (pstmt != null) pstmt.close();
+    //     }
+    //     return tables;
 
-    }
+    // }
 
     private static void createTable(String command) throws SQLException {
         try (Connection con = ConnectionManager.getConnection()) {
