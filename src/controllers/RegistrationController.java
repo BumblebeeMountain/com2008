@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import database.ConnectionManager;
 import exceptions.ExistingRecordException;
-import exceptions.ForeignLinkMissingException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Registration;
@@ -128,7 +127,7 @@ public class RegistrationController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null | !res.next())
+            if (res == null || !res.next())
                 throw new NoRecordException();
 
             // Filter through the output
@@ -171,7 +170,7 @@ public class RegistrationController {
      * @throws ExistingRecordException
      */
     public static void createInitialRegistration(Integer registrationNumber, String degreeCode)
-            throws GeneralProcessingException, ExistingRecordException, ForeignLinkMissingException {
+            throws GeneralProcessingException, ExistingRecordException {
 
         // Check for an exisiting registration
         Boolean registrationExists = true;
@@ -288,9 +287,76 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Get a single selected module
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
     private static SelectedModule getSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+        
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        String name = null;
+        String code = null;
+        Integer credits = null;
+        String teachingPeriod = null;
+        Float firstAttempt = null;
+        Float secondAttempt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("SELECT * FROM Module INNER JOIN SelectedModule ON Module.code = SelectedModule.moduleCode WHERE studentRegistrationNumber = ? AND period = ? AND moduleCode = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.setString(2, period.toString());
+            pstmt.setString(3, moduleCode);
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // If it is null - there was nothing returned
+            if (res == null || !res.next())
+                throw new NoRecordException();
+
+            // Filter through the output
+            name = res.getString("name");
+            code = moduleCode;
+            credits = res.getInt("credits");
+            teachingPeriod = res.getString("teachingPeriod");
+            firstAttempt = res.getFloat("firstAttemptResult");
+            secondAttempt = res.getFloat("secondAttemptResult");
+
+        } catch (NoRecordException e) {
+
+            throw new NoRecordException(); // Caught and re-thrown if there are no records
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+        // Return a new department object
+        return new SelectedModule(name, code, credits, teachingPeriod, firstAttempt, secondAttempt);
+
     }
 
     public static void createSelectedModule(Integer registrationNumber, Character period, String moduleCode)
