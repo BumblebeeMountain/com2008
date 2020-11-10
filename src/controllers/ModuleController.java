@@ -133,7 +133,7 @@ public class ModuleController {
 
         } catch (NoRecordException e) {
 
-            throw new NoRecordException(); // Caught and re-thrown if there are no records
+            throw e; // Caught and re-thrown if there are no records
 
         } catch (Exception e) { // Catch general exception
 
@@ -172,7 +172,7 @@ public class ModuleController {
         try {
             getModule(moduleCode);
         } catch (GeneralProcessingException e) {
-            throw new GeneralProcessingException();
+            throw e;
         } catch (NoRecordException e) {
             moduleExists = false;
         }
