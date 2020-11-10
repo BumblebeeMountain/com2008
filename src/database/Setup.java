@@ -131,7 +131,7 @@ public class Setup {
 
     public static void createStudentTable() throws SQLException {
         String command = "CREATE TABLE Student (" +
-                        "registrationNumber INTEGER NOT NULL, " +
+                        "registrationNumber INTEGER NOT NULL AUTO_INCREMENT, " +
                         "email VARCHAR(64) NOT NULL, " +
                         "personalTutor VARCHAR(64) NOT NULL, " +
                         "PRIMARY KEY (registrationNumber), " +
@@ -142,8 +142,8 @@ public class Setup {
 
     private static void createRegistrationTable() throws SQLException {
         String command = "CREATE TABLE Registration (" +
-                        "period CHAR(1) NOT NULL, " +
                         "studentRegistrationNumber INTEGER NOT NULL, " +
+                        "period CHAR(1) NOT NULL, " +
                         "level CHAR(1) NOT NULL, " +
                         "startYear SMALLINT NOT NULL, " +
                         "degreeCode VARCHAR(16) NOT NULL, " +
