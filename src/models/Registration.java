@@ -75,8 +75,13 @@ public class Registration {
 
     // constructor
 
+<<<<<<< HEAD
     public Registration(Integer registrationNumber, String degreeCode, Character level, Character period,
             Integer startYear, SelectedModule[] selectedModules) {
+=======
+    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period, Integer startYear,
+            SelectedModule[] selectedModules) {
+>>>>>>> a57a2e1... Get student registrations
         this.registrationNumber = registrationNumber;
         this.degreeCode = degreeCode;
         this.level = level;

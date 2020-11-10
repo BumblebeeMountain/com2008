@@ -83,6 +83,7 @@ public class Degree {
     }
 
     public String toString () {
+<<<<<<< HEAD
         String returnString = "";
         returnString += this.code + " > " + this.name + System.lineSeparator();
         returnString += "  Core modules" + System.lineSeparator();
@@ -97,6 +98,9 @@ public class Degree {
         for (Department d : this.partnerDepartments)
             returnString += "    - " + d.toString() + System.lineSeparator();
         return returnString;
+=======
+        return this.code + " > " + this.name;
+>>>>>>> a57a2e1... Get student registrations
     }
 
     // constructor
