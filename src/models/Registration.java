@@ -8,26 +8,26 @@ public class Registration {
 
     private Integer registrationNumber;
     private String degreeCode;
-    private String level;
-    private String period;
+    private Character level;
+    private Character period;
     private Integer startYear;
     private SelectedModule[] selectedModules;
 
     // getters & setters
 
-    public void setLevel(String level) {
+    public void setLevel(Character level) {
         this.level = level;
     }
 
-    public String getLevel() {
+    public Character getLevel() {
         return this.level;
     }
 
-    public void setPeriod(String period) {
+    public void setPeriod(Character period) {
         this.period = period;
     }
 
-    public String getPeriod() {
+    public Character getPeriod() {
         return this.period;
     }
 
@@ -65,8 +65,9 @@ public class Registration {
 
     public String toString() {
         String returnString = "";
-        returnString += this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period
-                + " > " + this.startYear + System.lineSeparator();
+        returnString += "Reg No:" + this.registrationNumber + " > Deg:" + this.degreeCode + " > Level:" + this.level + " > Period:" + this.period
+                + " > Year:" + this.startYear + System.lineSeparator();
+        returnString += "  Selected modules" + System.lineSeparator();
         for (SelectedModule m : this.selectedModules) {
             returnString += "    - " + m.toString() + System.lineSeparator();
         }
@@ -75,8 +76,8 @@ public class Registration {
 
     // constructor
 
-    public Registration(Integer registrationNumber, String degreeCode, String level, String period, Integer startYear,
-            SelectedModule[] selectedModules) {
+    public Registration(Integer registrationNumber, String degreeCode, Character level, Character period,
+            Integer startYear, SelectedModule[] selectedModules) {
         this.registrationNumber = registrationNumber;
         this.degreeCode = degreeCode;
         this.level = level;

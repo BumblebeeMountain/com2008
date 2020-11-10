@@ -35,14 +35,14 @@ public class DepartmentController {
             // Change this value to delete a department
             removeDepartment("DEP1");
 
-            try {
-            createDegreeDepartment("COM", "COMU01", true);
-            } catch (ExistingRecordException e) {
-            System.out.println("COM/COM001 has already been inserted");
-            }
+            // try {
+            // createDegreeDepartment("COM", "COMU01", true);
+            // } catch (ExistingRecordException e) {
+            // System.out.println("COM/COM001 has already been inserted");
+            // }
 
-            // // // Delete a degree department
-            removeDegreeDepartment("COM", "COMU01");
+            // // // // Delete a degree department
+            // removeDegreeDepartment("COM", "COMU01");
 
             // Output all the current departments
             Department[] arr = getAllDepartments();
@@ -262,14 +262,15 @@ public class DepartmentController {
 
     /**
      * Private method to check if there is a degree department link in place
+     * 
      * @param departmentCode
      * @param degreeCode
      * @return
      * @throws GeneralProcessingException
      * @throws NoRecordException
      */
-    private static Department getDegreeDepartment (String departmentCode, String degreeCode)
-    throws GeneralProcessingException, NoRecordException {
+    private static Department getDegreeDepartment(String departmentCode, String degreeCode)
+            throws GeneralProcessingException, NoRecordException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -281,7 +282,8 @@ public class DepartmentController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.degreeCode WHERE departmentCode = ? AND degreeCode = ?;");
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Degree INNER JOIN DegreeDepartment ON Degree.code = DegreeDepartment.degreeCode WHERE departmentCode = ? AND degreeCode = ?;");
             pstmt.setString(1, departmentCode);
             pstmt.setString(2, degreeCode);
 
@@ -289,7 +291,8 @@ public class DepartmentController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null || !res.next()) throw new NoRecordException();
+            if (res == null || !res.next())
+                throw new NoRecordException();
 
             // Filter through the output
             degName = res.getString("name");
@@ -305,9 +308,11 @@ public class DepartmentController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
-                if (res != null) res.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }
