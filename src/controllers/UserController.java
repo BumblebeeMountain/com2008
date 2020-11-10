@@ -19,14 +19,10 @@ public class UserController {
         return null;
     }
 
-    public static User getUserByID (Integer userID)
-    throws GeneralProcessingException, NoRecordException {
-        return null;
-    }
-
-    public static void createUser (Constants.Title title, String firstname, String surname, String password, Constants.AccountType accountType)
+    // Needs to return the generated email
+    public static String createUser (Constants.Title title, String firstname, String surname, String password, Constants.AccountType accountType)
     throws GeneralProcessingException, ExistingRecordException {
-        
+        return null;
     }
 
     public static void removeUser (String email) 

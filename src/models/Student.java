@@ -35,9 +35,9 @@ public class Student extends User {
     }
 
     // constructor
-    public Student(Integer userID, String email, Title title, String forename, String surname,
-            Integer registrationNumber, String personalTutor) {
-        super(userID, email, title, forename, surname, AccountType.STUDENT);
+    public Student(String email, Title title, String forename, String surname, Integer registrationNumber,
+            String personalTutor) {
+        super(email, title, forename, surname, AccountType.STUDENT);
         this.registrationNumber = registrationNumber;
         this.personalTutor = personalTutor;
     }
