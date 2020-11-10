@@ -83,7 +83,20 @@ public class Degree {
     }
 
     public String toString () {
-        return this.code + " > " + this.name;
+        String returnString = "";
+        returnString += this.code + " > " + this.name + System.lineSeparator();
+        returnString += "  Core modules" + System.lineSeparator();
+        for (Module m : this.coreModules)
+            returnString += "    - " + m.toString() + System.lineSeparator();
+        returnString += "  Optional modules" + System.lineSeparator();
+        for (Module m : this.optionalModules)
+            returnString += "    - " + m.toString() + System.lineSeparator();
+        returnString += "  Lead department" + System.lineSeparator();
+        returnString += "    - " + this.leadDepartment.toString() + System.lineSeparator();
+        returnString += "  Partner departments" + System.lineSeparator();
+        for (Department d : this.partnerDepartments)
+            returnString += "    - " + d.toString() + System.lineSeparator();
+        return returnString;
     }
 
     // Needs modifying to look at the U or P in the degree code

@@ -23,7 +23,7 @@ public class DegreeModule extends Module {
     }
 
     public String toString () {
-        return super.toString() + " > " + this.degreeCode + " > " + this.isCore;
+        return super.toString() + " > " + this.degreeCode + " > " + this.isCore + " > Level:" + this.level;
     }
 
     public Character getLevel () {

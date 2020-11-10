@@ -64,8 +64,13 @@ public class Registration {
     }
 
     public String toString() {
-        return this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period + " > "
-                + this.startYear;
+        String returnString = "";
+        returnString += this.registrationNumber + " > " + this.degreeCode + " > " + this.level + " > " + this.period
+                + " > " + this.startYear + System.lineSeparator();
+        for (SelectedModule m : this.selectedModules) {
+            returnString += "    - " + m.toString() + System.lineSeparator();
+        }
+        return returnString;
     }
 
     // constructor
