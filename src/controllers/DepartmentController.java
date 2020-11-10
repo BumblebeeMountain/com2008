@@ -135,7 +135,7 @@ public class DepartmentController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null | !res.next())
+            if (res == null || !res.next())
                 throw new NoRecordException();
 
             // Filter through the output
@@ -144,7 +144,7 @@ public class DepartmentController {
 
         } catch (NoRecordException e) {
 
-            throw new NoRecordException(); // Caught and re-thrown if there are no records
+            throw e; // Caught and re-thrown if there are no records
 
         } catch (Exception e) { // Catch general exception
 
@@ -184,7 +184,7 @@ public class DepartmentController {
         try {
             getDepartment(departmentCode);
         } catch (GeneralProcessingException e) {
-            throw new GeneralProcessingException();
+            throw e;
         } catch (NoRecordException e) {
             departmentExists = false;
         }
@@ -289,7 +289,7 @@ public class DepartmentController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null | !res.next()) throw new NoRecordException();
+            if (res == null || !res.next()) throw new NoRecordException();
 
             // Filter through the output
             degName = res.getString("name");

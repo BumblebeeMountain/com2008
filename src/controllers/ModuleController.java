@@ -123,7 +123,7 @@ public class ModuleController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null | !res.next()) throw new NoRecordException();
+            if (res == null || !res.next()) throw new NoRecordException();
 
             // Filter through the output
             code = res.getString("code");
