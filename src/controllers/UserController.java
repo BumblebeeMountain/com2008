@@ -329,6 +329,8 @@ public class UserController {
     /**
      * removeUser()
      * Function to remove a user, given the users email
+     * If the user account is attempted to be deleted before the student account,
+     * will throw a GeneralProcessingException due to foreign key constraits
      * @param email - String - the users email
      * @return void
      * @throws GeneralProcessingException
@@ -341,27 +343,14 @@ public class UserController {
         PreparedStatement pstmt = null;
 
         try (Connection con = ConnectionManager.getConnection()){
-            User user = getUser(email);
 
-            // if the user is a student, will need to delete the student first
-            // due to SQL foreign key constraints
-            if (StudentController.isStudent(user)) {
-                // get the student object
-                Student student = StudentController.getStudent(email);
-
-                // use the student controller to delete the student by registration number
-                StudentController.removeStudent(student.getRegistrationNumber());
-            }
-
-            // delete the user from 'our' table by email
+            // delete the user from table by email
             pstmt = con.prepareStatement(DELETE_USER_COMMAND);
             pstmt.setString(1, email);
 
             System.out.print(pstmt);
             pstmt.executeUpdate();
 
-        } catch (GeneralProcessingException ex) {
-            throw ex;
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new GeneralProcessingException();
