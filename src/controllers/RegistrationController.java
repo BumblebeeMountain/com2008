@@ -13,6 +13,7 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Registration;
 import models.SelectedModule;
+import models.Student;
 
 public class RegistrationController {
 
@@ -20,14 +21,33 @@ public class RegistrationController {
 
         try {
 
+            final int REG_NUMBER = 11;
+
+            // First output all the current students
+            // for (Student s: StudentController.getAllStudents())
+            //     System.out.println(s);
+
+            // Try creating a registration
             try {
-                createInitialRegistration(2, "COMU01");
+                createInitialRegistration(REG_NUMBER, "COMU01");
             } catch (ExistingRecordException e) {
                 System.out.println("2/COMU01 has already been inserted");
             }
 
+            // Try adding selected modules to this registration
+            try {
+                createSelectedModule(REG_NUMBER, 'A', "COM1001");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1001 has already been selected");
+            }
+            try {
+                createSelectedModule(REG_NUMBER, 'A', "COM1003");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1003 has already been selected");
+            }
+
             // Output all the current registrations
-            Registration[] arr = getStudentRegistrations(2);
+            Registration[] arr = getStudentRegistrations(REG_NUMBER);
             for (Registration r : arr)
                 System.out.println(r);
 
@@ -227,7 +247,6 @@ public class RegistrationController {
 
     /**
      * Get the selected modules for a given reg no and period
-     * 
      * @param registrationNumber
      * @param period
      * @return
@@ -359,8 +378,59 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Generate a selected module
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void createSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException, ExistingRecordException {
+        
+        // Check for an exisiting registration
+        Boolean selectedModuleExists = true;
+        try {
+            getSelectedModule(registrationNumber, period, moduleCode);
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            selectedModuleExists = false;
+        }
+        if (selectedModuleExists)
+            throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("INSERT INTO SelectedModule (moduleCode, studentRegistrationNumber, period) VALUES (?, ?, ?);");
+            pstmt.setString(1, moduleCode);
+            pstmt.setInt(2, registrationNumber);
+            pstmt.setString(3, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
