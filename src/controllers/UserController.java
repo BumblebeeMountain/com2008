@@ -7,27 +7,17 @@ import exceptions.IncorrectLoginCredentialsException;
 import exceptions.NoRecordException;
 import models.Constants;
 import models.User;
-import models.Student;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class UserController {
 
-    private static String USER_EXISTS_FROM_ATT_COMMAND = "SELECT * FROM User WHERE " +
-        "title = ? AND "+
-        "forename = ? AND " +
-        "surname = ? AND " +
-        "accountType = ? AND " +
-        "password = ?" +
-        ";";
-
     private static String INSERT_USER_COMMAND = "INSERT INTO User(email, title, forename, surname, password, accountType) " + 
         "VALUES (?, ?, ?, ?, ?, ?);";
 
     private static String DELETE_USER_COMMAND = "DELETE FROM User WHERE email = ?;";
     private static String GET_ALL_USERS_COMMAND = "SELECT * FROM User;";
-    private static String USER_EXISTS_COMMAND_EMAIL = "SELECT * FROM User WHERE email = ?;";
     private static String GET_USER_FROM_EMAIL_COMMAND = "SELECT * FROM User WHERE email = ?;";
 
     public static void main(String[] args) {
@@ -218,8 +208,8 @@ public class UserController {
             // generate the email address of the user
             String email = genEmail(forename, surname);
 
-            // if another user exists with the exact same title, forename, surname, accountType and password, account must already exist
-            if (userExists(title, forename, surname, accountType, password) ){
+            // Does an account already exist with this email?
+            if (userExists(email)){
                 throw new ExistingRecordException();
             }
 
@@ -269,53 +259,6 @@ public class UserController {
 
         return true; // User does exist
 
-    }
-
-    /**
-     * userExists()
-     * Function that given user details, returns whether that user exists
-     * @param title - Constants.Title - the users title
-     * @param forename - String - the forename
-     * @param surname - String - the surname
-     * @param accountType - Constants.AccountType - the account type
-     * @param password - String - the password
-     * @throws GeneralProcessingException
-     */
-    public static boolean userExists(
-            Constants.Title title,
-            String forename,
-            String surname,
-            Constants.AccountType accountType,
-            String password
-            ) throws GeneralProcessingException {
-
-        PreparedStatement pstmt = null;
-        boolean userExists = false;
-        try (Connection con = ConnectionManager.getConnection()) {
-            pstmt = con.prepareStatement(USER_EXISTS_FROM_ATT_COMMAND);
-            pstmt.setString(1, title.toString());
-            pstmt.setString(2, forename);
-            pstmt.setString(3, surname);
-            pstmt.setString(4, accountType.toString());
-            pstmt.setString(5, password);
-
-            ResultSet rs = pstmt.executeQuery();
-            if (rs != null && rs.next()) {
-                userExists = true;
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new GeneralProcessingException();
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException ex) {
-                    throw new GeneralProcessingException();
-                }
-            }
-        }
-        return userExists;
     }
 
     /**
