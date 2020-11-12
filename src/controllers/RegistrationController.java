@@ -444,6 +444,15 @@ public class RegistrationController {
         return null;
     }
 
+    /**
+     * Given a current character - what is the next period
+     * @param c
+     * @return
+     */
+    private static Character getNextPeriod (Character c) {
+        return new Character((char)(c.charValue() + 1));
+    }
+
     public static Character getMostRecentLevel(Integer registrationNumber)
             throws GeneralProcessingException, NoRecordException {
         return null;
