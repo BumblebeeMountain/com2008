@@ -30,36 +30,55 @@ public class StudentController {
     public static void main(String[] args) {
         try {
 
+            int reg1 = 0;
+            int reg2 = 0;
+
+            try {
+                reg1 = createStudent(Title.MR, "James", "Edmundson", "pwd", AccountType.STUDENT, "Neil Walkinshaw");
+                System.out.println("James " + reg1);
+            } catch (ExistingRecordException e) {
+                System.out.println("James already exists");
+            }
+
+            try {
+                reg2 = createStudent(Title.MR, "Dom", "Barter", "pwd", AccountType.STUDENT, "Dawn Walker");
+                System.out.println("Dom " + reg2);
+            } catch (ExistingRecordException e) {
+                System.out.println("Dom already exists");
+            }
+
             System.out.println("all Students:");
             for (Student s : getAllStudents() ) {
                 System.out.println(s);
             }
 
-            System.out.println("creating student james");
+            try {
+                Student james = getStudent(reg1);
+                System.out.println(james);
+            } catch (NoRecordException e) {
+                System.out.println("James doesn't exist");
+            }
 
-            int regNum = createStudent(Title.MR, "James", "Edmundson", "pwd", AccountType.STUDENT, "Neil Walkinshaw");
-
-            Student james = getStudent(regNum);
-            System.out.println("isStudent james:");
-            System.out.println(isStudent(james));
-
-            System.out.println("james exists:");
-            System.out.println(studentExists(regNum));
-
+            try {
+                Student dom = getStudent(reg2);
+                System.out.println(dom);
+            } catch (NoRecordException e) {
+                System.out.println("Dom doesn't exist");
+            }
+            
             System.out.println("randomer exists:");
             System.out.println(studentExists(28549505));
 
             System.out.println("removing james");
-            removeStudent(regNum);
+            removeStudent(reg1);
+
+            System.out.println("james exists: ");
+            System.out.println(studentExists(1));
 
             System.out.println("all Students:");
             for (Student s : getAllStudents() ) {
                 System.out.println(s);
             }
-
-            System.out.println("james exists: ");
-            System.out.println(studentExists(1));
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -180,7 +199,6 @@ public class StudentController {
      * @throws NoRecordException
      */
     public static Student getStudent(String email) throws GeneralProcessingException, NoRecordException {
-        Student student;
         PreparedStatement pstmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
             pstmt = con.prepareStatement(GET_REG_BY_EMAIL_COMMAND);
@@ -227,7 +245,6 @@ public class StudentController {
      * @throws NoRecordException
      */
     public static Degree getStudentDegree(Integer registrationNumber) throws GeneralProcessingException, NoRecordException {
-        Degree degree;
         PreparedStatement pstmt = null;
 
         // if no student with that reg num exists
@@ -297,6 +314,8 @@ public class StudentController {
             pstmt.setString(2, pTutor);
             pstmt.execute();
 
+            pstmt.close();
+
             // get the reg number from their email
             pstmt = con.prepareStatement(GET_REG_BY_EMAIL_COMMAND);
             pstmt.setString(1, email);
@@ -352,6 +371,8 @@ public class StudentController {
 
             String email = rs.getString("email");
             System.out.println(String.format("student email: #%s#", email));
+
+            pstmt.close();
 
             // then delete the student account
             pstmt = con.prepareStatement(REMOVE_STUDENT_BY_REG_COMMAND);
@@ -410,36 +431,17 @@ public class StudentController {
      * @throws GeneralProcessingException
      */
     public static boolean studentExists(int registrationNumber) throws GeneralProcessingException {
-        PreparedStatement pstmt = null;
-        try (Connection con = ConnectionManager.getConnection()) {
-
-            // gets all students with that registration number
-            pstmt = con.prepareStatement(GET_STUDENT_BY_REG_COMMAND);
-            pstmt.setInt(1, registrationNumber);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            // if the set is not null and there exists a row
-            if (rs != null && rs.next()) {
-
-                // there is a student, so return true
-                return true;
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        
+        try {
+            getStudent(registrationNumber);
+        } catch (NoRecordException e) {
+            return false;
+        } catch (Exception e) {
             throw new GeneralProcessingException();
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    throw new GeneralProcessingException();
-                }
-            }
         }
-        // no student exists
-        return false;
+
+        return true;
+
     }
 
 }
