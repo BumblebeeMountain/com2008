@@ -11,6 +11,8 @@ import database.ConnectionManager;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
+import exceptions.ShouldGraduateException;
+import models.Degree;
 import models.Registration;
 import models.SelectedModule;
 import models.Student;
@@ -601,6 +603,62 @@ public class RegistrationController {
 
         // Return a new department object
         return new Registration(registrationNumber, degreeCode, level, period, startYear, mods);
+
+    }
+
+    /**
+     * Estimates what the next progressing level should be given current reg status and degree info
+     * @param registrationNumber
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     * @throws ShouldGraduateException
+     */
+    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException, ShouldGraduateException {
+
+        try {
+
+            // Get the current registration
+            Registration currentReg = getMostRecentRegistration(registrationNumber);
+            String degreeCode = currentReg.getDegreeCode();
+            Character currentLevel = currentReg.getLevel();
+
+            // Get info about the degree
+            Degree degree = DegreeController.getDegree(degreeCode);
+            Integer maxLevel = degree.getMaxLevel();
+
+            // If currently on placement - go to max level
+            if (currentLevel == 'P' || currentLevel == 'p') {
+                return new Character(maxLevel.toString().charAt(0));
+            }
+
+            // If on max level - graduate
+            if (currentLevel == maxLevel.toString().charAt(0)) {
+                throw new ShouldGraduateException();
+            }
+
+            // If the degree has a year in industry
+            if (degree.getHasYearInIndustry()) {
+
+                if (Integer.parseInt(currentLevel.toString()) == maxLevel - 1) {
+                    return new Character('P');
+                } else {
+                    return getNextPeriod(currentLevel);
+                }
+
+            } else {
+
+                return getNextPeriod(currentLevel);
+
+            }
+
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralProcessingException();
+        }
 
     }
 
