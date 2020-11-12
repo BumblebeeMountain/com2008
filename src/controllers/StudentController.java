@@ -30,22 +30,11 @@ public class StudentController {
     public static void main(String[] args) {
         try {
 
-            int reg1 = 0;
-            int reg2 = 0;
+            Student reg1 = createStudent(Title.MR, "James", "Edmundson", "pwd", AccountType.STUDENT, "Neil Walkinshaw");
+            System.out.println("James " + reg1);
 
-            try {
-                reg1 = createStudent(Title.MR, "James", "Edmundson", "pwd", AccountType.STUDENT, "Neil Walkinshaw");
-                System.out.println("James " + reg1);
-            } catch (ExistingRecordException e) {
-                System.out.println("James already exists");
-            }
-
-            try {
-                reg2 = createStudent(Title.MR, "Dom", "Barter", "pwd", AccountType.STUDENT, "Dawn Walker");
-                System.out.println("Dom " + reg2);
-            } catch (ExistingRecordException e) {
-                System.out.println("Dom already exists");
-            }
+            Student reg2 = createStudent(Title.MR, "Dom", "Barter", "pwd", AccountType.STUDENT, "Dawn Walker");
+            System.out.println("Dom " + reg2);
 
             System.out.println("all Students:");
             for (Student s : getAllStudents() ) {
@@ -53,14 +42,14 @@ public class StudentController {
             }
 
             try {
-                Student james = getStudent(reg1);
+                Student james = getStudent(reg1.getRegistrationNumber());
                 System.out.println(james);
             } catch (NoRecordException e) {
                 System.out.println("James doesn't exist");
             }
 
             try {
-                Student dom = getStudent(reg2);
+                Student dom = getStudent(reg2.getRegistrationNumber());
                 System.out.println(dom);
             } catch (NoRecordException e) {
                 System.out.println("Dom doesn't exist");
@@ -70,7 +59,7 @@ public class StudentController {
             System.out.println(studentExists(28549505));
 
             System.out.println("removing james");
-            removeStudent(reg1);
+            removeStudent(reg1.getRegistrationNumber());
 
             System.out.println("james exists: ");
             System.out.println(studentExists(1));
@@ -290,21 +279,21 @@ public class StudentController {
      * @param password - String
      * @param accountType - AccountType
      * @param pTutor - String - The student's personal tutor
-     * @return Integer - The users registration number
+     * @return Student - the newly formed student object
      * @throws GeneralProcessingException
      * @throws ExistingRecordException
      */
-    public static Integer createStudent(
+    public static Student createStudent(
             Title title,
             String forename,
             String surname,
             String password,
             AccountType accountType,
             String pTutor
-            ) throws GeneralProcessingException, ExistingRecordException {
+            ) throws GeneralProcessingException {
 
         // create the user account, and get the users email
-        String email = UserController.createUser(title, forename, surname, password, accountType);
+        String email = UserController.createUser(title, forename, surname, password, accountType).getEmail();
         PreparedStatement pstmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
 
@@ -324,7 +313,7 @@ public class StudentController {
             if (rs == null || !rs.next()) { throw new GeneralProcessingException(); }
             int regNum = rs.getInt("registrationNumber");
 
-            return regNum;
+            return new Student(email, title, forename, surname, regNum, pTutor);
 
         } catch (SQLException ex ) {
             ex.printStackTrace();

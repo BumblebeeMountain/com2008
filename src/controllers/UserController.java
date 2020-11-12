@@ -26,26 +26,21 @@ public class UserController {
             System.out.println("all users now: ");
             System.out.println(getAllUsers());
 
-            try {
-                createUser(
-                    Constants.Title.MR,
-                    "a",
-                    "b",
-                    "pas",
-                    Constants.AccountType.STUDENT
-                    );
+            createUser(
+                Constants.Title.MR,
+                "a",
+                "b",
+                "pas",
+                Constants.AccountType.STUDENT
+            );
 
             createUser(
-                    Constants.Title.MS,
-                    "ms",
-                    "ms",
-                    "pas",
-                    Constants.AccountType.STUDENT
-                    );
-            } catch (ExistingRecordException e) {
-                System.out.println("Already exist");
-            }
-            
+                Constants.Title.MS,
+                "ms",
+                "ms",
+                "pas",
+                Constants.AccountType.STUDENT
+            );
 
             System.out.println("all users now: ");
             User[] users = getAllUsers();
@@ -189,17 +184,17 @@ public class UserController {
      * @param surname - String - the surname
      * @param password - String - the password
      * @param accountType - Constants.AccountType - the account type
-     * @return String - the generated email
+     * @return User - the generated user
      * @throws GeneralProcessingException
      * @throws ExistingRecordException
      */
-    public static String createUser (
+    public static User createUser (
             Constants.Title title,
             String forename,
             String surname,
             String password,
             Constants.AccountType accountType
-            ) throws GeneralProcessingException, ExistingRecordException {
+            ) throws GeneralProcessingException {
 
         PreparedStatement pstmt = null;
 
@@ -207,11 +202,6 @@ public class UserController {
 
             // generate the email address of the user
             String email = genEmail(forename, surname);
-
-            // Does an account already exist with this email?
-            if (userExists(email)){
-                throw new ExistingRecordException();
-            }
 
             pstmt = con.prepareStatement(INSERT_USER_COMMAND);
             pstmt.setString(1, email);
@@ -223,7 +213,7 @@ public class UserController {
 
             pstmt.execute();
 
-            return email;
+            return new User(email, title, forename, surname, accountType);
 
 
         } catch (SQLException ex ) {
