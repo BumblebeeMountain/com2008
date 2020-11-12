@@ -36,7 +36,8 @@ public class UserController {
             System.out.println("all users now: ");
             System.out.println(getAllUsers());
 
-            createUser(
+            try {
+                createUser(
                     Constants.Title.MR,
                     "a",
                     "b",
@@ -51,6 +52,10 @@ public class UserController {
                     "pas",
                     Constants.AccountType.STUDENT
                     );
+            } catch (ExistingRecordException e) {
+                System.out.println("Already exist");
+            }
+            
 
             System.out.println("all users now: ");
             User[] users = getAllUsers();
@@ -60,6 +65,8 @@ public class UserController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            
         }
     }
     
@@ -169,7 +176,7 @@ public class UserController {
      * @throws GeneralProcessingException
      */
     private static String genEmail(String forename, String surname) throws GeneralProcessingException {
-        String preEmail = (forename.charAt(0) + surname).toLowerCase();
+        String preEmail = (forename.charAt(0) + surname).toLowerCase().trim();
         String num = "1";
         int numI = 1;
 
@@ -251,32 +258,17 @@ public class UserController {
      * @throws GeneralProcessingException
      */
     public static boolean userExists(String email) throws GeneralProcessingException {
-        PreparedStatement pstmt = null;
-        boolean userExists = false;
-        try (Connection con = ConnectionManager.getConnection()) {
-            pstmt = con.prepareStatement(USER_EXISTS_COMMAND_EMAIL);
-            pstmt.setString(1, email.toLowerCase());
-
-            ResultSet rs = pstmt.executeQuery();
-
-            // if users exist with that email address
-            if (rs != null && rs.next()) {
-                // user must exist
-                userExists = true;
-            }
-        } catch (SQLException ex) {
+        
+        try {
+            getUser(email);
+        } catch (NoRecordException e) {
+            return false; // User doesn't exist
+        } catch (Exception e) {
             throw new GeneralProcessingException();
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException ex) {
-                    throw new GeneralProcessingException();
-                }
-            }
         }
 
-        return userExists;
+        return true; // User does exist
+
     }
 
     /**
