@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.Year;
 import java.util.ArrayList;
 
@@ -11,8 +12,11 @@ import database.ConnectionManager;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
+import exceptions.ShouldGraduateException;
+import models.Degree;
 import models.Registration;
 import models.SelectedModule;
+import models.Student;
 
 public class RegistrationController {
 
@@ -20,14 +24,59 @@ public class RegistrationController {
 
         try {
 
+            final Integer REG_NUMBER = 11;
+
+            // First output all the current students
+            for (Student s: StudentController.getAllStudents())
+                System.out.println(s);
+
+            // Try creating a registration
             try {
-                createInitialRegistration(2, "COMU01");
+                createInitialRegistration(REG_NUMBER, "COMU01");
             } catch (ExistingRecordException e) {
-                System.out.println("2/COMU01 has already been inserted");
+                System.out.println("REG_NUMBER/COMU01 has already been inserted");
             }
 
+            // Try adding selected modules to this registration
+            try {
+                createSelectedModule(REG_NUMBER, 'A', "COM1001");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1001 has already been selected");
+            }
+            try {
+                createSelectedModule(REG_NUMBER, 'A', "COM1003");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1003 has already been selected");
+            }
+
+            try {
+                createSelectedModule(REG_NUMBER, 'B', "COM1001");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1001 has already been selected");
+            }
+
+            // try {
+            //     generateNextRegistration(REG_NUMBER, '2');
+            // } catch (Exception e) {
+            //     System.out.println("Something went wrong");
+            // }
+
+            // try {
+            //     updateFirstGrade(REG_NUMBER, new Character('A'), "COM1003", new Float(63.2));
+            // } catch (NoRecordException e) {
+            //     System.out.println("Module not selected");
+            // }
+
+            try {
+                System.out.println(calculateOverallGrade(REG_NUMBER, 'A'));
+            } catch (NoRecordException e) {
+                System.out.println("No selected modules");
+            }
+
+            removeSelectedModule(REG_NUMBER, 'B', "COM1001");
+
             // Output all the current registrations
-            Registration[] arr = getStudentRegistrations(2);
+            Registration[] arr = getStudentRegistrations(REG_NUMBER);
             for (Registration r : arr)
                 System.out.println(r);
 
@@ -163,7 +212,9 @@ public class RegistrationController {
     }
 
     /**
-     * Create an initial student registration - requires that there be a student already made
+     * Create an initial student registration - requires that there be a student
+     * already made
+     * 
      * @param registrationNumber
      * @param degreeCode
      * @throws GeneralProcessingException
@@ -289,6 +340,7 @@ public class RegistrationController {
 
     /**
      * Get a single selected module
+     * 
      * @param registrationNumber
      * @param period
      * @param moduleCode
@@ -298,7 +350,7 @@ public class RegistrationController {
      */
     private static SelectedModule getSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException, NoRecordException {
-        
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -313,7 +365,8 @@ public class RegistrationController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Module INNER JOIN SelectedModule ON Module.code = SelectedModule.moduleCode WHERE studentRegistrationNumber = ? AND period = ? AND moduleCode = ?;");
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Module INNER JOIN SelectedModule ON Module.code = SelectedModule.moduleCode WHERE studentRegistrationNumber = ? AND period = ? AND moduleCode = ?;");
             pstmt.setInt(1, registrationNumber);
             pstmt.setString(2, period.toString());
             pstmt.setString(3, moduleCode);
@@ -359,44 +412,461 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Generate a selected module
+     * 
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void createSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException, ExistingRecordException {
 
+        // Check for an exisiting registration
+        Boolean selectedModuleExists = true;
+        try {
+            getSelectedModule(registrationNumber, period, moduleCode);
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            selectedModuleExists = false;
+        }
+        if (selectedModuleExists)
+            throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement(
+                    "INSERT INTO SelectedModule (moduleCode, studentRegistrationNumber, period) VALUES (?, ?, ?);");
+            pstmt.setString(1, moduleCode);
+            pstmt.setInt(2, registrationNumber);
+            pstmt.setString(3, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
     }
 
+    /**
+     * Generate the next registration in a series
+     * @param registrationNumber
+     * @param level
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void generateNextRegistration(Integer registrationNumber, Character level)
             throws GeneralProcessingException, ExistingRecordException {
+        
+        // Get current registration
+        Registration currentReg = null;
+        try {
+            currentReg = getMostRecentRegistration(registrationNumber);
+        } catch (Exception e) {
+            throw new GeneralProcessingException();
+        }
+
+        // Calculate next year and period and degree code
+        Character nextPeriod = getNextPeriod(currentReg.getPeriod());
+        Integer nextYear = getNextYear(currentReg.getStartYear());
+        String degreeCode = currentReg.getDegreeCode();
+
+
+        // Check for an exisiting registration
+        Boolean registrationExists = true;
+        try {
+            getStudentRegistration(registrationNumber, nextPeriod);
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            registrationExists = false;
+        }
+        if (registrationExists)
+            throw new ExistingRecordException();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("INSERT INTO Registration VALUES (?, ?, ?, ?, ?);");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.setString(2, nextPeriod.toString());
+            pstmt.setString(3, level.toString());
+            pstmt.setInt(4, nextYear);
+            pstmt.setString(5, degreeCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
-    public static Character getMostRecentPeriod(Integer registrationNumber)
+    /**
+     * Given a current character - what is the next period
+     * 
+     * @param c
+     * @return
+     */
+    private static Character getNextPeriod(Character c) {
+        return new Character((char) (c.charValue() + 1));
+    }
+
+    /**
+     * Given a current year - get the next year
+     * @param y
+     * @return
+     */
+    private static Integer getNextYear(Integer y) {
+        return y + 1;
+    }
+
+    /**
+     * Get the most recent registration
+     * 
+     * @param registrationNumber
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    public static Registration getMostRecentRegistration(Integer registrationNumber)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        Character level = null;
+        Character period = null;
+        Integer startYear = null;
+        String degreeCode = null;
+        SelectedModule[] mods = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Registration WHERE studentRegistrationNumber = ? ORDER BY period DESC LIMIT 1;");
+            pstmt.setInt(1, registrationNumber);
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // If it is null - there was nothing returned
+            if (res == null || !res.next())
+                throw new NoRecordException();
+
+            // Filter through the output
+            level = res.getString("level").charAt(0);
+            period = res.getString("period").charAt(0);
+            startYear = res.getInt("startYear");
+            degreeCode = res.getString("degreeCode");
+            mods = getStudentSelectedModules(registrationNumber, period);
+
+        } catch (NoRecordException e) {
+
+            throw new NoRecordException(); // Caught and re-thrown if there are no records
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+        // Return a new department object
+        return new Registration(registrationNumber, degreeCode, level, period, startYear, mods);
+
     }
 
-    public static Character getMostRecentLevel(Integer registrationNumber)
+    /**
+     * Estimates what the next progressing level should be given current reg status and degree info
+     * @param registrationNumber
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     * @throws ShouldGraduateException
+     */
+    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException, ShouldGraduateException {
+
+        try {
+
+            // Get the current registration
+            Registration currentReg = getMostRecentRegistration(registrationNumber);
+            String degreeCode = currentReg.getDegreeCode();
+            Character currentLevel = currentReg.getLevel();
+
+            // Get info about the degree
+            Degree degree = DegreeController.getDegree(degreeCode);
+            Integer maxLevel = degree.getMaxLevel();
+
+            // If currently on placement - go to max level
+            if (currentLevel == 'P' || currentLevel == 'p') {
+                return new Character(maxLevel.toString().charAt(0));
+            }
+
+            // If on max level - graduate
+            if (currentLevel == maxLevel.toString().charAt(0)) {
+                throw new ShouldGraduateException();
+            }
+
+            // If the degree has a year in industry
+            if (degree.getHasYearInIndustry()) {
+
+                if (Integer.valueOf(currentLevel.toString()) == maxLevel - 1) {
+                    return new Character('P');
+                } else {
+                    return getNextPeriod(currentLevel);
+                }
+
+            } else {
+
+                return getNextPeriod(currentLevel);
+
+            }
+
+        } catch (GeneralProcessingException e) {
+            throw e;
+        } catch (NoRecordException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GeneralProcessingException();
+        }
+
+    }
+
+    /**
+     * Update the first grade in the selected module
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @param grade
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    public static void updateFirstGrade(Integer registrationNumber, Character period, String moduleCode, Float grade)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+
+        // Make sure that the module has been selected
+        try {
+            getSelectedModule(registrationNumber, period, moduleCode);
+        } catch (NoRecordException e) {
+            throw e;
+        }
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("UPDATE SelectedModule SET firstAttemptResult = ? WHERE moduleCode = ? AND studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setFloat(1, grade);
+            pstmt.setString(2, moduleCode);
+            pstmt.setInt(3, registrationNumber);
+            pstmt.setString(4, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
     }
 
-    public static void updateFirstGrade(Integer registrationNumber, Character period, String moduleCode, Integer grade)
-            throws GeneralProcessingException {
+    /**
+     * Update the resit grade
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @param grade
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    public static void updateResitGrade(Integer registrationNumber, Character period, String moduleCode, Float grade)
+            throws GeneralProcessingException, NoRecordException {
+
+        // Make sure that the module has been selected
+        try {
+            getSelectedModule(registrationNumber, period, moduleCode);
+        } catch (NoRecordException e) {
+            throw e;
+        }
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("UPDATE SelectedModule SET secondAttemptResult = ? WHERE moduleCode = ? AND studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setFloat(1, grade);
+            pstmt.setString(2, moduleCode);
+            pstmt.setInt(3, registrationNumber);
+            pstmt.setString(4, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
-    public static void updateResitGrade(Integer registrationNumber, Character period, String moduleCode, Integer grade)
-            throws GeneralProcessingException {
-
-    }
-
+    /**
+     * Remove a selected module
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     */
     public static void removeSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException {
 
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM SelectedModule WHERE moduleCode = ? AND studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setString(1, moduleCode);
+            pstmt.setInt(2, registrationNumber);
+            pstmt.setString(3, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
     }
 
-    public static Integer calculateOverallGrade(Integer registrationNumber, Character period)
+    /**
+     * Calculate the overall grade
+     * @param registrationNumber
+     * @param period
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    public static Float calculateOverallGrade(Integer registrationNumber, Character period)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+        
+        try {
+
+            // First pull out all the selected modules
+            SelectedModule[] modules = getStudentSelectedModules(registrationNumber, period);
+            Integer numberOfModules = modules.length;
+
+            // Guard against no records
+            if (numberOfModules == 0) throw new NoRecordException();
+
+            // Get a total max grade for all modules
+            Double total = 0d;
+            for (SelectedModule m : modules) {
+                Float maxGrade = Math.max(m.getFirstAttemptResult(), m.getSecondAttemptResult());
+                total += maxGrade;
+            }
+
+            DecimalFormat df = new DecimalFormat("#.#");
+            Float overallGrade = Float.valueOf(df.format(total / numberOfModules));
+                
+            return overallGrade;
+
+        } catch (NoRecordException e) {
+            throw e;
+        } catch (GeneralProcessingException e) {
+            throw e;
+        }
+
     }
 
 }
