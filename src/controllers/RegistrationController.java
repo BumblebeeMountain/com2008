@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.Year;
 import java.util.ArrayList;
 
@@ -61,10 +62,16 @@ public class RegistrationController {
             // }
 
             // try {
-            //     updateResitGrade(REG_NUMBER, new Character('A'), "COM1001", new Float(83.4));
+            //     updateFirstGrade(REG_NUMBER, new Character('A'), "COM1003", new Float(63.2));
             // } catch (NoRecordException e) {
             //     System.out.println("Module not selected");
             // }
+
+            try {
+                System.out.println(calculateOverallGrade(REG_NUMBER, 'A'));
+            } catch (NoRecordException e) {
+                System.out.println("No selected modules");
+            }
 
             removeSelectedModule(REG_NUMBER, 'B', "COM1001");
 
@@ -654,7 +661,7 @@ public class RegistrationController {
             // If the degree has a year in industry
             if (degree.getHasYearInIndustry()) {
 
-                if (Integer.parseInt(currentLevel.toString()) == maxLevel - 1) {
+                if (Integer.valueOf(currentLevel.toString()) == maxLevel - 1) {
                     return new Character('P');
                 } else {
                     return getNextPeriod(currentLevel);
@@ -822,9 +829,44 @@ public class RegistrationController {
 
     }
 
-    public static Integer calculateOverallGrade(Integer registrationNumber, Character period)
+    /**
+     * Calculate the overall grade
+     * @param registrationNumber
+     * @param period
+     * @return
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
+    public static Float calculateOverallGrade(Integer registrationNumber, Character period)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+        
+        try {
+
+            // First pull out all the selected modules
+            SelectedModule[] modules = getStudentSelectedModules(registrationNumber, period);
+            Integer numberOfModules = modules.length;
+
+            // Guard against no records
+            if (numberOfModules == 0) throw new NoRecordException();
+
+            // Get a total max grade for all modules
+            Double total = 0d;
+            for (SelectedModule m : modules) {
+                Float maxGrade = Math.max(m.getFirstAttemptResult(), m.getSecondAttemptResult());
+                total += maxGrade;
+            }
+
+            DecimalFormat df = new DecimalFormat("#.#");
+            Float overallGrade = Float.valueOf(df.format(total / numberOfModules));
+                
+            return overallGrade;
+
+        } catch (NoRecordException e) {
+            throw e;
+        } catch (GeneralProcessingException e) {
+            throw e;
+        }
+
     }
 
 }
