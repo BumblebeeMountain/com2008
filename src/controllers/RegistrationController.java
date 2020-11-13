@@ -27,8 +27,8 @@ public class RegistrationController {
             final Integer REG_NUMBER = 11;
 
             // First output all the current students
-            // for (Student s: StudentController.getAllStudents())
-            // System.out.println(s);
+            for (Student s: StudentController.getAllStudents())
+                System.out.println(s);
 
             // Try creating a registration
             try {
