@@ -55,7 +55,7 @@ public class RegistrationController {
             // }
 
             try {
-                updateFirstGrade(REG_NUMBER, new Character('B'), "COM1001", new Float(78.9));
+                updateResitGrade(REG_NUMBER, new Character('A'), "COM1001", new Float(83.4));
             } catch (NoRecordException e) {
                 System.out.println("Module not selected");
             }
@@ -720,8 +720,55 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Update the resit grade
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @param grade
+     * @throws GeneralProcessingException
+     * @throws NoRecordException
+     */
     public static void updateResitGrade(Integer registrationNumber, Character period, String moduleCode, Float grade)
-            throws GeneralProcessingException {
+            throws GeneralProcessingException, NoRecordException {
+
+        // Make sure that the module has been selected
+        try {
+            getSelectedModule(registrationNumber, period, moduleCode);
+        } catch (NoRecordException e) {
+            throw e;
+        }
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("UPDATE SelectedModule SET secondAttemptResult = ? WHERE moduleCode = ? AND studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setFloat(1, grade);
+            pstmt.setString(2, moduleCode);
+            pstmt.setInt(3, registrationNumber);
+            pstmt.setString(4, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
