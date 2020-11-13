@@ -48,17 +48,25 @@ public class RegistrationController {
                 System.out.println("COM1003 has already been selected");
             }
 
+            try {
+                createSelectedModule(REG_NUMBER, 'B', "COM1001");
+            } catch (ExistingRecordException e) {
+                System.out.println("COM1001 has already been selected");
+            }
+
             // try {
             //     generateNextRegistration(REG_NUMBER, '2');
             // } catch (Exception e) {
             //     System.out.println("Something went wrong");
             // }
 
-            try {
-                updateResitGrade(REG_NUMBER, new Character('A'), "COM1001", new Float(83.4));
-            } catch (NoRecordException e) {
-                System.out.println("Module not selected");
-            }
+            // try {
+            //     updateResitGrade(REG_NUMBER, new Character('A'), "COM1001", new Float(83.4));
+            // } catch (NoRecordException e) {
+            //     System.out.println("Module not selected");
+            // }
+
+            removeSelectedModule(REG_NUMBER, 'B', "COM1001");
 
             // Output all the current registrations
             Registration[] arr = getStudentRegistrations(REG_NUMBER);
@@ -772,8 +780,45 @@ public class RegistrationController {
 
     }
 
+    /**
+     * Remove a selected module
+     * @param registrationNumber
+     * @param period
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     */
     public static void removeSelectedModule(Integer registrationNumber, Character period, String moduleCode)
             throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM SelectedModule WHERE moduleCode = ? AND studentRegistrationNumber = ? AND period = ?;");
+            pstmt.setString(1, moduleCode);
+            pstmt.setInt(2, registrationNumber);
+            pstmt.setString(3, period.toString());
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
 
     }
 
