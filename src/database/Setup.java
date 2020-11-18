@@ -122,7 +122,7 @@ public class Setup {
                         "title VARCHAR(16) NOT NULL, " +
                         "forename VARCHAR(64) NOT NULL, " +
                         "surname VARCHAR(32) NOT NULL, " +
-                        "password VARCHAR(32) NOT NULL, " +
+                        "password VARCHAR(64) NOT NULL, " +
                         "accountType VARCHAR(16) NOT NULL, " +
                         "PRIMARY KEY (email) " +
                         ");";

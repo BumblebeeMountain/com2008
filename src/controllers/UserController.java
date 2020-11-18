@@ -12,14 +12,15 @@ import models.Student;
 import java.sql.*;
 import java.util.ArrayList;
 
+import org.springframework.security.crypto.bcrypt.*;
+
 public class UserController {
 
     private static String USER_EXISTS_FROM_ATT_COMMAND = "SELECT * FROM User WHERE " +
         "title = ? AND "+
         "forename = ? AND " +
         "surname = ? AND " +
-        "accountType = ? AND " +
-        "password = ?" +
+        "accountType = ?" +
         ";";
 
     private static String INSERT_USER_COMMAND = "INSERT INTO User(email, title, forename, surname, password, accountType) " + 
@@ -29,6 +30,7 @@ public class UserController {
     private static String GET_ALL_USERS_COMMAND = "SELECT * FROM User;";
     private static String USER_EXISTS_COMMAND_EMAIL = "SELECT * FROM User WHERE email = ?;";
     private static String GET_USER_FROM_EMAIL_COMMAND = "SELECT * FROM User WHERE email = ?;";
+    private static String GET_USER_PASSWORD_COMMAND = "SELECT password FROM User WHERE email = ?;";
 
     public static void main(String[] args) {
         try {
@@ -36,7 +38,7 @@ public class UserController {
             System.out.println("all users now: ");
             System.out.println(getAllUsers());
 
-            createUser(
+            String email = createUser(
                     Constants.Title.MR,
                     "a",
                     "b",
@@ -56,6 +58,17 @@ public class UserController {
             User[] users = getAllUsers();
             for (User user : users) {
                 System.out.println(user);
+            }
+
+            System.out.println("Checking authentication");
+            User user = login(email, "pas");
+            System.out.println("login successful");
+
+            try {
+                User aUser = login(email, "wrong_pass");
+                System.out.println("I shouldn't be reached");
+            } catch (IncorrectLoginCredentialsException ex) {
+                System.out.println("incorrect password returned exception, as expected");
             }
 
         } catch (Exception ex) {
@@ -216,12 +229,14 @@ public class UserController {
                 throw new ExistingRecordException();
             }
 
+            String pw_hash = BCrypt.hashpw(password, BCrypt.gensalt());
+
             pstmt = con.prepareStatement(INSERT_USER_COMMAND);
             pstmt.setString(1, email);
             pstmt.setString(2, title.toString());
             pstmt.setString(3, forename);
             pstmt.setString(4, surname);
-            pstmt.setString(5, password);
+            pstmt.setString(5, pw_hash);
             pstmt.setString(6, accountType.toString());
 
             pstmt.execute();
@@ -230,6 +245,7 @@ public class UserController {
 
 
         } catch (SQLException ex ) {
+            ex.printStackTrace();
             throw new GeneralProcessingException();
         } finally {
             if (pstmt != null) {
@@ -305,7 +321,6 @@ public class UserController {
             pstmt.setString(2, forename);
             pstmt.setString(3, surname);
             pstmt.setString(4, accountType.toString());
-            pstmt.setString(5, password);
 
             ResultSet rs = pstmt.executeQuery();
             if (rs != null && rs.next()) {
@@ -365,10 +380,54 @@ public class UserController {
         }
     }
 
-    // I *really* cba doing the login stuff now
-    public static User login (String email, String password) 
-    throws IncorrectLoginCredentialsException, GeneralProcessingException {
-        return null;
+    /**
+     * login()
+     * Take an email and password, and return the User object if correct, otherwise throw GeneralProcessingException
+     * @param email     - String - The users email
+     * @param password  - String - the users plaintext password
+     * @return User     - The User object
+     * @throws IncorrectLoginCredentialsException
+     * @throws GeneralProcessingException
+     */
+    public static User login (String email, String password) throws IncorrectLoginCredentialsException, GeneralProcessingException {
+
+        PreparedStatement pstmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+            pstmt = con.prepareStatement(GET_USER_PASSWORD_COMMAND);
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs == null || !rs.next()) {
+                // no user with that email have been found, so throw IncorrectLoginCredentialsException
+                throw new IncorrectLoginCredentialsException();
+            }
+
+            String pw_hash = rs.getString("password");
+
+            if (BCrypt.checkpw(password, pw_hash)) {
+                // password matches
+                return getUser(email);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new GeneralProcessingException();
+        } catch (NoRecordException ex) {
+            // will occur when no user is found when the getUser(email) function is called
+            // If no user exists with that email, should throw IncorrectLoginCredentialsException
+            throw new IncorrectLoginCredentialsException();
+        } finally {
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    throw new GeneralProcessingException();
+                }
+            }
+        }
+        // if this statement is reached, it means the password authentication failed
+        throw new IncorrectLoginCredentialsException();
     }
 
 }

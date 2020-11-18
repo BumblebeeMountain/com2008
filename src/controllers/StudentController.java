@@ -211,13 +211,6 @@ public class StudentController {
         }
     }
 
-    // TODO
-    // is this function needed? as the normal getStudent gets the student by the email
-    public static Student getStudentByEmail(String email) 
-    throws GeneralProcessingException, NoRecordException {
-        return getStudent(email);
-    }
-
     /**
      * getStudentDegree()
      * Function that given a student registration number, returns their degree
@@ -288,6 +281,7 @@ public class StudentController {
 
         // create the user account, and get the users email
         String email = UserController.createUser(title, forename, surname, password, accountType);
+
         PreparedStatement pstmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
 
