@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Main extends JFrame {
-    
+
     private static final long serialVersionUID = -8667920279388305018L;
     private Container contentPane;
 
@@ -13,22 +13,44 @@ public class Main extends JFrame {
      */
     public Main() {
 
-		setTitle("University Management System");
-		contentPane = getContentPane();
-		contentPane.setLayout(new GridLayout(1,1));
+        setTitle("University Management System");
+        contentPane = getContentPane();
+        contentPane.setLayout(new GridLayout(1, 1));
         setSize(800, 500);
         add(new Login(this)); // Initial screen
-        setVisible(true); // Show
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        
+        setResizable(false);
+        setVisible(true); // Show
+
+    }
+
+    // Error and info boxes ===================================================
+
+    /**
+     * Popup a box with an error message
+     * 
+     * @param message
+     */
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(null, message, "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Popup a box with a message
+     * 
+     * @param message
+     */
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message);
     }
 
     // Move to functions (Screen transitions) =================================
-    
+
     /**
      * Return the current screen to the login screen
      */
-    public void logout () {
+    public void logout() {
         contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new Login(this));
@@ -51,6 +73,8 @@ public class Main extends JFrame {
 
     }
 
-    public void moveToRegistrarDashboard()
+    public void moveToRegistrarDashboard() {
+
+    }
 
 }
