@@ -17,13 +17,13 @@ rm $(find bin/ -name *.class);
 
 # javac -d bin --release 8 src/App.java;
 # javac -d bin --release 8 src/database/Setup.java;
-javac -d bin --release 8 src/controllers/StudentController.java;
+javac -d bin --release 8 src/controllers/UserController.java;
 
 # class path is both the binaries, and the lib directories
 # export CLASSPATH=$path/bin/:$path/lib/*;
 
 # java App;
 # java database.Setup;
-java controllers.StudentController;
+java controllers.UserController;
 
 # export CLASSPATH=$path/src/;

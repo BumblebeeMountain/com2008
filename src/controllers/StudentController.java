@@ -218,13 +218,6 @@ public class StudentController {
         }
     }
 
-    // TODO
-    // is this function needed? as the normal getStudent gets the student by the email
-    public static Student getStudentByEmail(String email) 
-    throws GeneralProcessingException, NoRecordException {
-        return getStudent(email);
-    }
-
     /**
      * getStudentDegree()
      * Function that given a student registration number, returns their degree
