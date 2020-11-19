@@ -188,7 +188,7 @@ public class ModuleController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("INSERT INTO Module VALUES (?, ?, ?, ?);");
+            pstmt = con.prepareStatement("INSERT INTO Module VALUES (?, ?, ?, ?, true);");
             pstmt.setString(1, moduleCode);
             pstmt.setString(2, moduleName);
             pstmt.setInt(3, credits);

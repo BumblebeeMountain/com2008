@@ -49,10 +49,14 @@ public class DegreeController {
             }
 
             try {
-                createDegree("COMU02", "Computer Science with a Year In Industry", false, 4);
-            } catch (ExistingRecordException e) {
-                System.out.println("COMU02 already exists");
+                Degree[] allDegrees = getAllDegrees();
+                for (Degree d : allDegrees)
+                    System.out.println(d);
+            } catch (GeneralProcessingException er) {
+                System.out.println("Couldn't print out all degrees.");
             }
+
+            removeDegree("COMU01");
 
             try {
                 Degree[] allDegrees = getAllDegrees();
@@ -147,6 +151,7 @@ public class DegreeController {
                 Boolean currentlyOffered = res.getBoolean("currentlyOffered");
                 Department leadDepartment = getLeadDepartment(degreeCode);
                 Department[] partnerDepartments = getPartnerDepartments(degreeCode);
+                System.out.println(partnerDepartments.length);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
                         partnerDepartments, currentlyOffered));
@@ -154,6 +159,7 @@ public class DegreeController {
 
         } catch (Exception e) { // Catch general exception
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
@@ -277,7 +283,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("INSERT INTO Degree VALUES (?, ?, ?, ?);");
+            pstmt = con.prepareStatement("INSERT INTO Degree VALUES (?, ?, ?, ?, true);");
             pstmt.setString(1, degreeCode);
             pstmt.setString(2, degreeName);
             pstmt.setBoolean(3, hasYearInIndustry);
@@ -287,6 +293,8 @@ public class DegreeController {
             pstmt.executeUpdate();
 
         } catch (Exception e) {
+
+            e.printStackTrace();
 
             throw new GeneralProcessingException();
 

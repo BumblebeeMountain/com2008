@@ -36,7 +36,7 @@ public class DepartmentController {
             removeDepartment("DEP1");
 
             try {
-                createDegreeDepartment("COM", "COMU02", true);
+                createDegreeDepartment("COM", "COMU01", true);
             } catch (ExistingRecordException e) {
             System.out.println("COM/COM001 has already been inserted");
             }

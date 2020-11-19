@@ -3,6 +3,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - DepartmentController",
+            "request": "launch",
+            "mainClass": "controllers.DepartmentController",
+            "projectName": "com2008_8b977ed9"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DegreeController",
+            "request": "launch",
+            "mainClass": "controllers.DegreeController",
+            "projectName": "com2008_8b977ed9"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - StudentController",
             "request": "launch",
             "mainClass": "controllers.StudentController",
