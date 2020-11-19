@@ -312,7 +312,8 @@ public class RegistrationController {
                 String teachingPeriod = res.getString("teachingPeriod");
                 Float firstAttempt = res.getFloat("firstAttemptResult");
                 Float secondAttempt = res.getFloat("secondAttemptResult");
-                mods.add(new SelectedModule(name, code, credits, teachingPeriod, firstAttempt, secondAttempt));
+                Boolean currentlyOffered = res.getBoolean("currentlyOffered");
+                mods.add(new SelectedModule(name, code, credits, teachingPeriod, currentlyOffered, firstAttempt, secondAttempt));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -360,6 +361,7 @@ public class RegistrationController {
         String teachingPeriod = null;
         Float firstAttempt = null;
         Float secondAttempt = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -385,6 +387,7 @@ public class RegistrationController {
             teachingPeriod = res.getString("teachingPeriod");
             firstAttempt = res.getFloat("firstAttemptResult");
             secondAttempt = res.getFloat("secondAttemptResult");
+            currentlyOffered = res.getBoolean("currentlyOffered");
 
         } catch (NoRecordException e) {
 
@@ -408,7 +411,7 @@ public class RegistrationController {
         }
 
         // Return a new department object
-        return new SelectedModule(name, code, credits, teachingPeriod, firstAttempt, secondAttempt);
+        return new SelectedModule(name, code, credits, teachingPeriod, currentlyOffered, firstAttempt, secondAttempt);
 
     }
 
