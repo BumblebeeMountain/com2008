@@ -49,13 +49,17 @@ public class DegreeController {
             }
 
             try {
-                createDegree("COMU02", "Computer Science with a Year In Industry", false, 4);
-            } catch (ExistingRecordException e) {
-                System.out.println("COMU02 already exists");
+                Degree[] allDegrees = getAllDegrees(true);
+                for (Degree d : allDegrees)
+                    System.out.println(d);
+            } catch (GeneralProcessingException er) {
+                System.out.println("Couldn't print out all degrees.");
             }
 
+            removeDegree("COMU01");
+
             try {
-                Degree[] allDegrees = getAllDegrees();
+                Degree[] allDegrees = getAllDegrees(false);
                 for (Degree d : allDegrees)
                     System.out.println(d);
             } catch (GeneralProcessingException er) {
@@ -122,7 +126,7 @@ public class DegreeController {
      * @return
      * @throws GeneralProcessingException
      */
-    public static Degree[] getAllDegrees() throws GeneralProcessingException {
+    public static Degree[] getAllDegrees(Boolean onlyOfferedDegrees) throws GeneralProcessingException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -133,7 +137,12 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree;");
+            if (onlyOfferedDegrees) {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = true;");
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = false;");
+            }
+            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -144,15 +153,18 @@ public class DegreeController {
                 String degreeCode = res.getString("code");
                 Boolean hasYearInIndustry = res.getBoolean("hasYearInIndustry");
                 Integer maxLevel = res.getInt("maxLevel");
+                Boolean currentlyOffered = res.getBoolean("currentlyOffered");
                 Department leadDepartment = getLeadDepartment(degreeCode);
                 Department[] partnerDepartments = getPartnerDepartments(degreeCode);
+                System.out.println(partnerDepartments.length);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
-                        partnerDepartments));
+                        partnerDepartments, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
@@ -184,7 +196,7 @@ public class DegreeController {
      * @throws NoRecordException
      */
 
-    public static Degree getDegree(String degreeCode) throws GeneralProcessingException, NoRecordException {
+    public static Degree getDegree(String degreeCode, Boolean onlyOfferedDegrees) throws GeneralProcessingException, NoRecordException {
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -193,6 +205,7 @@ public class DegreeController {
         String name = null;
         Boolean hasYearInIndustry = null;
         Integer maxLevel = null;
+        Boolean currentlyOffered = null;
         Department leadDepartment = null;
         Department[] partnerDepartments = null;
 
@@ -200,8 +213,14 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ?;");
-            pstmt.setString(1, degreeCode);
+            if (onlyOfferedDegrees) {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = true;");
+                pstmt.setString(1, degreeCode);
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = false;");
+                pstmt.setString(1, degreeCode);
+            }
+            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -215,6 +234,7 @@ public class DegreeController {
             code = res.getString("code");
             hasYearInIndustry = res.getBoolean("hasYearInIndustry");
             maxLevel = res.getInt("maxLevel");
+            currentlyOffered = res.getBoolean("currentlyOffered");
             leadDepartment = getLeadDepartment(code);
             partnerDepartments = getPartnerDepartments(code);
 
@@ -240,7 +260,7 @@ public class DegreeController {
         }
 
         // Return a new degree object
-        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments);
+        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments, currentlyOffered);
 
     }
 
@@ -258,7 +278,8 @@ public class DegreeController {
         // Check for an exisiting degree
         Boolean degreeExists = true;
         try {
-            getDegree(degreeCode);
+            getDegree(degreeCode, true);
+            getDegree(degreeCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
         } catch (NoRecordException e) {
@@ -274,7 +295,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("INSERT INTO Degree VALUES (?, ?, ?, ?);");
+            pstmt = con.prepareStatement("INSERT INTO Degree VALUES (?, ?, ?, ?, true);");
             pstmt.setString(1, degreeCode);
             pstmt.setString(2, degreeName);
             pstmt.setBoolean(3, hasYearInIndustry);
@@ -284,6 +305,8 @@ public class DegreeController {
             pstmt.executeUpdate();
 
         } catch (Exception e) {
+
+            e.printStackTrace();
 
             throw new GeneralProcessingException();
 
@@ -315,7 +338,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("DELETE FROM Degree WHERE code = ?;");
+            pstmt = con.prepareStatement("UPDATE Degree SET currentlyOffered = false WHERE code = ?;");
             pstmt.setString(1, degreeCode);
 
             // Execute the query
@@ -360,6 +383,7 @@ public class DegreeController {
         String degCode = null;
         Boolean isCore = null;
         Character level = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -385,6 +409,7 @@ public class DegreeController {
             degCode = res.getString("degreeCode");
             isCore = res.getBoolean("core");
             level = res.getString("level").charAt(0);
+            currentlyOffered = res.getBoolean("currentlyOffered");
 
         } catch (NoRecordException e) {
 
@@ -408,7 +433,7 @@ public class DegreeController {
         }
 
         // Return a new object
-        return new DegreeModule(modName, modCode, degCredits, teachPeriod, degCode, isCore, level);
+        return new DegreeModule(modName, modCode, degCredits, teachPeriod, currentlyOffered, degCode, isCore, level);
 
     }
 
@@ -435,6 +460,7 @@ public class DegreeController {
         String degCode = null;
         Boolean isCore = null;
         Character level = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -456,8 +482,9 @@ public class DegreeController {
                 degCode = res.getString("degreeCode");
                 isCore = res.getBoolean("core");
                 level = res.getString("level").charAt(0);
+                currentlyOffered = res.getBoolean("currentlyOffered");
 
-                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, degCode, isCore, level));
+                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, currentlyOffered, degCode, isCore, level));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -559,6 +586,43 @@ public class DegreeController {
             // Prepare the sql parameters
             pstmt = con.prepareStatement("DELETE FROM DegreeModule WHERE degreeCode = ? AND moduleCode = ?;");
             pstmt.setString(1, degreeCode);
+            pstmt.setString(2, moduleCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+    }
+
+    /**
+     * Removes a module / degree link
+     * 
+     * @param degreeCode
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     */
+    public static void removeDegreeModule(String moduleCode) throws GeneralProcessingException {
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM DegreeModule WHERE moduleCode = ?;");
             pstmt.setString(2, moduleCode);
 
             // Execute the query
@@ -699,6 +763,7 @@ public class DegreeController {
         String modCode = null;
         Integer modCredits = null;
         String teachingPeriod = null;
+        Boolean currentlyOffered = null;
 
         ArrayList<Module> coreModules = new ArrayList<>();
 
@@ -721,8 +786,9 @@ public class DegreeController {
                 modCode = res.getString("code");
                 modCredits = res.getInt("credits");
                 teachingPeriod = res.getString("teachingPeriod");
+                currentlyOffered = res.getBoolean("currentlyOffered");
 
-                coreModules.add(new Module(modName, modCode, modCredits, teachingPeriod));
+                coreModules.add(new Module(modName, modCode, modCredits, teachingPeriod, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -759,6 +825,7 @@ public class DegreeController {
         String modCode = null;
         Integer modCredits = null;
         String teachPeriod = null;
+        Boolean currentlyOffered = null;
 
         ArrayList<Module> optionalModules = new ArrayList<>();
 
@@ -780,7 +847,7 @@ public class DegreeController {
                 modCredits = res.getInt("credits");
                 teachPeriod = res.getString("teachingPeriod");
 
-                optionalModules.add(new Module(modName, modCode, modCredits, teachPeriod));
+                optionalModules.add(new Module(modName, modCode, modCredits, teachPeriod, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception

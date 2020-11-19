@@ -12,7 +12,6 @@ import database.ConnectionManager;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
-import exceptions.ShouldGraduateException;
 import models.Degree;
 import models.Registration;
 import models.SelectedModule;
@@ -312,7 +311,8 @@ public class RegistrationController {
                 String teachingPeriod = res.getString("teachingPeriod");
                 Float firstAttempt = res.getFloat("firstAttemptResult");
                 Float secondAttempt = res.getFloat("secondAttemptResult");
-                mods.add(new SelectedModule(name, code, credits, teachingPeriod, firstAttempt, secondAttempt));
+                Boolean currentlyOffered = res.getBoolean("currentlyOffered");
+                mods.add(new SelectedModule(name, code, credits, teachingPeriod, currentlyOffered, firstAttempt, secondAttempt));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -360,6 +360,7 @@ public class RegistrationController {
         String teachingPeriod = null;
         Float firstAttempt = null;
         Float secondAttempt = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -385,6 +386,7 @@ public class RegistrationController {
             teachingPeriod = res.getString("teachingPeriod");
             firstAttempt = res.getFloat("firstAttemptResult");
             secondAttempt = res.getFloat("secondAttemptResult");
+            currentlyOffered = res.getBoolean("currentlyOffered");
 
         } catch (NoRecordException e) {
 
@@ -408,7 +410,7 @@ public class RegistrationController {
         }
 
         // Return a new department object
-        return new SelectedModule(name, code, credits, teachingPeriod, firstAttempt, secondAttempt);
+        return new SelectedModule(name, code, credits, teachingPeriod, currentlyOffered, firstAttempt, secondAttempt);
 
     }
 
@@ -635,7 +637,7 @@ public class RegistrationController {
      * @throws NoRecordException
      * @throws ShouldGraduateException
      */
-    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException, ShouldGraduateException {
+    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException {
 
         try {
 
@@ -645,7 +647,7 @@ public class RegistrationController {
             Character currentLevel = currentReg.getLevel();
 
             // Get info about the degree
-            Degree degree = DegreeController.getDegree(degreeCode);
+            Degree degree = DegreeController.getDegree(degreeCode, true);
             Integer maxLevel = degree.getMaxLevel();
 
             // If currently on placement - go to max level
@@ -655,7 +657,7 @@ public class RegistrationController {
 
             // If on max level - graduate
             if (currentLevel == maxLevel.toString().charAt(0)) {
-                throw new ShouldGraduateException();
+                return new Character('G'); // G for graduate
             }
 
             // If the degree has a year in industry

@@ -25,7 +25,7 @@ public class StudentController {
         "((Degree INNER JOIN Registration ON Degree.code = Registration.degreeCode) " +
         "INNER JOIN Student ON Registration.studentRegistrationNumber = Student.registrationNumber);";
     private final static String REMOVE_STUDENT_BY_REG_COMMAND = "DELETE FROM Student WHERE registrationNumber = ?;";
-    private final static String CREATE_STUDENT_COMMAND = "INSERT INTO Student(email, personalTutor) VALUES(?, ?);";
+    private final static String CREATE_STUDENT_COMMAND = "INSERT INTO Student(email, personalTutor, hasGraduated) VALUES(?, ?, false);";
 
     public static void main(String[] args) {
         try {
@@ -41,33 +41,40 @@ public class StudentController {
                 System.out.println(s);
             }
 
-            try {
-                Student james = getStudent(reg1.getRegistrationNumber());
-                System.out.println(james);
-            } catch (NoRecordException e) {
-                System.out.println("James doesn't exist");
-            }
-
-            try {
-                Student dom = getStudent(reg2.getRegistrationNumber());
-                System.out.println(dom);
-            } catch (NoRecordException e) {
-                System.out.println("Dom doesn't exist");
-            }
-            
-            System.out.println("randomer exists:");
-            System.out.println(studentExists(28549505));
-
-            System.out.println("removing james");
-            removeStudent(reg1.getRegistrationNumber());
-
-            System.out.println("james exists: ");
-            System.out.println(studentExists(1));
+            graduateStudent(reg1.getRegistrationNumber());
 
             System.out.println("all Students:");
             for (Student s : getAllStudents() ) {
                 System.out.println(s);
             }
+
+            // try {
+            //     Student james = getStudent(reg1.getRegistrationNumber());
+            //     System.out.println(james);
+            // } catch (NoRecordException e) {
+            //     System.out.println("James doesn't exist");
+            // }
+
+            // try {
+            //     Student dom = getStudent(reg2.getRegistrationNumber());
+            //     System.out.println(dom);
+            // } catch (NoRecordException e) {
+            //     System.out.println("Dom doesn't exist");
+            // }
+            
+            // System.out.println("randomer exists:");
+            // System.out.println(studentExists(28549505));
+
+            // System.out.println("removing james");
+            // removeStudent(reg1.getRegistrationNumber());
+
+            // System.out.println("james exists: ");
+            // System.out.println(studentExists(1));
+
+            // System.out.println("all Students:");
+            // for (Student s : getAllStudents() ) {
+            //     System.out.println(s);
+            // }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -148,6 +155,7 @@ public class StudentController {
             int regNum = rs.getInt("registrationNumber");
             String email = rs.getString("email");
             String pTutor = rs.getString("personalTutor");
+            Boolean hasGraduated = rs.getBoolean("hasGraduated");
             User user;
             try {
                 // need to get the user account which is linked
@@ -161,7 +169,7 @@ public class StudentController {
             String forename = user.getForename();
             String surname = user.getSurname();
 
-            student = new Student(email, title, forename, surname, regNum, pTutor);
+            student = new Student(email, title, forename, surname, regNum, pTutor, hasGraduated);
             return student;
 
         } catch (SQLException ex ) {
@@ -245,7 +253,12 @@ public class StudentController {
             String code = rs.getString("code");
 
             // get the degree from the degree controller
-            return DegreeController.getDegree(code);
+            try {
+                return DegreeController.getDegree(code, true);
+            } catch (NoRecordException e) {
+                return DegreeController.getDegree(code, false);
+            }
+            
 
         } catch (SQLException ex ) {
             ex.printStackTrace();
@@ -306,7 +319,7 @@ public class StudentController {
             if (rs == null || !rs.next()) { throw new GeneralProcessingException(); }
             int regNum = rs.getInt("registrationNumber");
 
-            return new Student(email, title, forename, surname, regNum, pTutor);
+            return new Student(email, title, forename, surname, regNum, pTutor, false); // Assume not graduated
 
         } catch (SQLException ex ) {
             ex.printStackTrace();
@@ -424,6 +437,43 @@ public class StudentController {
 
         return true;
 
+    }
+
+    /**
+     * Graduate a given student
+     * @param registrationNumber
+     * @throws GeneralProcessingException
+     */
+    public static void graduateStudent(
+            Integer registrationNumber
+            ) throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("UPDATE Student SET hasGraduated = true WHERE registrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
     }
 
 }

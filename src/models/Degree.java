@@ -13,6 +13,7 @@ public class Degree {
     private int maxLevel;
     private Department leadDepartment;
     private Department[] partnerDepartments;
+    private Boolean currentlyOffered;
 
     // getters & setters
 
@@ -64,9 +65,17 @@ public class Degree {
         this.partnerDepartments = partners;
     }
 
+    public Boolean getCurrentlyOffered () {
+        return this.currentlyOffered;
+    }
+
+    public void setCurrentlyOffered (Boolean currentlyOffered) {
+        this.currentlyOffered = currentlyOffered;
+    }
+
     public String toString () {
         String returnString = "";
-        returnString += "Deg:" + this.code + " > Deg name:" + this.name + System.lineSeparator();
+        returnString += "Deg:" + this.code + " > Deg name:" + this.name + " > Offered:" + this.currentlyOffered + System.lineSeparator();
         returnString += "  Lead department" + System.lineSeparator();
         returnString += "    - " + this.leadDepartment.toString() + System.lineSeparator();
         returnString += "  Partner departments" + System.lineSeparator();
@@ -78,12 +87,13 @@ public class Degree {
     // constructor
 
     public Degree(String name, String code, Boolean hasYearInIndustry, int maxLevel, Department leadDepartment,
-            Department[] partnerDepartments) {
+            Department[] partnerDepartments, Boolean currentlyOffered) {
         this.name = name;
         this.code = code;
         this.hasYearInIndustry = hasYearInIndustry;
         this.maxLevel = maxLevel;
         this.leadDepartment = leadDepartment;
         this.partnerDepartments = partnerDepartments;
+        this.currentlyOffered = currentlyOffered;
     }
 }

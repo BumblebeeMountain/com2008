@@ -11,6 +11,7 @@ public class Student extends User {
 
     private Integer registrationNumber;
     private String personalTutor;
+    private Boolean hasGraduated;
 
     // getters & setters
 
@@ -30,15 +31,24 @@ public class Student extends User {
         return this.personalTutor;
     }
 
+    public Boolean getHasGraduated () {
+        return this.hasGraduated;
+    }
+
+    public void setHasGraduated (Boolean hasGraduated) {
+        this.hasGraduated = hasGraduated;
+    }
+
     public String toString() {
-        return super.toString() + " > Reg no:" + this.registrationNumber;
+        return super.toString() + " > Reg no:" + this.registrationNumber + " > Graduated:" + this.hasGraduated;
     }
 
     // constructor
     public Student(String email, Title title, String forename, String surname, Integer registrationNumber,
-            String personalTutor) {
+            String personalTutor, Boolean hasGraduated) {
         super(email, title, forename, surname, AccountType.STUDENT);
         this.registrationNumber = registrationNumber;
         this.personalTutor = personalTutor;
+        this.hasGraduated = hasGraduated;
     }
 }

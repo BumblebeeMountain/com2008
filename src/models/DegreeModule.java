@@ -34,9 +34,9 @@ public class DegreeModule extends Module {
         this.level = level;
     }
 
-    public DegreeModule(String name, String code, Integer credits, String teachingPeriod, String degreeCode,
+    public DegreeModule(String name, String code, Integer credits, String teachingPeriod, Boolean currentlyOffered, String degreeCode,
             Boolean isCore, Character level) {
-        super(name, code, credits, teachingPeriod);
+        super(name, code, credits, teachingPeriod, currentlyOffered);
         this.degreeCode = degreeCode;
         this.isCore = isCore;
         this.level = level;
