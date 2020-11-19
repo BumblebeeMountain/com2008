@@ -14,7 +14,6 @@ import models.Degree;
 import models.DegreeModule;
 import models.Department;
 import models.Module;
-import sun.security.krb5.internal.crypto.HmacSha1Aes128CksumType;
 
 import java.util.ArrayList;
 
@@ -24,78 +23,94 @@ public class DegreeController {
 
         try {
 
-            // Change these values to insert a new degree
+            // DEPARTMENTS ==========================================
+
+            // try {
+            //     Department d = getLeadDepartment("COMU01");
+            //     System.out.println(d);
+            // } catch (NoRecordException e) {
+            //     System.out.println("COMU01 has no lead");
+            // }
+
+            // try {
+            //     Department[] d = getPartnerDepartments("COMU01");
+            //     for (Department d_ : d) 
+            //         System.out.println(d_);
+            // } catch (GeneralProcessingException e) {
+            //     System.out.println(e);
+            // }
+
+            // DEGREE ===============================================
+
             try {
-                createDegree("COMU01", "Computer Science", false, 3);
-                // createDegree("HISU02", "History", true, 4);
-                System.out.println("Created successfully.");
+                createDegree("COMU01", "Computer Science", true, 4);
             } catch (ExistingRecordException e) {
-                System.out.println("This degree is already created!");
-            } catch (GeneralProcessingException e) {
-                System.out.println("General processing error in creating a Degree");
+                System.out.println("COMU01 already exists");
             }
 
-            // // create a degree module 
-            // try {
-            //     createDegreeModule("COMU01","COM1001", true, "U");
-            // } catch (ExistingRecordException e) {
-            //     System.out.println("COM/COM001 has already been inserted");
+            try {
+                createDegree("COMU02", "Computer Science with a Year In Industry", false, 4);
+            } catch (ExistingRecordException e) {
+                System.out.println("COMU02 already exists");
+            }
 
-
-            // displaying all the degrees
             try {
                 Degree[] allDegrees = getAllDegrees();
-                System.out.println(allDegrees);
+                for (Degree d : allDegrees)
+                    System.out.println(d);
             } catch (GeneralProcessingException er) {
                 System.out.println("Couldn't print out all degrees.");
             }
 
-            // getting a degree
-            try {
-                System.out.println(getDegree("COMU01").toString());
-            } catch (NoRecordException er) {
-                System.out.println("There is no degree with this code.");
-            }
-            // } catch (GeneralProcessingException er) {
-            //     System.out.println("General processing error in getting a Degree");
-            // }
+            // DEGREE MODULE ========================================
 
-            // // removing a degree
             // try {
-            //     removeDegree("COMU01");
-            //     System.out.println("Deleted COMU01");
-            // } catch (GeneralProcessingException er) {
-            //     System.out.println("Failed to delete the degree.");
+            //     createDegreeModule("COMU01", "COM1001", true, "1");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("Degree module already exists");
             // }
 
+            // try {
+            //     createDegreeModule("COMU01", "COM1003", false, "1");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("Degree module already exists");
+            // }
 
-            //get degree module 
+            // removeDegreeModule("COMU01", "COM1001");
 
-            // get all degree modules
+            // // Print all degree modules
+            // try {
+            //     DegreeModule[] arr = getAllDegreeModules();
+            //     for (DegreeModule m : arr)
+            //         System.out.println(m);
+            // } catch (GeneralProcessingException e) {
+            //     System.out.println(e);
+            // }
 
-            // crete degree module
+            // try {
+            //     Module[] arr = getCoreModules("COMU01", '1');
+            //     for (Module m : arr)
+            //         System.out.println(m);
+            // } catch (GeneralProcessingException e) {
+            //     System.out.println(e);
+            // }
 
-            // remove degree module
+            // try {
+            //     Module[] arr = getOptionalModules("COMU01", '1');
+            //     for (Module m : arr)
+            //         System.out.println(m);
+            // } catch (GeneralProcessingException e) {
+            //     System.out.println(e);
+            // }
 
-            // get lead department
-
-            // get partner departments
-
-            // get core modules
-
-            // get optional modules
-
-            // 
-
-            
-            // } try {
-            //     DegreeModule trial = getDegreeModule("COM", "COM1001");
-            //     System.out.println(trial.toString());
+            // try {
+            //     DegreeModule m = getDegreeModule("COMU01", "COM1001");
+            //     System.out.println(m);
             // } catch (NoRecordException e) {
-            //     System.out.println("There is no module called COM1001.");
+            //     System.out.println("No degree module to be found");
             // }
 
-        } catch (GeneralProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } 
 
@@ -119,7 +134,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree");
+            pstmt = con.prepareStatement("SELECT * FROM Degree;");
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -131,12 +146,10 @@ public class DegreeController {
                 Boolean hasYearInIndustry = res.getBoolean("hasYearInIndustry");
                 Integer maxLevel = res.getInt("maxLevel");
                 Department leadDepartment = getLeadDepartment(degreeCode); 
-                Department[] partnerDepartments = getPartnerDepartments(degreeCode);
-                Module[] coreModules = getCoreModules(degreeCode);
-                Module[] optionalModules = getOptionalModules(degreeCode);
+                Department[] partnerDepartments =getPartnerDepartments(degreeCode);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
-                partnerDepartments, coreModules, optionalModules));
+                partnerDepartments));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -183,8 +196,6 @@ public class DegreeController {
         Integer maxLevel = null;
         Department leadDepartment = null; 
         Department[] partnerDepartments = null;
-        Module[] coreModules = null;
-        Module[] optionalModules = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -207,8 +218,6 @@ public class DegreeController {
             maxLevel = res.getInt("maxLevel");
             leadDepartment = getLeadDepartment(code);
             partnerDepartments = getPartnerDepartments(code);
-            coreModules = getCoreModules(code);
-            optionalModules = getOptionalModules(code);
 
         } catch (NoRecordException e) {
 
@@ -233,7 +242,7 @@ public class DegreeController {
 
         // Return a new degree object
         return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment,
-        partnerDepartments, coreModules, optionalModules);
+        partnerDepartments);
 
     }
 
@@ -309,7 +318,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("DELETE FROM Department WHERE code = ?;");
+            pstmt = con.prepareStatement("DELETE FROM Degree WHERE code = ?;");
             pstmt.setString(1, degreeCode);
 
             // Execute the query
@@ -434,14 +443,11 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM DegreeModule");
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Module INNER JOIN DegreeModule ON Module.code = DegreeModule.moduleCode;");
 
             // Execute the query
             res = pstmt.executeQuery();
-
-            // If it is null - there was nothing returned
-            if (res == null || !res.next())
-                throw new NoRecordException();
 
             // Filter through the output
             while (res.next()) {
@@ -655,10 +661,6 @@ public class DegreeController {
                 // Execute the query
                 res = pstmt.executeQuery();
    
-                // If it is null - there was nothing returned
-                if (res == null || !res.next())
-                    throw new NoRecordException();
-   
                 // Filter through the output
                 while (res.next()) {
                     departName = res.getString("name");
@@ -690,8 +692,7 @@ public class DegreeController {
         return arr;
     }
 
-    // This is private as it is only for internal checks
-    private static Module[] getCoreModules(String degreeCode) throws GeneralProcessingException {
+    public static Module[] getCoreModules(String degreeCode, Character level) throws GeneralProcessingException {
         
         // Variables
         PreparedStatement pstmt = null;
@@ -708,7 +709,11 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM DegreeModule WHERE core = true");
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Module INNER JOIN DegreeModule ON Module.code = DegreeModule.moduleCode WHERE degreeCode = ? AND core = true AND level = ?;");
+            pstmt.setString(1, degreeCode);
+            pstmt.setString(2, level.toString());
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -747,8 +752,8 @@ public class DegreeController {
 
     }
 
-    // This is private as it is only for internal checks
-    private static Module[] getOptionalModules(String degreeCode) throws GeneralProcessingException {
+    public static Module[] getOptionalModules(String degreeCode, Character level) throws GeneralProcessingException {
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -763,18 +768,13 @@ public class DegreeController {
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
 
-            // Prepare the sql parameters
             pstmt = con.prepareStatement(
-                    "SELECT * FROM Module INNER JOIN DegreeModule ON Module.code = DegreeModule.moduleCode WHERE degreeCode = ? AND core = ?;");
+                    "SELECT * FROM Module INNER JOIN DegreeModule ON Module.code = DegreeModule.moduleCode WHERE degreeCode = ? AND core = false AND level = ?;");
             pstmt.setString(1, degreeCode);
-            pstmt.setBoolean(2, false);
+            pstmt.setString(2, level.toString());
 
             // Execute the query
             res = pstmt.executeQuery();
-
-            // If it is null - there was nothing returned
-            if (res == null || !res.next())
-                throw new NoRecordException();
 
             while (res.next()) {
                 // Filter through the output

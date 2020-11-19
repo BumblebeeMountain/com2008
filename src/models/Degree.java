@@ -13,8 +13,6 @@ public class Degree {
     private int maxLevel;
     private Department leadDepartment;
     private Department[] partnerDepartments;
-    private Module[] coreModules;
-    private Module[] optionalModules;
 
     // getters & setters
 
@@ -66,31 +64,9 @@ public class Degree {
         this.partnerDepartments = partners;
     }
 
-    public Module[] getCoreModules () {
-        return this.coreModules;
-    }
-
-    public void setCoreModules (Module[] coreModules) {
-        this.coreModules = coreModules;
-    }
-
-    public Module[] getOptionalModules () {
-        return this.optionalModules;
-    }
-
-    public void setOptionalModules (Module[] optionalModules) {
-        this.optionalModules = optionalModules;
-    }
-
     public String toString () {
         String returnString = "";
         returnString += "Deg:" + this.code + " > Deg name:" + this.name + System.lineSeparator();
-        returnString += "  Core modules" + System.lineSeparator();
-        for (Module m : this.coreModules)
-            returnString += "    - " + m.toString() + System.lineSeparator();
-        returnString += "  Optional modules" + System.lineSeparator();
-        for (Module m : this.optionalModules)
-            returnString += "    - " + m.toString() + System.lineSeparator();
         returnString += "  Lead department" + System.lineSeparator();
         returnString += "    - " + this.leadDepartment.toString() + System.lineSeparator();
         returnString += "  Partner departments" + System.lineSeparator();
@@ -102,14 +78,12 @@ public class Degree {
     // constructor
 
     public Degree(String name, String code, Boolean hasYearInIndustry, int maxLevel, Department leadDepartment,
-            Department[] partnerDepartments, Module[] coreModules, Module[] optionalModules) {
+            Department[] partnerDepartments) {
         this.name = name;
         this.code = code;
         this.hasYearInIndustry = hasYearInIndustry;
         this.maxLevel = maxLevel;
         this.leadDepartment = leadDepartment;
         this.partnerDepartments = partnerDepartments;
-        this.coreModules = coreModules;
-        this.optionalModules = optionalModules;
     }
 }
