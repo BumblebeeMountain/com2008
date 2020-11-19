@@ -122,7 +122,7 @@ public class Setup {
                         "title VARCHAR(16) NOT NULL, " +
                         "forename VARCHAR(64) NOT NULL, " +
                         "surname VARCHAR(32) NOT NULL, " +
-                        "password VARCHAR(32) NOT NULL, " +
+                        "password VARCHAR(64) NOT NULL, " +
                         "accountType VARCHAR(16) NOT NULL, " +
                         "PRIMARY KEY (email) " +
                         ");";
@@ -134,6 +134,7 @@ public class Setup {
                         "registrationNumber INTEGER NOT NULL AUTO_INCREMENT, " +
                         "email VARCHAR(64) NOT NULL, " +
                         "personalTutor VARCHAR(64) NOT NULL, " +
+                        "hasGraduated BOOLEAN NOT NULL," + 
                         "PRIMARY KEY (registrationNumber), " +
                         "FOREIGN KEY (email) REFERENCES User(email) " +
                         ");";
@@ -160,6 +161,7 @@ public class Setup {
                         "name VARCHAR(64) NOT NULL, " +
                         "hasYearInIndustry BOOLEAN NOT NULL, " +
                         "maxLevel TINYINT NOT NULL, " +
+                        "currentlyOffered BOOLEAN NOT NULL," +
                         "PRIMARY KEY (code) " +
                         ");";
         createTable(command);
@@ -171,6 +173,7 @@ public class Setup {
                         "name VARCHAR(64) NOT NULL, " +
                         "credits SMALLINT NOT NULL, " +
                         "teachingPeriod VARCHAR(16) NOT NULL, " +
+                        "currentlyOffered BOOLEAN NOT NULL," +
                         "PRIMARY KEY (code) " +
                         ");";
         createTable(command);

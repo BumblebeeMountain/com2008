@@ -27,7 +27,7 @@ public class DepartmentController {
 
             // Change these values to insert a new department
             try {
-                createDepartment("DEP2", "Department 2");
+                createDepartment("BIO", "Biology");
             } catch (ExistingRecordException e) {
                 System.out.println("Maybe try a different department!");
             }
@@ -35,11 +35,17 @@ public class DepartmentController {
             // Change this value to delete a department
             removeDepartment("DEP1");
 
-            // try {
-            // createDegreeDepartment("COM", "COMU01", true);
-            // } catch (ExistingRecordException e) {
-            // System.out.println("COM/COM001 has already been inserted");
-            // }
+            try {
+                createDegreeDepartment("COM", "COMU01", true);
+            } catch (ExistingRecordException e) {
+            System.out.println("COM/COM001 has already been inserted");
+            }
+
+            try {
+                createDegreeDepartment("BIO", "COMU01", false);
+                } catch (ExistingRecordException e) {
+                System.out.println("BIO/COM001 has already been inserted");
+            }
 
             // // // // Delete a degree department
             // removeDegreeDepartment("COM", "COMU01");

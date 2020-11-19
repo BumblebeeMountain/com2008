@@ -33,9 +33,9 @@ public class SelectedModule extends Module {
 
     // constructor
 
-    public SelectedModule(String name, String code, Integer credits, String teachingPeriod, Float firstAttempt,
+    public SelectedModule(String name, String code, Integer credits, String teachingPeriod, Boolean currentlyOffered, Float firstAttempt,
             Float secondAttempt) {
-        super(name, code, credits, teachingPeriod);
+        super(name, code, credits, teachingPeriod, currentlyOffered);
         this.firstAttemptResult = firstAttempt;
         this.secondAttemptResult = secondAttempt;
     }
