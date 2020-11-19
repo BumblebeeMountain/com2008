@@ -36,7 +36,7 @@ public class ModuleController {
             removeModule("COM1002");
 
             // Output all the current modules
-            Module[] arr = getAllModules();
+            Module[] arr = getAllModules(true);
             for (Module m : arr) System.out.println(m);
 
         } catch (GeneralProcessingException e) {
@@ -51,7 +51,7 @@ public class ModuleController {
      * @return
      * @throws GeneralProcessingException
      */
-    public static Module[] getAllModules() throws GeneralProcessingException {
+    public static Module[] getAllModules(Boolean onlyOfferedModules) throws GeneralProcessingException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -62,7 +62,12 @@ public class ModuleController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Module");
+            if (onlyOfferedModules) {
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = true");
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = false");
+            }
+            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -103,7 +108,7 @@ public class ModuleController {
     /**
      * Get a given module, if it exists
      */
-    public static Module getModule(String moduleCode) throws GeneralProcessingException, NoRecordException {
+    public static Module getModule(String moduleCode, Boolean onlyOfferedModules) throws GeneralProcessingException, NoRecordException {
         
         // Variables
         PreparedStatement pstmt = null;
@@ -118,8 +123,13 @@ public class ModuleController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ?;");
-            pstmt.setString(1, moduleCode);
+            if (onlyOfferedModules) {
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = true;");
+                pstmt.setString(1, moduleCode);
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = false;");
+                pstmt.setString(1, moduleCode);
+            }
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -173,7 +183,8 @@ public class ModuleController {
         // Check for an exisiting department
         Boolean moduleExists = true;
         try {
-            getModule(moduleCode);
+            getModule(moduleCode, true);
+            getModule(moduleCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
         } catch (NoRecordException e) {

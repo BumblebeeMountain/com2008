@@ -49,7 +49,7 @@ public class DegreeController {
             }
 
             try {
-                Degree[] allDegrees = getAllDegrees();
+                Degree[] allDegrees = getAllDegrees(true);
                 for (Degree d : allDegrees)
                     System.out.println(d);
             } catch (GeneralProcessingException er) {
@@ -59,7 +59,7 @@ public class DegreeController {
             removeDegree("COMU01");
 
             try {
-                Degree[] allDegrees = getAllDegrees();
+                Degree[] allDegrees = getAllDegrees(false);
                 for (Degree d : allDegrees)
                     System.out.println(d);
             } catch (GeneralProcessingException er) {
@@ -126,7 +126,7 @@ public class DegreeController {
      * @return
      * @throws GeneralProcessingException
      */
-    public static Degree[] getAllDegrees() throws GeneralProcessingException {
+    public static Degree[] getAllDegrees(Boolean onlyOfferedDegrees) throws GeneralProcessingException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -137,7 +137,12 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree;");
+            if (onlyOfferedDegrees) {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = true;");
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = false;");
+            }
+            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -191,7 +196,7 @@ public class DegreeController {
      * @throws NoRecordException
      */
 
-    public static Degree getDegree(String degreeCode) throws GeneralProcessingException, NoRecordException {
+    public static Degree getDegree(String degreeCode, Boolean onlyOfferedDegrees) throws GeneralProcessingException, NoRecordException {
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -208,8 +213,14 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ?;");
-            pstmt.setString(1, degreeCode);
+            if (onlyOfferedDegrees) {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = true;");
+                pstmt.setString(1, degreeCode);
+            } else {
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = false;");
+                pstmt.setString(1, degreeCode);
+            }
+            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -267,7 +278,8 @@ public class DegreeController {
         // Check for an exisiting degree
         Boolean degreeExists = true;
         try {
-            getDegree(degreeCode);
+            getDegree(degreeCode, true);
+            getDegree(degreeCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
         } catch (NoRecordException e) {

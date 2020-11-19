@@ -253,7 +253,12 @@ public class StudentController {
             String code = rs.getString("code");
 
             // get the degree from the degree controller
-            return DegreeController.getDegree(code);
+            try {
+                return DegreeController.getDegree(code, true);
+            } catch (NoRecordException e) {
+                return DegreeController.getDegree(code, false);
+            }
+            
 
         } catch (SQLException ex ) {
             ex.printStackTrace();

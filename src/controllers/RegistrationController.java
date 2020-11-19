@@ -647,7 +647,7 @@ public class RegistrationController {
             Character currentLevel = currentReg.getLevel();
 
             // Get info about the degree
-            Degree degree = DegreeController.getDegree(degreeCode);
+            Degree degree = DegreeController.getDegree(degreeCode, true);
             Integer maxLevel = degree.getMaxLevel();
 
             // If currently on placement - go to max level
