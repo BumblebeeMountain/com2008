@@ -3,41 +3,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - RegistrationController",
-            "request": "launch",
-            "mainClass": "controllers.RegistrationController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - StudentController",
-            "request": "launch",
-            "mainClass": "controllers.StudentController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - UserController",
-            "request": "launch",
-            "mainClass": "controllers.UserController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - ModuleController",
-            "request": "launch",
-            "mainClass": "controllers.ModuleController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - DepartmentController",
-            "request": "launch",
-            "mainClass": "controllers.DepartmentController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
             "name": "Database Setup",
             "request": "launch",
             "mainClass": "database.Setup"
