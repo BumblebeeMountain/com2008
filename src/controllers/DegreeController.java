@@ -26,19 +26,20 @@ public class DegreeController {
 
             // Change these values to insert a new degree
             try {
-                // createDegree("COMU01", "Computer Science", false, 3);
-                createDegree("HISU02", "History", true, 4);
+                createDegree("COMU01", "Computer Science", false, 3);
+                // createDegree("HISU02", "History", true, 4);
+                System.out.println("Created successfully.");
             } catch (ExistingRecordException e) {
                 System.out.println("This degree is already created!");
             } catch (GeneralProcessingException e) {
                 System.out.println("General processing error in creating a Degree");
             }
 
-            // create a degree module 
-            try {
-                createDegreeModule("COMU01","COM1001", true, "U");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM/COM001 has already been inserted");
+            // // create a degree module 
+            // try {
+            //     createDegreeModule("COMU01","COM1001", true, "U");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM/COM001 has already been inserted");
 
 
             // displaying all the degrees
@@ -54,17 +55,18 @@ public class DegreeController {
                 System.out.println(getDegree("COMU01").toString());
             } catch (NoRecordException er) {
                 System.out.println("There is no degree with this code.");
-            } catch (GeneralProcessingException er) {
-                System.out.println("General processing error in getting a Degree");
             }
+            // } catch (GeneralProcessingException er) {
+            //     System.out.println("General processing error in getting a Degree");
+            // }
 
-            // removing a degree
-            try {
-                removeDegree("COMU01");
-                System.out.println("Deleted COMU01");
-            } catch (GeneralProcessingException er) {
-                System.out.println("Failed to delete the degree.");
-            }
+            // // removing a degree
+            // try {
+            //     removeDegree("COMU01");
+            //     System.out.println("Deleted COMU01");
+            // } catch (GeneralProcessingException er) {
+            //     System.out.println("Failed to delete the degree.");
+            // }
 
 
             //get degree module 
@@ -97,10 +99,8 @@ public class DegreeController {
             e.printStackTrace();
         } 
 
-    } finally {
-        System.out.println("END");
-    }
-    }
+    } 
+    
 
     /**
      * Returns an array of all the degrees
