@@ -25,7 +25,7 @@ public class StudentController {
         "((Degree INNER JOIN Registration ON Degree.code = Registration.degreeCode) " +
         "INNER JOIN Student ON Registration.studentRegistrationNumber = Student.registrationNumber);";
     private final static String REMOVE_STUDENT_BY_REG_COMMAND = "DELETE FROM Student WHERE registrationNumber = ?;";
-    private final static String CREATE_STUDENT_COMMAND = "INSERT INTO Student(email, personalTutor) VALUES(?, ?);";
+    private final static String CREATE_STUDENT_COMMAND = "INSERT INTO Student(email, personalTutor, hasGraduated) VALUES(?, ?, false);";
 
     public static void main(String[] args) {
         try {
@@ -148,6 +148,7 @@ public class StudentController {
             int regNum = rs.getInt("registrationNumber");
             String email = rs.getString("email");
             String pTutor = rs.getString("personalTutor");
+            Boolean hasGraduated = rs.getBoolean("hasGraduated");
             User user;
             try {
                 // need to get the user account which is linked
@@ -161,7 +162,7 @@ public class StudentController {
             String forename = user.getForename();
             String surname = user.getSurname();
 
-            student = new Student(email, title, forename, surname, regNum, pTutor);
+            student = new Student(email, title, forename, surname, regNum, pTutor, hasGraduated);
             return student;
 
         } catch (SQLException ex ) {
@@ -306,7 +307,7 @@ public class StudentController {
             if (rs == null || !rs.next()) { throw new GeneralProcessingException(); }
             int regNum = rs.getInt("registrationNumber");
 
-            return new Student(email, title, forename, surname, regNum, pTutor);
+            return new Student(email, title, forename, surname, regNum, pTutor, false); // Assume not graduated
 
         } catch (SQLException ex ) {
             ex.printStackTrace();
