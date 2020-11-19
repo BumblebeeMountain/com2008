@@ -23,16 +23,7 @@ public class Main extends JFrame {
         
     }
 
-    /**
-     * Move to the teacher dashboard
-     * @param email
-     */
-    public void moveToTeacherDashboard () {
-        contentPane.invalidate();
-        contentPane.removeAll();
-        contentPane.add(new TeacherDashboard(this));
-        contentPane.validate();
-    }
+    // Move to functions (Screen transitions) =================================
     
     /**
      * Return the current screen to the login screen
@@ -43,5 +34,23 @@ public class Main extends JFrame {
         contentPane.add(new Login(this));
         contentPane.validate();
     }
+
+    public void moveToStudentRecord(Integer registrationNumber) {
+
+    }
+
+    public void moveToRegistrationDetails(Integer registrationNumber, Character period) {
+
+    }
+
+    public void moveToTeacherDashboard() {
+
+    }
+
+    public void moveToModuleGradingScreen(Integer registrationNumber) {
+
+    }
+
+    public void moveToRegistrarDashboard()
 
 }
