@@ -41,33 +41,40 @@ public class StudentController {
                 System.out.println(s);
             }
 
-            try {
-                Student james = getStudent(reg1.getRegistrationNumber());
-                System.out.println(james);
-            } catch (NoRecordException e) {
-                System.out.println("James doesn't exist");
-            }
-
-            try {
-                Student dom = getStudent(reg2.getRegistrationNumber());
-                System.out.println(dom);
-            } catch (NoRecordException e) {
-                System.out.println("Dom doesn't exist");
-            }
-            
-            System.out.println("randomer exists:");
-            System.out.println(studentExists(28549505));
-
-            System.out.println("removing james");
-            removeStudent(reg1.getRegistrationNumber());
-
-            System.out.println("james exists: ");
-            System.out.println(studentExists(1));
+            graduateStudent(reg1.getRegistrationNumber());
 
             System.out.println("all Students:");
             for (Student s : getAllStudents() ) {
                 System.out.println(s);
             }
+
+            // try {
+            //     Student james = getStudent(reg1.getRegistrationNumber());
+            //     System.out.println(james);
+            // } catch (NoRecordException e) {
+            //     System.out.println("James doesn't exist");
+            // }
+
+            // try {
+            //     Student dom = getStudent(reg2.getRegistrationNumber());
+            //     System.out.println(dom);
+            // } catch (NoRecordException e) {
+            //     System.out.println("Dom doesn't exist");
+            // }
+            
+            // System.out.println("randomer exists:");
+            // System.out.println(studentExists(28549505));
+
+            // System.out.println("removing james");
+            // removeStudent(reg1.getRegistrationNumber());
+
+            // System.out.println("james exists: ");
+            // System.out.println(studentExists(1));
+
+            // System.out.println("all Students:");
+            // for (Student s : getAllStudents() ) {
+            //     System.out.println(s);
+            // }
 
         } catch (Exception ex) {
             ex.printStackTrace();
