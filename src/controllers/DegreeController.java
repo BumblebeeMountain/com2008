@@ -144,11 +144,12 @@ public class DegreeController {
                 String degreeCode = res.getString("code");
                 Boolean hasYearInIndustry = res.getBoolean("hasYearInIndustry");
                 Integer maxLevel = res.getInt("maxLevel");
+                Boolean currentlyOffered = res.getBoolean("currentlyOffered");
                 Department leadDepartment = getLeadDepartment(degreeCode);
                 Department[] partnerDepartments = getPartnerDepartments(degreeCode);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
-                        partnerDepartments));
+                        partnerDepartments, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -193,6 +194,7 @@ public class DegreeController {
         String name = null;
         Boolean hasYearInIndustry = null;
         Integer maxLevel = null;
+        Boolean currentlyOffered = null;
         Department leadDepartment = null;
         Department[] partnerDepartments = null;
 
@@ -215,6 +217,7 @@ public class DegreeController {
             code = res.getString("code");
             hasYearInIndustry = res.getBoolean("hasYearInIndustry");
             maxLevel = res.getInt("maxLevel");
+            currentlyOffered = res.getBoolean("currentlyOffered");
             leadDepartment = getLeadDepartment(code);
             partnerDepartments = getPartnerDepartments(code);
 
@@ -240,7 +243,7 @@ public class DegreeController {
         }
 
         // Return a new degree object
-        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments);
+        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments, currentlyOffered);
 
     }
 
@@ -360,6 +363,7 @@ public class DegreeController {
         String degCode = null;
         Boolean isCore = null;
         Character level = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -385,6 +389,7 @@ public class DegreeController {
             degCode = res.getString("degreeCode");
             isCore = res.getBoolean("core");
             level = res.getString("level").charAt(0);
+            currentlyOffered = res.getBoolean("currentlyOffered");
 
         } catch (NoRecordException e) {
 
@@ -408,7 +413,7 @@ public class DegreeController {
         }
 
         // Return a new object
-        return new DegreeModule(modName, modCode, degCredits, teachPeriod, degCode, isCore, level);
+        return new DegreeModule(modName, modCode, degCredits, teachPeriod, currentlyOffered, degCode, isCore, level);
 
     }
 
@@ -435,6 +440,7 @@ public class DegreeController {
         String degCode = null;
         Boolean isCore = null;
         Character level = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -456,8 +462,9 @@ public class DegreeController {
                 degCode = res.getString("degreeCode");
                 isCore = res.getBoolean("core");
                 level = res.getString("level").charAt(0);
+                currentlyOffered = res.getBoolean("currentlyOffered");
 
-                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, degCode, isCore, level));
+                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, currentlyOffered, degCode, isCore, level));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -699,6 +706,7 @@ public class DegreeController {
         String modCode = null;
         Integer modCredits = null;
         String teachingPeriod = null;
+        Boolean currentlyOffered = null;
 
         ArrayList<Module> coreModules = new ArrayList<>();
 
@@ -721,8 +729,9 @@ public class DegreeController {
                 modCode = res.getString("code");
                 modCredits = res.getInt("credits");
                 teachingPeriod = res.getString("teachingPeriod");
+                currentlyOffered = res.getBoolean("currentlyOffered");
 
-                coreModules.add(new Module(modName, modCode, modCredits, teachingPeriod));
+                coreModules.add(new Module(modName, modCode, modCredits, teachingPeriod, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -759,6 +768,7 @@ public class DegreeController {
         String modCode = null;
         Integer modCredits = null;
         String teachPeriod = null;
+        Boolean currentlyOffered = null;
 
         ArrayList<Module> optionalModules = new ArrayList<>();
 
@@ -780,7 +790,7 @@ public class DegreeController {
                 modCredits = res.getInt("credits");
                 teachPeriod = res.getString("teachingPeriod");
 
-                optionalModules.add(new Module(modName, modCode, modCredits, teachPeriod));
+                optionalModules.add(new Module(modName, modCode, modCredits, teachPeriod, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
