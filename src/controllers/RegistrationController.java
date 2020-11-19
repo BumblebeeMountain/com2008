@@ -12,7 +12,6 @@ import database.ConnectionManager;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
-import exceptions.ShouldGraduateException;
 import models.Degree;
 import models.Registration;
 import models.SelectedModule;
@@ -638,7 +637,7 @@ public class RegistrationController {
      * @throws NoRecordException
      * @throws ShouldGraduateException
      */
-    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException, ShouldGraduateException {
+    public static Character getNextProgressingLevel(Integer registrationNumber) throws GeneralProcessingException, NoRecordException {
 
         try {
 
@@ -658,7 +657,7 @@ public class RegistrationController {
 
             // If on max level - graduate
             if (currentLevel == maxLevel.toString().charAt(0)) {
-                throw new ShouldGraduateException();
+                return new Character('G'); // G for graduate
             }
 
             // If the degree has a year in industry
