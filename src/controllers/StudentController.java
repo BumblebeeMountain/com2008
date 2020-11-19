@@ -427,4 +427,41 @@ public class StudentController {
 
     }
 
+    /**
+     * Graduate a given student
+     * @param registrationNumber
+     * @throws GeneralProcessingException
+     */
+    public static void graduateStudent(
+            Integer registrationNumber
+            ) throws GeneralProcessingException {
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("UPDATE Student SET hasGraduated = true WHERE registrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try { 
+                if (pstmt != null) pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+    }
+
 }
