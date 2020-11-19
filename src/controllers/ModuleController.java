@@ -73,7 +73,8 @@ public class ModuleController {
                 String name = res.getString("name");
                 Integer credits = res.getInt("credits");
                 String teachingPeriod = res.getString("teachingPeriod");
-                modules.add(new Module(name, code, credits, teachingPeriod));
+                Boolean currentlyOffered = res.getBoolean("currentlyOffered");
+                modules.add(new Module(name, code, credits, teachingPeriod, currentlyOffered));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -111,6 +112,7 @@ public class ModuleController {
         String name = null;
         Integer credits = null;
         String teachingPeriod = null;
+        Boolean currentlyOffered = null;
 
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
@@ -130,6 +132,7 @@ public class ModuleController {
             name = res.getString("name");
             credits = res.getInt("credits");
             teachingPeriod = res.getString("teachingPeriod");
+            currentlyOffered = res.getBoolean("currentlyOffered");
 
         } catch (NoRecordException e) {
 
@@ -151,7 +154,7 @@ public class ModuleController {
         }
 
         // Return a new department object
-        return new Module(name, code, credits, teachingPeriod);
+        return new Module(name, code, credits, teachingPeriod, currentlyOffered);
 
     }
 
