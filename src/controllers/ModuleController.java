@@ -226,8 +226,11 @@ public class ModuleController {
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
 
+            // Remove the degreeModule link
+            DegreeController.removeDegreeModule(moduleCode);
+
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("DELETE FROM Module WHERE code = ?;");
+            pstmt = con.prepareStatement("UPDATE Module SET currentlyOffered = false WHERE code = ?;");
             pstmt.setString(1, moduleCode);
 
             // Execute the query

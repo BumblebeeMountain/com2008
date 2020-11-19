@@ -318,7 +318,7 @@ public class DegreeController {
         try (Connection con = ConnectionManager.getConnection()) {
 
             // Prepare the sql parameters
-            pstmt = con.prepareStatement("DELETE FROM Degree WHERE code = ?;");
+            pstmt = con.prepareStatement("UPDATE Degree SET currentlyOffered = false WHERE code = ?;");
             pstmt.setString(1, degreeCode);
 
             // Execute the query
@@ -566,6 +566,43 @@ public class DegreeController {
             // Prepare the sql parameters
             pstmt = con.prepareStatement("DELETE FROM DegreeModule WHERE degreeCode = ? AND moduleCode = ?;");
             pstmt.setString(1, degreeCode);
+            pstmt.setString(2, moduleCode);
+
+            // Execute the query
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+    }
+
+    /**
+     * Removes a module / degree link
+     * 
+     * @param degreeCode
+     * @param moduleCode
+     * @throws GeneralProcessingException
+     */
+    public static void removeDegreeModule(String moduleCode) throws GeneralProcessingException {
+        // Variables
+        PreparedStatement pstmt = null;
+
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement("DELETE FROM DegreeModule WHERE moduleCode = ?;");
             pstmt.setString(2, moduleCode);
 
             // Execute the query
