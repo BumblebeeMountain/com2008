@@ -26,18 +26,18 @@ public class DegreeController {
             // DEPARTMENTS ==========================================
 
             // try {
-            //     Department d = getLeadDepartment("COMU01");
-            //     System.out.println(d);
+            // Department d = getLeadDepartment("COMU01");
+            // System.out.println(d);
             // } catch (NoRecordException e) {
-            //     System.out.println("COMU01 has no lead");
+            // System.out.println("COMU01 has no lead");
             // }
 
             // try {
-            //     Department[] d = getPartnerDepartments("COMU01");
-            //     for (Department d_ : d) 
-            //         System.out.println(d_);
+            // Department[] d = getPartnerDepartments("COMU01");
+            // for (Department d_ : d)
+            // System.out.println(d_);
             // } catch (GeneralProcessingException e) {
-            //     System.out.println(e);
+            // System.out.println(e);
             // }
 
             // DEGREE ===============================================
@@ -65,57 +65,56 @@ public class DegreeController {
             // DEGREE MODULE ========================================
 
             // try {
-            //     createDegreeModule("COMU01", "COM1001", true, "1");
+            // createDegreeModule("COMU01", "COM1001", true, "1");
             // } catch (ExistingRecordException e) {
-            //     System.out.println("Degree module already exists");
+            // System.out.println("Degree module already exists");
             // }
 
             // try {
-            //     createDegreeModule("COMU01", "COM1003", false, "1");
+            // createDegreeModule("COMU01", "COM1003", false, "1");
             // } catch (ExistingRecordException e) {
-            //     System.out.println("Degree module already exists");
+            // System.out.println("Degree module already exists");
             // }
 
             // removeDegreeModule("COMU01", "COM1001");
 
             // // Print all degree modules
             // try {
-            //     DegreeModule[] arr = getAllDegreeModules();
-            //     for (DegreeModule m : arr)
-            //         System.out.println(m);
+            // DegreeModule[] arr = getAllDegreeModules();
+            // for (DegreeModule m : arr)
+            // System.out.println(m);
             // } catch (GeneralProcessingException e) {
-            //     System.out.println(e);
+            // System.out.println(e);
             // }
 
             // try {
-            //     Module[] arr = getCoreModules("COMU01", '1');
-            //     for (Module m : arr)
-            //         System.out.println(m);
+            // Module[] arr = getCoreModules("COMU01", '1');
+            // for (Module m : arr)
+            // System.out.println(m);
             // } catch (GeneralProcessingException e) {
-            //     System.out.println(e);
+            // System.out.println(e);
             // }
 
             // try {
-            //     Module[] arr = getOptionalModules("COMU01", '1');
-            //     for (Module m : arr)
-            //         System.out.println(m);
+            // Module[] arr = getOptionalModules("COMU01", '1');
+            // for (Module m : arr)
+            // System.out.println(m);
             // } catch (GeneralProcessingException e) {
-            //     System.out.println(e);
+            // System.out.println(e);
             // }
 
             // try {
-            //     DegreeModule m = getDegreeModule("COMU01", "COM1001");
-            //     System.out.println(m);
+            // DegreeModule m = getDegreeModule("COMU01", "COM1001");
+            // System.out.println(m);
             // } catch (NoRecordException e) {
-            //     System.out.println("No degree module to be found");
+            // System.out.println("No degree module to be found");
             // }
 
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
 
-    } 
-    
+    }
 
     /**
      * Returns an array of all the degrees
@@ -145,11 +144,11 @@ public class DegreeController {
                 String degreeCode = res.getString("code");
                 Boolean hasYearInIndustry = res.getBoolean("hasYearInIndustry");
                 Integer maxLevel = res.getInt("maxLevel");
-                Department leadDepartment = getLeadDepartment(degreeCode); 
-                Department[] partnerDepartments =getPartnerDepartments(degreeCode);
+                Department leadDepartment = getLeadDepartment(degreeCode);
+                Department[] partnerDepartments = getPartnerDepartments(degreeCode);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
-                partnerDepartments));
+                        partnerDepartments));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -194,7 +193,7 @@ public class DegreeController {
         String name = null;
         Boolean hasYearInIndustry = null;
         Integer maxLevel = null;
-        Department leadDepartment = null; 
+        Department leadDepartment = null;
         Department[] partnerDepartments = null;
 
         // Create the connection
@@ -241,19 +240,18 @@ public class DegreeController {
         }
 
         // Return a new degree object
-        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment,
-        partnerDepartments);
+        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments);
 
     }
 
     /**
-    * Creates a degree from a given code and name
-    * 
-    * @param degreeCode
-    * @param degreeName
-    * @throws GeneralProcessingException
-    * @throws ExistingRecordException
-    */
+     * Creates a degree from a given code and name
+     * 
+     * @param degreeCode
+     * @param degreeName
+     * @throws GeneralProcessingException
+     * @throws ExistingRecordException
+     */
     public static void createDegree(String degreeCode, String degreeName, Boolean hasYearInIndustry, Integer maxLevel)
             throws GeneralProcessingException, ExistingRecordException {
 
@@ -281,7 +279,6 @@ public class DegreeController {
             pstmt.setString(2, degreeName);
             pstmt.setBoolean(3, hasYearInIndustry);
             pstmt.setInt(4, maxLevel);
-
 
             // Execute the query
             pstmt.executeUpdate();
@@ -338,7 +335,7 @@ public class DegreeController {
             }
 
         }
-        
+
     }
 
     // This is private as it is only for internal checks
@@ -487,7 +484,7 @@ public class DegreeController {
 
     }
 
-      /**
+    /**
      * Creates a degree module link
      * 
      * @param degreeCode
@@ -498,7 +495,7 @@ public class DegreeController {
      */
     public static void createDegreeModule(String degreeCode, String moduleCode, Boolean core, String level)
             throws GeneralProcessingException, ExistingRecordException {
-        
+
         // Check for an exisiting department link
         Boolean moduleLinkExists = true;
         try {
@@ -553,7 +550,7 @@ public class DegreeController {
      * @throws GeneralProcessingException
      */
     public static void removeDegreeModule(String degreeCode, String moduleCode) throws GeneralProcessingException {
-         // Variables
+        // Variables
         PreparedStatement pstmt = null;
 
         // Create the connection
@@ -612,7 +609,7 @@ public class DegreeController {
             // Filter through the output
             departCode = res.getString("departmentCode");
             departName = res.getString("name");
-           
+
         } catch (NoRecordException e) {
 
             throw e; // Caught and re-thrown if there are no records
@@ -641,51 +638,51 @@ public class DegreeController {
 
     // This is private as it is only for internal checks
     private static Department[] getPartnerDepartments(String degreeCode) throws GeneralProcessingException {
-            // Variables
-            PreparedStatement pstmt = null;
-            ResultSet res = null;
-            String departCode = null;
-            String departName = null;
+        // Variables
+        PreparedStatement pstmt = null;
+        ResultSet res = null;
+        String departCode = null;
+        String departName = null;
 
-            ArrayList<Department> partnerDepartments = new ArrayList<>();
-   
-            // Create the connection
-            try (Connection con = ConnectionManager.getConnection()) {
-   
-                // Prepare the sql parameters
-                pstmt = con.prepareStatement(
-                       "SELECT * FROM Department INNER JOIN DegreeDepartment ON Department.code = DegreeDepartment.departmentCode WHERE degreeCode = ? AND isLead = ?;");
-                pstmt.setString(1, degreeCode);
-                pstmt.setBoolean(2, false);
-   
-                // Execute the query
-                res = pstmt.executeQuery();
-   
-                // Filter through the output
-                while (res.next()) {
-                    departName = res.getString("name");
-                    departCode = res.getString("departmentCode");
+        ArrayList<Department> partnerDepartments = new ArrayList<>();
 
-                    partnerDepartments.add(new Department(departName, departCode));
-                }
-              
-           } catch (Exception e) { // Catch general exception
-   
-               throw new GeneralProcessingException();
-   
-           } finally { // Close the prepared statement
-   
-               try {
-                   if (pstmt != null)
-                       pstmt.close();
-                   if (res != null)
-                       res.close();
-               } catch (SQLException e) {
-                   throw new GeneralProcessingException();
-               }
-   
-           }
-   
+        // Create the connection
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            // Prepare the sql parameters
+            pstmt = con.prepareStatement(
+                    "SELECT * FROM Department INNER JOIN DegreeDepartment ON Department.code = DegreeDepartment.departmentCode WHERE degreeCode = ? AND isLead = ?;");
+            pstmt.setString(1, degreeCode);
+            pstmt.setBoolean(2, false);
+
+            // Execute the query
+            res = pstmt.executeQuery();
+
+            // Filter through the output
+            while (res.next()) {
+                departName = res.getString("name");
+                departCode = res.getString("departmentCode");
+
+                partnerDepartments.add(new Department(departName, departCode));
+            }
+
+        } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
         // Transform the arraylist into a standard array
         Department[] arr = new Department[partnerDepartments.size()];
         arr = partnerDepartments.toArray(arr);
@@ -693,7 +690,7 @@ public class DegreeController {
     }
 
     public static Module[] getCoreModules(String degreeCode, Character level) throws GeneralProcessingException {
-        
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
