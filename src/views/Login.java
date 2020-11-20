@@ -23,9 +23,7 @@ public class Login extends JPanel {
     private void loginButtonActionPerformed(ActionEvent e) {
 
         String email = emailTextBox.getText().trim().toLowerCase();
-        System.out.println(email);
         String password = new String(passwordBox.getPassword());
-        System.out.println(password);
 
         if (email.equals("") || password.equals("")) {
             rootFrame.showError("Please complete the form.");
