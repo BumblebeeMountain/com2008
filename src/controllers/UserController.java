@@ -45,6 +45,14 @@ public class UserController {
                 Constants.AccountType.STUDENT
             );
 
+            String email2 = createUser(
+                Constants.Title.MR,
+                "John",
+                "Smith",
+                "password",
+                Constants.AccountType.REGISTRAR
+            ).getEmail();
+
             System.out.println("all users now: ");
             User[] users = getAllUsers();
             for (User user : users) {

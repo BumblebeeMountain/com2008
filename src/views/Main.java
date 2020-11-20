@@ -76,7 +76,10 @@ public class Main extends JFrame {
     }
 
     public void moveToRegistrarDashboard() {
-
+        contentPane.invalidate();
+        contentPane.removeAll();
+        contentPane.add(new RegistrarDashboard(this));
+        contentPane.validate();
     }
 
     public void moveToModuleAddDrop(Integer registrationNumber) {

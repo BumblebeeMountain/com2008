@@ -31,7 +31,22 @@ public class Login extends JPanel {
             User user = null;
             try {
                 user = UserController.login(email, password);
-                rootFrame.showMessage("Hello " + user.getForename() + ". Your user level is " + user.getAccountType());
+                switch (user.getAccountType()) {
+                    case ADMINISTRATOR:
+                        rootFrame.showMessage("The admin dashboard is still in development.");
+                        break;
+                    case REGISTRAR:
+                        this.rootFrame.moveToRegistrarDashboard();
+                        break;
+                    case TEACHER:
+                        rootFrame.showMessage("The teacher dashboard is still in development.");
+                        break;
+                    case STUDENT:
+                        rootFrame.showMessage("The student dashboard is still in development.");
+                        break;
+                    default:
+                        throw new Exception();
+                }
             } catch (IncorrectLoginCredentialsException err) {
                 rootFrame.showError("Incorrect login credentials. Please try again.");
             } catch (Exception err) {
