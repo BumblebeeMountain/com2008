@@ -163,7 +163,6 @@ public class DegreeController {
                 Boolean currentlyOffered = res.getBoolean("currentlyOffered");
                 Department leadDepartment = getLeadDepartment(degreeCode);
                 Department[] partnerDepartments = getPartnerDepartments(degreeCode);
-                System.out.println(partnerDepartments.length);
 
                 degrees.add(new Degree(degreeName, degreeCode, hasYearInIndustry, maxLevel, leadDepartment,
                         partnerDepartments, currentlyOffered));
