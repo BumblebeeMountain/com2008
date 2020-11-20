@@ -13,13 +13,15 @@ public class Main extends JFrame {
      */
     public Main() {
 
+        // Standard info about the system
         setTitle("University Management System");
         contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(1, 1));
         setSize(800, 500);
-        add(new Login(this)); // Initial screen
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+
+        add(new Login(this)); // Initial screen
         setVisible(true); // Show
 
     }
@@ -32,8 +34,7 @@ public class Main extends JFrame {
      * @param message
      */
     public void showError(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error",
-                JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -47,14 +48,15 @@ public class Main extends JFrame {
 
     // Move to functions (Screen transitions) =================================
 
-    /**
-     * Return the current screen to the login screen
-     */
     public void logout() {
         contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new Login(this));
         contentPane.validate();
+    }
+
+    public void movetoLogin() {
+        logout();
     }
 
     public void moveToStudentRecord(Integer registrationNumber) {
@@ -74,6 +76,58 @@ public class Main extends JFrame {
     }
 
     public void moveToRegistrarDashboard() {
+
+    }
+
+    public void moveToModuleAddDrop(Integer registrationNumber) {
+
+    }
+
+    public void moveToStudentSignUp() {
+
+    }
+
+    public void moveToAdminDashboard() {
+
+    }
+
+    public void moveToUserDashboard() {
+
+    }
+
+    public void moveToAddUser() {
+
+    }
+
+    public void moveToDepartmentDashboard() {
+
+    }
+
+    public void moveToAddDepartment() {
+
+    }
+
+    public void moveToModuleDashboard() {
+
+    }
+
+    public void moveToAddModule() {
+
+    }
+
+    public void moveToDegreeDashboard() {
+
+    }
+
+    public void moveToAddDegree() {
+
+    }
+
+    public void moveToModuleOfferDashboard() {
+
+    }
+
+    public void moveToAddModuleOffer() {
 
     }
 
