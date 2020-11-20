@@ -83,6 +83,7 @@ public class ModuleGrades extends JPanel {
 
             // ---- registrationNumber ----
             registrationNumber.setText("reg number");
+            registrationNumber.setFont(new Font("Tahoma", Font.PLAIN, 11));
             panel2.add(registrationNumber, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 

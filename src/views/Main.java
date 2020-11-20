@@ -79,7 +79,10 @@ public class Main extends JFrame {
     }
 
     public void moveToModuleGradingScreen(Integer registrationNumber) {
-
+        contentPane.invalidate();
+        contentPane.removeAll();
+        contentPane.add(new ModuleGrades(this, registrationNumber));
+        contentPane.validate();
     }
 
     public void moveToRegistrarDashboard() {
