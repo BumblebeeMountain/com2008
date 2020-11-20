@@ -21,7 +21,9 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        add(new Login(this)); // Initial screen
+        // add(new Login(this)); // Initial screen
+        add(new RegistrarDashboard(this));
+
         setVisible(true); // Show
 
     }
@@ -87,7 +89,10 @@ public class Main extends JFrame {
     }
 
     public void moveToStudentSignUp() {
-
+        contentPane.invalidate();
+        contentPane.removeAll();
+        contentPane.add(new StudentSignUp(this));
+        contentPane.validate();
     }
 
     public void moveToAdminDashboard() {

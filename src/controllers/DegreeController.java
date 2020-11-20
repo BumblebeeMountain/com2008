@@ -43,9 +43,16 @@ public class DegreeController {
             // DEGREE ===============================================
 
             try {
-                createDegree("COMU01", "Computer Science", true, 4);
+                createDegree("COMU01", "BSc Computer Science", false, 3);
             } catch (ExistingRecordException e) {
                 System.out.println("COMU01 already exists");
+            }
+
+            try {
+                DepartmentController.createDepartment("COM", "Computer Science");
+                DepartmentController.createDegreeDepartment("COM", "COMU01", true);
+            } catch (Exception e) {
+                System.out.println("Error linking departments");
             }
 
             try {
@@ -56,15 +63,15 @@ public class DegreeController {
                 System.out.println("Couldn't print out all degrees.");
             }
 
-            removeDegree("COMU01");
+            // removeDegree("COMU01");
 
-            try {
-                Degree[] allDegrees = getAllDegrees(false);
-                for (Degree d : allDegrees)
-                    System.out.println(d);
-            } catch (GeneralProcessingException er) {
-                System.out.println("Couldn't print out all degrees.");
-            }
+            // try {
+            //     Degree[] allDegrees = getAllDegrees(false);
+            //     for (Degree d : allDegrees)
+            //         System.out.println(d);
+            // } catch (GeneralProcessingException er) {
+            //     System.out.println("Couldn't print out all degrees.");
+            // }
 
             // DEGREE MODULE ========================================
 

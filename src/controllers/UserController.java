@@ -45,7 +45,7 @@ public class UserController {
                 Constants.AccountType.STUDENT
             );
 
-            String email2 = createUser(
+            createUser(
                 Constants.Title.MR,
                 "John",
                 "Smith",

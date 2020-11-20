@@ -19,7 +19,7 @@ public class RegistrarDashboard extends JPanel {
     }
 
     private void studentSignUpButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToStudentSignUp();
     }
 
     private void moduleButtonActionPerformed(ActionEvent e) {
@@ -27,9 +27,6 @@ public class RegistrarDashboard extends JPanel {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Dominic Barter
         panel1 = new JPanel();
         logoutButton = new JButton();
         panel2 = new JPanel();
