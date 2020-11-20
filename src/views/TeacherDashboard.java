@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.StudentController;
+import models.Student;
+
 public class TeacherDashboard extends JPanel {
 
     private static final long serialVersionUID = -4029694441237975254L;
@@ -15,11 +18,23 @@ public class TeacherDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void studentRecordButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        String registrationNumber = registrationNumberBox.getText();
+        if (registrationNumber.equals("")) {
+            rootFrame.showError("Please complete the form.");
+        } else {
+            try {
+                Student student = StudentController.getStudent(Integer.valueOf(registrationNumber));
+                this.rootFrame.moveToStudentRecord(student.getRegistrationNumber());
+            } catch (Exception err) {
+                rootFrame.showError("Invalid registration number. Please try again.");
+            }
+        }
+
     }
 
     private void updateGradesButtonActionPerformed(ActionEvent e) {

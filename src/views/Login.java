@@ -39,7 +39,7 @@ public class Login extends JPanel {
                         this.rootFrame.moveToRegistrarDashboard();
                         break;
                     case TEACHER:
-                        rootFrame.showMessage("The teacher dashboard is still in development.");
+                        this.rootFrame.moveToTeacherDashboard();
                         break;
                     case STUDENT:
                         Student student = StudentController.getStudent(email);

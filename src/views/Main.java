@@ -72,7 +72,10 @@ public class Main extends JFrame {
     }
 
     public void moveToTeacherDashboard() {
-
+        contentPane.invalidate();
+        contentPane.removeAll();
+        contentPane.add(new TeacherDashboard(this));
+        contentPane.validate();
     }
 
     public void moveToModuleGradingScreen(Integer registrationNumber) {
