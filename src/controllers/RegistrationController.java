@@ -15,7 +15,6 @@ import exceptions.NoRecordException;
 import models.Degree;
 import models.Registration;
 import models.SelectedModule;
-import models.Student;
 
 public class RegistrationController {
 
@@ -23,36 +22,38 @@ public class RegistrationController {
 
         try {
 
-            final Integer REG_NUMBER = 11;
+            final Integer REG_NUMBER = 1;
 
-            // First output all the current students
-            for (Student s: StudentController.getAllStudents())
-                System.out.println(s);
+            generateNextRegistration(REG_NUMBER, '2');
 
-            // Try creating a registration
-            try {
-                createInitialRegistration(REG_NUMBER, "COMU01");
-            } catch (ExistingRecordException e) {
-                System.out.println("REG_NUMBER/COMU01 has already been inserted");
-            }
+            // // First output all the current students
+            // for (Student s: StudentController.getAllStudents())
+            //     System.out.println(s);
 
-            // Try adding selected modules to this registration
-            try {
-                createSelectedModule(REG_NUMBER, 'A', "COM1001");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM1001 has already been selected");
-            }
-            try {
-                createSelectedModule(REG_NUMBER, 'A', "COM1003");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM1003 has already been selected");
-            }
+            // // Try creating a registration
+            // try {
+            //     createInitialRegistration(REG_NUMBER, "COMU01");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("REG_NUMBER/COMU01 has already been inserted");
+            // }
 
-            try {
-                createSelectedModule(REG_NUMBER, 'B', "COM1001");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM1001 has already been selected");
-            }
+            // // Try adding selected modules to this registration
+            // try {
+            //     createSelectedModule(REG_NUMBER, 'A', "COM1001");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM1001 has already been selected");
+            // }
+            // try {
+            //     createSelectedModule(REG_NUMBER, 'A', "COM1003");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM1003 has already been selected");
+            // }
+
+            // try {
+            //     createSelectedModule(REG_NUMBER, 'B', "COM1001");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM1001 has already been selected");
+            // }
 
             // try {
             //     generateNextRegistration(REG_NUMBER, '2');
@@ -66,13 +67,13 @@ public class RegistrationController {
             //     System.out.println("Module not selected");
             // }
 
-            try {
-                System.out.println(calculateOverallGrade(REG_NUMBER, 'A'));
-            } catch (NoRecordException e) {
-                System.out.println("No selected modules");
-            }
+            // try {
+            //     System.out.println(calculateOverallGrade(REG_NUMBER, 'A'));
+            // } catch (NoRecordException e) {
+            //     System.out.println("No selected modules");
+            // }
 
-            removeSelectedModule(REG_NUMBER, 'B', "COM1001");
+            // removeSelectedModule(REG_NUMBER, 'B', "COM1001");
 
             // Output all the current registrations
             Registration[] arr = getStudentRegistrations(REG_NUMBER);

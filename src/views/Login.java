@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.StudentController;
 import controllers.UserController;
 import exceptions.IncorrectLoginCredentialsException;
+import models.Student;
 import models.User;
 
 public class Login extends JPanel {
@@ -42,7 +44,8 @@ public class Login extends JPanel {
                         rootFrame.showMessage("The teacher dashboard is still in development.");
                         break;
                     case STUDENT:
-                        rootFrame.showMessage("The student dashboard is still in development.");
+                        Student student = StudentController.getStudent(email);
+                        this.rootFrame.moveToStudentRecord(student.getRegistrationNumber());
                         break;
                     default:
                         throw new Exception();

@@ -21,8 +21,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        // add(new Login(this)); // Initial screen
-        add(new RegistrarDashboard(this));
+        add(new Login(this)); // Initial screen
 
         setVisible(true); // Show
 
@@ -62,7 +61,10 @@ public class Main extends JFrame {
     }
 
     public void moveToStudentRecord(Integer registrationNumber) {
-
+        contentPane.invalidate();
+        contentPane.removeAll();
+        contentPane.add(new StudentRecord(this, registrationNumber));
+        contentPane.validate();
     }
 
     public void moveToRegistrationDetails(Integer registrationNumber, Character period) {
