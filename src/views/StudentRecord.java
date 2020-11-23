@@ -61,9 +61,6 @@ public class StudentRecord extends JPanel {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Dominic Barter
         panel1 = new JPanel();
         logoutButton = new JButton();
         scrollPane1 = new JScrollPane();
@@ -188,7 +185,6 @@ public class StudentRecord extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         }
         add(panel3, BorderLayout.EAST);
-        // JFormDesigner - End of component initialization //GEN-END:initComponents
     }
 
     private JPanel panel1;

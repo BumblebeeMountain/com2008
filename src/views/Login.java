@@ -58,9 +58,6 @@ public class Login extends JPanel {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Dominic Barter
         panel1 = new JPanel();
         label1 = new JLabel();
         emailTextBox = new JTextField();

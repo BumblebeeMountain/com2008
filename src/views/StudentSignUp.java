@@ -68,9 +68,6 @@ public class StudentSignUp extends JPanel {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Dominic Barter
         panel1 = new JPanel();
         logoutButton = new JButton();
         goBackButton = new JButton();
@@ -181,7 +178,6 @@ public class StudentSignUp extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
         }
         add(panel3, BorderLayout.CENTER);
-        // JFormDesigner - End of component initialization //GEN-END:initComponents
     }
 
     private JPanel panel1;

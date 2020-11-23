@@ -106,7 +106,6 @@ public class RegistrationDetails extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         }
         add(panel2, BorderLayout.EAST);
-        // JFormDesigner - End of component initialization //GEN-END:initComponents
     }
 
     private JPanel panel1;
