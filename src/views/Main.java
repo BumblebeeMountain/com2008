@@ -50,10 +50,10 @@ public class Main extends JFrame {
     // Move to functions (Screen transitions) =================================
 
     public void logout() {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new Login(this));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void movetoLogin() {
@@ -61,10 +61,10 @@ public class Main extends JFrame {
     }
 
     public void moveToStudentRecord(Integer registrationNumber) {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new StudentRecord(this, registrationNumber));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToRegistrationDetails(Integer registrationNumber, Character period) {
@@ -72,24 +72,25 @@ public class Main extends JFrame {
     }
 
     public void moveToTeacherDashboard() {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new TeacherDashboard(this));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
+
     }
 
     public void moveToModuleGradingScreen(Integer registrationNumber) {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new ModuleGrades(this, registrationNumber));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToRegistrarDashboard() {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new RegistrarDashboard(this));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToModuleAddDrop(Integer registrationNumber) {
@@ -97,10 +98,10 @@ public class Main extends JFrame {
     }
 
     public void moveToStudentSignUp() {
-        contentPane.invalidate();
         contentPane.removeAll();
         contentPane.add(new StudentSignUp(this));
-        contentPane.validate();
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAdminDashboard() {
