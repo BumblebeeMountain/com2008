@@ -50,6 +50,7 @@ public class StudentRecord extends JPanel {
             }
 
             // Table gets set in the initComponents section - go look there!
+            registrationTable.getTableHeader().setReorderingAllowed(false);
 
         } catch (Exception e) {
             this.rootFrame.logout(); // Error

@@ -27,6 +27,7 @@ public class RegistrationDetails extends JPanel {
         } catch (Exception e) {
             this.rootFrame.moveToStudentRecord(this.registrationNumber); // Errored
         }
+
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
