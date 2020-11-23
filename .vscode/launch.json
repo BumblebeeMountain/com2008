@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - DepartmentController",
+            "name": "CodeLens (Launch) - RegistrationController",
             "request": "launch",
-            "mainClass": "controllers.DepartmentController",
+            "mainClass": "controllers.RegistrationController",
             "projectName": "com2008_8b977ed9"
         },
         {
@@ -17,9 +17,9 @@
         },
         {
             "type": "java",
-            "name": "CodeLens (Launch) - StudentController",
+            "name": "CodeLens (Launch) - UserController",
             "request": "launch",
-            "mainClass": "controllers.StudentController",
+            "mainClass": "controllers.UserController",
             "projectName": "com2008_8b977ed9"
         },
         {

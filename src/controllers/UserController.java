@@ -29,21 +29,29 @@ public class UserController {
             System.out.println("all users now: ");
             System.out.println(getAllUsers());
 
-            String email = createUser(
-                Constants.Title.MR,
-                "a",
-                "b",
-                "pas",
-                Constants.AccountType.STUDENT
-            ).getEmail();
+            // String email = createUser(
+            //     Constants.Title.MR,
+            //     "a",
+            //     "b",
+            //     "pas",
+            //     Constants.AccountType.STUDENT
+            // ).getEmail();
+
+            // createUser(
+            //     Constants.Title.MS,
+            //     "ms",
+            //     "ms",
+            //     "pas",
+            //     Constants.AccountType.STUDENT
+            // );
 
             createUser(
-                Constants.Title.MS,
-                "ms",
-                "ms",
-                "pas",
-                Constants.AccountType.STUDENT
-            );
+                Constants.Title.MR,
+                "Bob",
+                "Smith",
+                "password",
+                Constants.AccountType.TEACHER
+            ).getEmail();
 
             System.out.println("all users now: ");
             User[] users = getAllUsers();
@@ -51,16 +59,16 @@ public class UserController {
                 System.out.println(user);
             }
 
-            System.out.println("Checking authentication");
-            login(email, "pas");
-            System.out.println("login successful");
+            // System.out.println("Checking authentication");
+            // login(email, "pas");
+            // System.out.println("login successful");
 
-            try {
-                login(email, "wrong_pass");
-                System.out.println("I shouldn't be reached");
-            } catch (IncorrectLoginCredentialsException ex) {
-                System.out.println("incorrect password returned exception, as expected");
-            }
+            // try {
+            //     login(email, "wrong_pass");
+            //     System.out.println("I shouldn't be reached");
+            // } catch (IncorrectLoginCredentialsException ex) {
+            //     System.out.println("incorrect password returned exception, as expected");
+            // }
 
         } catch (Exception ex) {
             ex.printStackTrace();
