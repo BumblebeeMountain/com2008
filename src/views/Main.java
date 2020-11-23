@@ -105,7 +105,10 @@ public class Main extends JFrame {
     }
 
     public void moveToAdminDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new AdminDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToUserDashboard() {

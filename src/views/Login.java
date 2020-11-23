@@ -33,7 +33,7 @@ public class Login extends JPanel {
                 user = UserController.login(email, password);
                 switch (user.getAccountType()) {
                     case ADMINISTRATOR:
-                        rootFrame.showMessage("The admin dashboard is still in development.");
+                        this.rootFrame.moveToAdminDashboard();
                         break;
                     case REGISTRAR:
                         this.rootFrame.moveToRegistrarDashboard();
