@@ -238,7 +238,7 @@ class JTableButtonModel extends AbstractTableModel {
                 
                 JButton viewButton = new JButton("View");
                 viewButton.addActionListener(e -> {
-                    this.rootFrame.showMessage("You are trying to view registration: " + r.getPeriod().toString());
+                    this.rootFrame.moveToRegistrationDetails(this.registrationNumber, r.getPeriod().toString().charAt(0));
                 });
                 tableData[i][3] = viewButton;
             }

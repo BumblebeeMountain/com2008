@@ -16,7 +16,7 @@ public class Main extends JFrame {
         // Standard info about the system
         setTitle("University Management System");
         contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(1, 1));
+        contentPane.setLayout(new BorderLayout());
         setSize(800, 500);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -68,7 +68,10 @@ public class Main extends JFrame {
     }
 
     public void moveToRegistrationDetails(Integer registrationNumber, Character period) {
-
+        contentPane.removeAll();
+        contentPane.add(new RegistrationDetails(this, registrationNumber, period));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToTeacherDashboard() {
