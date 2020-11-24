@@ -2,11 +2,9 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import controllers.DegreeController;
@@ -54,7 +52,7 @@ public class ModuleAddDrop extends JPanel {
     /**
      * Calculate the number of credits from a table model
      */
-    private Integer calculateCredits (ModuleAddDropTable t) {
+    protected Integer calculateCredits (ModuleAddDropTable t) {
         Integer credits = 0;
         for (Object[] row: t.rows) {
             credits += Integer.valueOf((Integer)row[2]);
@@ -92,14 +90,6 @@ public class ModuleAddDrop extends JPanel {
             try {
                 Module m = ModuleController.getModule(moduleCode, true);
                 this.mainTable.insertRow(m);
-
-                // Revalidate
-                TableCellRenderer tableRenderer;
-                tableRenderer = moduleTable.getDefaultRenderer(JButton.class);
-                moduleTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
-                moduleTable.addMouseListener(new JTableButtonMouseListener(moduleTable));
-                moduleTable.revalidate();
-                moduleTable.repaint();
 
                 // Set the number of credits
                 this.numberOfCredits.setText(calculateCredits(this.mainTable).toString());
@@ -155,7 +145,7 @@ public class ModuleAddDrop extends JPanel {
 
             // I've added the following 5 lines :)
             TableCellRenderer tableRenderer;
-            mainTable = new ModuleAddDropTable(this.rootFrame, this.studentRegistrationNumber);
+            mainTable = new ModuleAddDropTable(this.rootFrame, this.studentRegistrationNumber, this);
             moduleTable = new JTable(mainTable);
             tableRenderer = moduleTable.getDefaultRenderer(JButton.class);
             moduleTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
@@ -224,7 +214,7 @@ public class ModuleAddDrop extends JPanel {
     private JComboBox<String> optionalModuleList;
     private JButton addButton;
     private JLabel label2;
-    private JLabel numberOfCredits;
+    protected JLabel numberOfCredits;
     private JButton submitButton;
 }
 
@@ -239,11 +229,13 @@ class ModuleAddDropTable extends AbstractTableModel {
     private Integer registrationNumber;
     private Registration currentRegistration;
     private Module[] coreModules;
+    private ModuleAddDrop rootPanel;
 
-    public ModuleAddDropTable (Main rootFrame, Integer registrationNumber) {
+    public ModuleAddDropTable (Main rootFrame, Integer registrationNumber, ModuleAddDrop rootPanel) {
 
         this.rootFrame = rootFrame;
         this.registrationNumber = registrationNumber;
+        this.rootPanel = rootPanel;
 
         try {   
 
@@ -294,7 +286,7 @@ class ModuleAddDropTable extends AbstractTableModel {
                     if (!contains(coreModules, m.getCode())) { // If optional
                         JButton viewButton = new JButton("Drop");
                         viewButton.addActionListener(e -> {
-                            this.rootFrame.showMessage("Attempting to drop: " + m.getCode());
+                            this.removeRow(m.getCode());
                         });
                         tableData[i][5] = viewButton;
                     }
@@ -313,6 +305,30 @@ class ModuleAddDropTable extends AbstractTableModel {
         
     }
 
+    public void removeRow (String code) {
+
+        if (rowsContain(this.rows, code)) {
+            
+            // Add a row and repaint
+            Object[][] currentRows = this.rows.clone();
+            Object[][] newRows = new Object[currentRows.length - 1][currentRows[0].length];
+            
+            int counter = 0;
+            for (Object[] r : currentRows) {
+                if (!((String)r[0]).equals(code)) {
+                    newRows[counter] = r;
+                    counter++;
+                }
+            }
+            
+            this.rows = newRows;
+            this.fireTableDataChanged();
+            this.rootPanel.numberOfCredits.setText(this.rootPanel.calculateCredits(this).toString());
+
+        }
+
+    } 
+
     public void insertRow (Module m) {
         // Add a row and repaint
         Object[][] currentRows = this.rows.clone();
@@ -326,13 +342,22 @@ class ModuleAddDropTable extends AbstractTableModel {
         if (!contains(coreModules, m.getCode())) { // If optional
             JButton viewButton = new JButton("Drop");
             viewButton.addActionListener(e -> {
-                this.rootFrame.showMessage("Attempting to drop: " + m.getCode());
+                this.removeRow(m.getCode());
             });
             newRows[currentRows.length][5] = viewButton;
         }
         
         this.rows = newRows;
-        System.out.print(this.rows.length);
+        this.fireTableDataChanged();
+    }
+
+    private Boolean rowsContain (Object[][] rx, String code) {
+        for (Object[] row: rx) {
+            if (((String)row[0]).equals(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Boolean contains(Module[] mx, String code) {
