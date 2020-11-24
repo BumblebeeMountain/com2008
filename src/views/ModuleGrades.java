@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
+import controllers.ModuleController;
 import controllers.RegistrationController;
 import models.Registration;
 import models.SelectedModule;
@@ -14,6 +15,9 @@ public class ModuleGrades extends JPanel {
     private static final long serialVersionUID = -2358750203321858050L;
     private Main rootFrame;
     private Integer studentRegistrationNumber;
+    private ModuleGradesTable moduleGradesTable;
+    public Character currentPeriod;
+    public SelectedModule[] initialSelectedModules;
 
     public ModuleGrades(Main rootFrame, Integer studentRegistrationNumber) {
         this.rootFrame = rootFrame;
@@ -32,7 +36,37 @@ public class ModuleGrades extends JPanel {
     }
 
     private void saveButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        // Validate the data in the rows
+        for (Object[] row: this.moduleGradesTable.rows) {
+            Float grade = (Float)row[3];
+            Float resitGrade = (Float)row[4];
+            if (grade < 0 || grade >= 100 || resitGrade < 0 || resitGrade >= 100) {
+                this.rootFrame.showError("You have entered invalid grades, please try again.");
+                return;
+            }
+        }
+
+        // Now cross compare and only update those who have changed
+        try {
+            for (int i = 0; i < this.initialSelectedModules.length; i++) {
+                SelectedModule m = this.initialSelectedModules[i];
+                Object[] row = this.moduleGradesTable.rows[i];
+
+                if (m.getFirstAttemptResult() != (Float)row[3]) {
+                    RegistrationController.updateFirstGrade(this.studentRegistrationNumber, this.currentPeriod, m.getCode(), (Float)row[3]);
+                }
+                if (m.getSecondAttemptResult() != (Float)row[4]) {
+                    RegistrationController.updateResitGrade(this.studentRegistrationNumber, this.currentPeriod, m.getCode(), (Float)row[4]);
+                }
+            }
+
+            this.rootFrame.moveToTeacherDashboard();
+
+        } catch (Exception err) {
+            this.rootFrame.showError("There was an error, please try again.");
+        }
+
     }
 
     private void registerNextButtonActionPerformed(ActionEvent e) {
@@ -72,7 +106,8 @@ public class ModuleGrades extends JPanel {
 
         // ======== scrollPane1 ========
         {
-            moduleTable = new JTable(new ModuleGradesTable(this.rootFrame, this.studentRegistrationNumber));
+            this.moduleGradesTable = new ModuleGradesTable(this.rootFrame, this.studentRegistrationNumber, this);
+            moduleTable = new JTable(this.moduleGradesTable);
             scrollPane1.setViewportView(moduleTable);
         }
         add(scrollPane1, BorderLayout.CENTER);
@@ -131,16 +166,21 @@ class ModuleGradesTable extends AbstractTableModel {
 
     private Main rootFrame;
     private Integer registrationNumber;
+    private ModuleGrades rootPanel;
 
-    public ModuleGradesTable (Main rootFrame, Integer registrationNumber) {
+    public ModuleGradesTable (Main rootFrame, Integer registrationNumber, ModuleGrades rootPanel) {
 
         this.rootFrame = rootFrame;
         this.registrationNumber = registrationNumber;
+        this.rootPanel = rootPanel;
 
         try {   
 
             String[] columnNames = {"Module Code", "Module Name", "Credits", "Grade", "Resit Grade"};
-            SelectedModule[] modules = RegistrationController.getMostRecentRegistration(this.registrationNumber).getSelectedModules();
+            Registration r = RegistrationController.getMostRecentRegistration(this.registrationNumber);
+            SelectedModule[] modules = r.getSelectedModules();
+            this.rootPanel.initialSelectedModules = modules; // For use later on
+            this.rootPanel.currentPeriod = r.getPeriod(); // For use later on
             Object[][] rowData = new Object[modules.length][columnNames.length];
             for (int i = 0; i < modules.length; i++) {
                 SelectedModule m = modules[i];
@@ -160,11 +200,11 @@ class ModuleGradesTable extends AbstractTableModel {
         
     }
 
-    private Object[][] rows; 
+    public Object[][] rows; 
     private String[] columns; 
 
     private final Class[] columnClass = new Class[] {
-        String.class, String.class, String.class, Double.class, Double.class
+        String.class, String.class, String.class, Float.class, Float.class
     };
 
     public String getColumnName(int column) {
