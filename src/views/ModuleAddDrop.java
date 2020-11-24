@@ -23,15 +23,17 @@ public class ModuleAddDrop extends JPanel {
     private SelectedModule[] initialSelectedModules;
 
     public ModuleAddDrop(Main rootFrame, Integer studentRegistrationNumber) {
+
         this.rootFrame = rootFrame;
         this.studentRegistrationNumber = studentRegistrationNumber;
+
         initComponents();
 
         try {
 
             // Get the most recent registration
             Registration r = RegistrationController.getMostRecentRegistration(this.studentRegistrationNumber);
-            initialSelectedModules = r.getSelectedModules();
+            initialSelectedModules = r.getSelectedModules(); // For use later on!
 
             // Get the optional modules for the current level and set in combo box
             Module[] optionalModules = DegreeController.getOptionalModules(r.getDegreeCode(), r.getLevel());
@@ -43,7 +45,6 @@ public class ModuleAddDrop extends JPanel {
             // Set the number of credits
             this.numberOfCredits.setText(calculateCredits(this.mainTable).toString());
 
-
         } catch (Exception e) {
             this.rootFrame.moveToRegistrarDashboard(); // Errored
         }
@@ -52,10 +53,10 @@ public class ModuleAddDrop extends JPanel {
     /**
      * Calculate the number of credits from a table model
      */
-    protected Integer calculateCredits (ModuleAddDropTable t) {
+    protected Integer calculateCredits(ModuleAddDropTable t) {
         Integer credits = 0;
-        for (Object[] row: t.rows) {
-            credits += Integer.valueOf((Integer)row[2]);
+        for (Object[] row : t.rows) {
+            credits += Integer.valueOf((Integer) row[2]);
         }
         return credits;
     }
@@ -63,26 +64,35 @@ public class ModuleAddDrop extends JPanel {
     /**
      * Check whether the table contains a module or not
      */
-    private Boolean tableContains (ModuleAddDropTable t, String code) {
-        for (Object[] row: t.rows) {
-            if (((String)row[0]).equals(code)) {
+    private Boolean tableContains(ModuleAddDropTable t, String code) {
+        for (Object[] row : t.rows) {
+            if (((String) row[0]).equals(code)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Logout button pressed
+     */
     private void logoutButtonActionPerformed(ActionEvent e) {
         this.rootFrame.logout();
     }
 
+    /**
+     * Go back button pressed
+     */
     private void goBackButtonActionPerformed(ActionEvent e) {
         this.rootFrame.moveToRegistrarDashboard();
     }
 
+    /**
+     * We try to add a module to the list
+     */
     private void addButtonActionPerformed(ActionEvent e) {
-        
-        String moduleCode = (String)optionalModuleList.getSelectedItem();
+
+        String moduleCode = (String) optionalModuleList.getSelectedItem();
 
         if (tableContains(this.mainTable, moduleCode)) {
             this.rootFrame.showError("This module has already been selected, please try a different one.");
@@ -97,11 +107,14 @@ public class ModuleAddDrop extends JPanel {
             } catch (Exception err) {
                 this.rootFrame.showError("There was an error, please try again.");
             }
-            
+
         }
 
     }
 
+    /**
+     * Submit the table to be saved
+     */
     private void submitButtonActionPerformed(ActionEvent e) {
         // TODO add your code here
     }
@@ -231,32 +244,33 @@ class ModuleAddDropTable extends AbstractTableModel {
     private Module[] coreModules;
     private ModuleAddDrop rootPanel;
 
-    public ModuleAddDropTable (Main rootFrame, Integer registrationNumber, ModuleAddDrop rootPanel) {
+    public ModuleAddDropTable(Main rootFrame, Integer registrationNumber, ModuleAddDrop rootPanel) {
 
         this.rootFrame = rootFrame;
         this.registrationNumber = registrationNumber;
         this.rootPanel = rootPanel;
 
-        try {   
+        try {
 
             // Get the most recent registration
             this.currentRegistration = RegistrationController.getMostRecentRegistration(this.registrationNumber);
 
             // Get all the core modules - add them
-            Module[] coreModules = DegreeController.getCoreModules(this.currentRegistration.getDegreeCode(), this.currentRegistration.getLevel());
+            Module[] coreModules = DegreeController.getCoreModules(this.currentRegistration.getDegreeCode(),
+                    this.currentRegistration.getLevel());
             this.coreModules = coreModules;
 
             // Get all the current selected modules
             SelectedModule[] selectedModules = this.currentRegistration.getSelectedModules();
 
             // Set the table
-            String[] columnNames = {"Module Code", "Module Name", "Credits", "Teaching Period", "Core", "Drop"};
+            String[] columnNames = { "Module Code", "Module Name", "Credits", "Teaching Period", "Core", "Drop" };
             Object[][] tableData;
 
             if (selectedModules.length == 0) { // Nothing been set yet
 
                 System.out.println("Setting a core only table");
-                
+
                 tableData = new Object[coreModules.length][columnNames.length];
                 for (int i = 0; i < tableData.length; i++) {
                     Module m = coreModules[i];
@@ -302,34 +316,40 @@ class ModuleAddDropTable extends AbstractTableModel {
         } catch (Exception e) {
             this.rootFrame.logout(); // Error
         }
-        
+
     }
 
-    public void removeRow (String code) {
+    /**
+     * Remove a row from the table
+     */
+    public void removeRow(String code) {
 
         if (rowsContain(this.rows, code)) {
-            
+
             // Add a row and repaint
             Object[][] currentRows = this.rows.clone();
             Object[][] newRows = new Object[currentRows.length - 1][currentRows[0].length];
-            
+
             int counter = 0;
             for (Object[] r : currentRows) {
-                if (!((String)r[0]).equals(code)) {
+                if (!((String) r[0]).equals(code)) {
                     newRows[counter] = r;
                     counter++;
                 }
             }
-            
+
             this.rows = newRows;
             this.fireTableDataChanged();
             this.rootPanel.numberOfCredits.setText(this.rootPanel.calculateCredits(this).toString());
 
         }
 
-    } 
+    }
 
-    public void insertRow (Module m) {
+    /**
+     * Insert a row into the table
+     */
+    public void insertRow(Module m) {
         // Add a row and repaint
         Object[][] currentRows = this.rows.clone();
         Object[][] newRows = new Object[currentRows.length + 1][currentRows[0].length];
@@ -346,20 +366,34 @@ class ModuleAddDropTable extends AbstractTableModel {
             });
             newRows[currentRows.length][5] = viewButton;
         }
-        
+
         this.rows = newRows;
         this.fireTableDataChanged();
     }
 
-    private Boolean rowsContain (Object[][] rx, String code) {
-        for (Object[] row: rx) {
-            if (((String)row[0]).equals(code)) {
+    /**
+     * Check if any row contains the module code
+     * 
+     * @param rx
+     * @param code
+     * @return
+     */
+    private Boolean rowsContain(Object[][] rx, String code) {
+        for (Object[] row : rx) {
+            if (((String) row[0]).equals(code)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Check if an array of modules has a module code in
+     * 
+     * @param mx
+     * @param code
+     * @return
+     */
     private Boolean contains(Module[] mx, String code) {
         for (Module m : mx) {
             if (m.getCode().equals(code)) {
@@ -369,26 +403,31 @@ class ModuleAddDropTable extends AbstractTableModel {
         return false;
     }
 
-    public Object[][] rows; 
-    public String[] columns; 
+    public Object[][] rows;
+    private String[] columns;
 
     public String getColumnName(int column) {
-       return columns[column];
-    }
-    public int getRowCount() {
-       return rows.length;
-    }
-    public int getColumnCount() {
-       return columns.length;
-    }
-    public Object getValueAt(int row, int column) {
-       return rows[row][column];
-    }
-    public boolean isCellEditable(int row, int column) {
-       return false;
-    }
-    public Class<?> getColumnClass(int column) {
-       return getValueAt(0, column).getClass();
+        return columns[column];
     }
 
- }
+    public int getRowCount() {
+        return rows.length;
+    }
+
+    public int getColumnCount() {
+        return columns.length;
+    }
+
+    public Object getValueAt(int row, int column) {
+        return rows[row][column];
+    }
+
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
+    public Class<?> getColumnClass(int column) {
+        return getValueAt(0, column).getClass();
+    }
+
+}
