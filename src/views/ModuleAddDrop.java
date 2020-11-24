@@ -2,26 +2,58 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import controllers.DegreeController;
+import controllers.ModuleController;
+import controllers.RegistrationController;
+import models.Module;
+import models.Registration;
+import models.SelectedModule;
 
 public class ModuleAddDrop extends JPanel {
 
     private static final long serialVersionUID = -3970499508593858878L;
     private Main rootFrame;
     private Integer studentRegistrationNumber;
+    private ModuleAddDropTable mainTable;
+    private SelectedModule[] initialSelectedModules;
 
     public ModuleAddDrop(Main rootFrame, Integer studentRegistrationNumber) {
         this.rootFrame = rootFrame;
         this.studentRegistrationNumber = studentRegistrationNumber;
         initComponents();
+
+        try {
+
+            // Get the most recent registration
+            Registration r = RegistrationController.getMostRecentRegistration(this.studentRegistrationNumber);
+            initialSelectedModules = r.getSelectedModules();
+
+            // Get the optional modules for the current level and set in combo box
+            Module[] optionalModules = DegreeController.getOptionalModules(r.getDegreeCode(), r.getLevel());
+            for (Module m : optionalModules)
+                optionalModuleList.addItem(m.getCode());
+
+            // Table gets set in the initComponents and class section
+
+            // Set the number of credits
+
+        } catch (Exception e) {
+            this.rootFrame.moveToRegistrarDashboard(); // Errored
+        }
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToRegistrarDashboard();
     }
 
     private void addButtonActionPerformed(ActionEvent e) {
@@ -68,7 +100,17 @@ public class ModuleAddDrop extends JPanel {
 
         // ======== scrollPane1 ========
         {
+
+            // I've added the following 5 lines :)
+            TableCellRenderer tableRenderer;
+            mainTable = new ModuleAddDropTable(this.rootFrame, this.studentRegistrationNumber);
+            moduleTable = new JTable(mainTable);
+            tableRenderer = moduleTable.getDefaultRenderer(JButton.class);
+            moduleTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
+            moduleTable.addMouseListener(new JTableButtonMouseListener(moduleTable));
+
             scrollPane1.setViewportView(moduleTable);
+
         }
         add(scrollPane1, BorderLayout.CENTER);
 
@@ -80,7 +122,7 @@ public class ModuleAddDrop extends JPanel {
                     1.0E-4 };
 
             // ---- label1 ----
-            label1.setText("Select Optional Module:");
+            label1.setText("Select Optional Module:   ");
             label1.setFont(new Font("Tahoma", Font.BOLD, 11));
             panel2.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
@@ -133,3 +175,117 @@ public class ModuleAddDrop extends JPanel {
     private JLabel numberOfCredits;
     private JButton submitButton;
 }
+
+/**
+ * Class used for putting buttons in a table
+ */
+class ModuleAddDropTable extends AbstractTableModel {
+
+    private static final long serialVersionUID = 301047396186264466L;
+
+    private Main rootFrame;
+    private Integer registrationNumber;
+    private Registration currentRegistration;
+
+    public ModuleAddDropTable (Main rootFrame, Integer registrationNumber) {
+
+        this.rootFrame = rootFrame;
+        this.registrationNumber = registrationNumber;
+
+        try {   
+
+            // Get the most recent registration
+            this.currentRegistration = RegistrationController.getMostRecentRegistration(this.registrationNumber);
+
+            // Get all the core modules - add them
+            Module[] coreModules = DegreeController.getCoreModules(this.currentRegistration.getDegreeCode(), this.currentRegistration.getLevel());
+
+            // Get all the current selected modules
+            SelectedModule[] selectedModules = this.currentRegistration.getSelectedModules();
+
+            // Set the table
+            String[] columnNames = {"Module Code", "Module Name", "Credits", "Teaching Period", "Core", "Drop"};
+            Object[][] tableData;
+
+            if (selectedModules.length == 0) { // Nothing been set yet
+
+                System.out.println("Setting a core only table");
+                
+                tableData = new Object[coreModules.length][columnNames.length];
+                for (int i = 0; i < tableData.length; i++) {
+                    Module m = coreModules[i];
+                    tableData[i][0] = m.getCode();
+                    tableData[i][1] = m.getName();
+                    tableData[i][2] = m.getCredits();
+                    tableData[i][3] = m.getTeachingPeriod();
+                    tableData[i][4] = true;
+                    tableData[i][5] = "n/a";
+                }
+
+            } else { // Core already been set in
+
+                System.out.println("Setting a selected table");
+
+                tableData = new Object[selectedModules.length][columnNames.length];
+                for (int i = 0; i < tableData.length; i++) {
+                    Module m = selectedModules[i];
+                    tableData[i][0] = m.getCode();
+                    tableData[i][1] = m.getName();
+                    tableData[i][2] = m.getCredits();
+                    tableData[i][3] = m.getTeachingPeriod();
+                    tableData[i][4] = contains(coreModules, m.getCode());
+
+                    if (!contains(coreModules, m.getCode())) { // If optional
+                        JButton viewButton = new JButton("Drop");
+                        viewButton.addActionListener(e -> {
+                            this.rootFrame.showMessage("Attempting to drop: " + m.getCode());
+                        });
+                        tableData[i][5] = viewButton;
+                    }
+
+                }
+
+            }
+
+            // Set into the abstract model
+            this.rows = tableData;
+            this.columns = columnNames;
+
+        } catch (Exception e) {
+            this.rootFrame.logout(); // Error
+        }
+        
+    }
+
+    private Boolean contains(Module[] mx, String code) {
+        for (Module m : mx) {
+            if (m.getCode().equals(code)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Object[][] rows; 
+    private String[] columns; 
+
+    public String getColumnName(int column) {
+       return columns[column];
+    }
+    public int getRowCount() {
+       return rows.length;
+    }
+    public int getColumnCount() {
+       return columns.length;
+    }
+    public Object getValueAt(int row, int column) {
+       return rows[row][column];
+    }
+    public boolean isCellEditable(int row, int column) {
+       return false;
+    }
+    public Class<?> getColumnClass(int column) {
+       return getValueAt(0, column).getClass();
+    }
+
+ }
