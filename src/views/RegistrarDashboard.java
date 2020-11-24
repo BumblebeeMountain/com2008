@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.StudentController;
+import models.Student;
+
 public class RegistrarDashboard extends JPanel {
 
     private static final long serialVersionUID = 2713093958128383127L;
@@ -23,7 +26,19 @@ public class RegistrarDashboard extends JPanel {
     }
 
     private void moduleButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        String registrationNumber = registrationNumberBox.getText();
+        if (registrationNumber.equals("")) {
+            rootFrame.showError("Please complete the form.");
+        } else {
+            try {
+                Student student = StudentController.getStudent(Integer.valueOf(registrationNumber));
+                this.rootFrame.moveToModuleAddDrop(student.getRegistrationNumber());
+            } catch (Exception err) {
+                rootFrame.showError("Invalid registration number. Please try again.");
+            }
+        }
+
     }
 
     private void initComponents() {
