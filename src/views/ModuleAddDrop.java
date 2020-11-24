@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import controllers.DegreeController;
@@ -42,10 +43,35 @@ public class ModuleAddDrop extends JPanel {
             // Table gets set in the initComponents and class section
 
             // Set the number of credits
+            this.numberOfCredits.setText(calculateCredits(this.mainTable).toString());
+
 
         } catch (Exception e) {
             this.rootFrame.moveToRegistrarDashboard(); // Errored
         }
+    }
+
+    /**
+     * Calculate the number of credits from a table model
+     */
+    private Integer calculateCredits (ModuleAddDropTable t) {
+        Integer credits = 0;
+        for (Object[] row: t.rows) {
+            credits += Integer.valueOf((Integer)row[2]);
+        }
+        return credits;
+    }
+
+    /**
+     * Check whether the table contains a module or not
+     */
+    private Boolean tableContains (ModuleAddDropTable t, String code) {
+        for (Object[] row: t.rows) {
+            if (((String)row[0]).equals(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
@@ -57,7 +83,33 @@ public class ModuleAddDrop extends JPanel {
     }
 
     private void addButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        String moduleCode = (String)optionalModuleList.getSelectedItem();
+
+        if (tableContains(this.mainTable, moduleCode)) {
+            this.rootFrame.showError("This module has already been selected, please try a different one.");
+        } else {
+            try {
+                Module m = ModuleController.getModule(moduleCode, true);
+                this.mainTable.insertRow(m);
+
+                // Revalidate
+                TableCellRenderer tableRenderer;
+                tableRenderer = moduleTable.getDefaultRenderer(JButton.class);
+                moduleTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
+                moduleTable.addMouseListener(new JTableButtonMouseListener(moduleTable));
+                moduleTable.revalidate();
+                moduleTable.repaint();
+
+                // Set the number of credits
+                this.numberOfCredits.setText(calculateCredits(this.mainTable).toString());
+
+            } catch (Exception err) {
+                this.rootFrame.showError("There was an error, please try again.");
+            }
+            
+        }
+
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
@@ -186,6 +238,7 @@ class ModuleAddDropTable extends AbstractTableModel {
     private Main rootFrame;
     private Integer registrationNumber;
     private Registration currentRegistration;
+    private Module[] coreModules;
 
     public ModuleAddDropTable (Main rootFrame, Integer registrationNumber) {
 
@@ -199,6 +252,7 @@ class ModuleAddDropTable extends AbstractTableModel {
 
             // Get all the core modules - add them
             Module[] coreModules = DegreeController.getCoreModules(this.currentRegistration.getDegreeCode(), this.currentRegistration.getLevel());
+            this.coreModules = coreModules;
 
             // Get all the current selected modules
             SelectedModule[] selectedModules = this.currentRegistration.getSelectedModules();
@@ -219,7 +273,9 @@ class ModuleAddDropTable extends AbstractTableModel {
                     tableData[i][2] = m.getCredits();
                     tableData[i][3] = m.getTeachingPeriod();
                     tableData[i][4] = true;
-                    tableData[i][5] = "n/a";
+                    JButton viewButton = new JButton("n/a");
+                    viewButton.setEnabled(false);
+                    tableData[i][5] = viewButton;
                 }
 
             } else { // Core already been set in
@@ -257,6 +313,28 @@ class ModuleAddDropTable extends AbstractTableModel {
         
     }
 
+    public void insertRow (Module m) {
+        // Add a row and repaint
+        Object[][] currentRows = this.rows.clone();
+        Object[][] newRows = new Object[currentRows.length + 1][currentRows[0].length];
+        System.arraycopy(currentRows, 0, newRows, 0, currentRows.length);
+        newRows[currentRows.length][0] = m.getCode();
+        newRows[currentRows.length][1] = m.getName();
+        newRows[currentRows.length][2] = m.getCredits();
+        newRows[currentRows.length][3] = m.getTeachingPeriod();
+        newRows[currentRows.length][4] = contains(coreModules, m.getCode());
+        if (!contains(coreModules, m.getCode())) { // If optional
+            JButton viewButton = new JButton("Drop");
+            viewButton.addActionListener(e -> {
+                this.rootFrame.showMessage("Attempting to drop: " + m.getCode());
+            });
+            newRows[currentRows.length][5] = viewButton;
+        }
+        
+        this.rows = newRows;
+        System.out.print(this.rows.length);
+    }
+
     private Boolean contains(Module[] mx, String code) {
         for (Module m : mx) {
             if (m.getCode().equals(code)) {
@@ -266,8 +344,8 @@ class ModuleAddDropTable extends AbstractTableModel {
         return false;
     }
 
-    private Object[][] rows; 
-    private String[] columns; 
+    public Object[][] rows; 
+    public String[] columns; 
 
     public String getColumnName(int column) {
        return columns[column];
