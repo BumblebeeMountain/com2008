@@ -48,6 +48,8 @@ public class ModuleAddDrop extends JPanel {
             // Set the number of credits
             this.numberOfCredits.setText(calculateCredits(this.mainTable).toString());
 
+            moduleTable.getTableHeader().setReorderingAllowed(false);
+
         } catch (Exception e) {
             this.rootFrame.moveToRegistrarDashboard(); // Errored
         }

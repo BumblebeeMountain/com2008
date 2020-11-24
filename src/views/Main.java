@@ -21,10 +21,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-
-        // CHANGE ME =========
-        add(new RegistrarDashboard(this));
-        // add(new Login(this)); // Initial screen
+        add(new Login(this)); // Initial screen
 
         setVisible(true); // Show
 

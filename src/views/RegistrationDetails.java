@@ -6,16 +6,19 @@ import javax.swing.*;
 
 import controllers.RegistrationController;
 import models.Registration;
+import models.SelectedModule;
 
 public class RegistrationDetails extends JPanel {
 
     private static final long serialVersionUID = 2001232095172440708L;
     private Main rootFrame;
     private Integer registrationNumber;
+    private Character registrationPeriod;
 
     public RegistrationDetails(Main rootFrame, Integer registrationNumber, Character registrationPeriod) {
         this.rootFrame = rootFrame;
         this.registrationNumber = registrationNumber;
+        this.registrationPeriod = registrationPeriod;
         initComponents();
     
         // Fill in the labels
@@ -27,6 +30,8 @@ public class RegistrationDetails extends JPanel {
         } catch (Exception e) {
             this.rootFrame.moveToStudentRecord(this.registrationNumber); // Errored
         }
+
+        moduleTable.getTableHeader().setReorderingAllowed(false);
 
     }
 
@@ -74,6 +79,23 @@ public class RegistrationDetails extends JPanel {
 
         // ======== scrollPane1 ========
         {
+            Object[] columnNames = {"Module Code", "Module Name", "Credits", "Grade", "Resit Grade"};
+            try {
+                SelectedModule[] modules = RegistrationController.getStudentRegistration(this.registrationNumber, this.registrationPeriod).getSelectedModules();
+                Object[][] rowData = new Object[modules.length][columnNames.length];
+                for (int i = 0; i < modules.length; i++) {
+                    SelectedModule m = modules[i];
+                    rowData[i][0] = m.getCode();
+                    rowData[i][1] = m.getName();
+                    rowData[i][2] = m.getCredits();
+                    rowData[i][3] = m.getFirstAttemptResult();
+                    rowData[i][4] = m.getSecondAttemptResult();
+                }
+                moduleTable = new JTable(rowData, columnNames);
+            } catch (Exception e) {
+                this.rootFrame.moveToStudentRecord(this.registrationNumber); return;
+            }
+            
             scrollPane1.setViewportView(moduleTable);
         }
         add(scrollPane1, BorderLayout.CENTER);
