@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+
+import controllers.RegistrationController;
+import models.Registration;
+import models.SelectedModule;
 
 public class ModuleGrades extends JPanel {
 
@@ -14,14 +19,16 @@ public class ModuleGrades extends JPanel {
         this.rootFrame = rootFrame;
         this.studentRegistrationNumber = studentRegistrationNumber;
         initComponents();
+        moduleTable.getTableHeader().setReorderingAllowed(false);
+        this.registrationNumber.setText(studentRegistrationNumber.toString());
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToTeacherDashboard();
     }
 
     private void saveButtonActionPerformed(ActionEvent e) {
@@ -65,6 +72,7 @@ public class ModuleGrades extends JPanel {
 
         // ======== scrollPane1 ========
         {
+            moduleTable = new JTable(new ModuleGradesTable(this.rootFrame, this.studentRegistrationNumber));
             scrollPane1.setViewportView(moduleTable);
         }
         add(scrollPane1, BorderLayout.CENTER);
@@ -113,3 +121,76 @@ public class ModuleGrades extends JPanel {
     private JButton saveButton;
     private JButton registerNextButton;
 }
+
+/**
+ * Class used for putting buttons in a table
+ */
+class ModuleGradesTable extends AbstractTableModel {
+
+    private static final long serialVersionUID = 301047396186264466L;
+
+    private Main rootFrame;
+    private Integer registrationNumber;
+
+    public ModuleGradesTable (Main rootFrame, Integer registrationNumber) {
+
+        this.rootFrame = rootFrame;
+        this.registrationNumber = registrationNumber;
+
+        try {   
+
+            String[] columnNames = {"Module Code", "Module Name", "Credits", "Grade", "Resit Grade"};
+            SelectedModule[] modules = RegistrationController.getMostRecentRegistration(this.registrationNumber).getSelectedModules();
+            Object[][] rowData = new Object[modules.length][columnNames.length];
+            for (int i = 0; i < modules.length; i++) {
+                SelectedModule m = modules[i];
+                rowData[i][0] = m.getCode();
+                rowData[i][1] = m.getName();
+                rowData[i][2] = m.getCredits();
+                rowData[i][3] = m.getFirstAttemptResult();
+                rowData[i][4] = m.getSecondAttemptResult();
+            }
+
+            this.rows = rowData;
+            this.columns = columnNames;
+
+        } catch (Exception e) {
+            this.rootFrame.moveToTeacherDashboard(); // Error
+        }
+        
+    }
+
+    private Object[][] rows; 
+    private String[] columns; 
+
+    private final Class[] columnClass = new Class[] {
+        String.class, String.class, String.class, Double.class, Double.class
+    };
+
+    public String getColumnName(int column) {
+       return columns[column];
+    }
+    public int getRowCount() {
+       return rows.length;
+    }
+    public int getColumnCount() {
+       return columns.length;
+    }
+    public Object getValueAt(int row, int column) {
+       return rows[row][column];
+    }
+    public void setValueAt(Object value, int row, int column) {
+        this.rows[row][column] = value;
+    }
+    public boolean isCellEditable(int row, int column) {
+       if (column == 3 || column == 4) {
+           return true;
+       } else {
+           return false;
+       }
+    }
+    public Class<?> getColumnClass(int column) {
+       return getValueAt(0, column).getClass();
+    }
+
+ }

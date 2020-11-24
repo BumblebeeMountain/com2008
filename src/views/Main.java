@@ -21,7 +21,8 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        add(new Login(this)); // Initial screen
+        // add(new Login(this)); // Initial screen
+        add(new TeacherDashboard(this));
 
         setVisible(true); // Show
 

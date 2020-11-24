@@ -39,7 +39,6 @@ public class TeacherDashboard extends JPanel {
 
     private void updateGradesButtonActionPerformed(ActionEvent e) {
         
-        System.out.println("Module add drop");
         String registrationNumber = registrationNumberBox.getText();
         if (registrationNumber.equals("")) {
             rootFrame.showError("Please complete the form.");
