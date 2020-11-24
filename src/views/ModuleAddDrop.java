@@ -106,6 +106,7 @@ public class ModuleAddDrop extends JPanel {
 
             // ---- numberOfCredits ----
             numberOfCredits.setText("numberOfCredits");
+            numberOfCredits.setFont(new Font("Tahoma", Font.PLAIN, 11));
             panel2.add(numberOfCredits, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
