@@ -2,6 +2,7 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -20,7 +21,8 @@ public class ModuleAddDrop extends JPanel {
     private Main rootFrame;
     private Integer studentRegistrationNumber;
     private ModuleAddDropTable mainTable;
-    private SelectedModule[] initialSelectedModules;
+    private Module[] initialSelectedModules;
+    private Registration currentRegistration;
 
     public ModuleAddDrop(Main rootFrame, Integer studentRegistrationNumber) {
 
@@ -33,6 +35,7 @@ public class ModuleAddDrop extends JPanel {
 
             // Get the most recent registration
             Registration r = RegistrationController.getMostRecentRegistration(this.studentRegistrationNumber);
+            this.currentRegistration = r; // For use later on!
             initialSelectedModules = r.getSelectedModules(); // For use later on!
 
             // Get the optional modules for the current level and set in combo box
@@ -116,7 +119,68 @@ public class ModuleAddDrop extends JPanel {
      * Submit the table to be saved
      */
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        // Check the credit count
+        Integer requiredCredits = Integer.valueOf(this.currentRegistration.getLevel().toString()) >= 4 ? 180 : 120;
+
+        if (!(Integer.valueOf(this.numberOfCredits.getText()) == requiredCredits)) {
+            this.rootFrame.showError("Please select modules that add up to " + requiredCredits + " credits.");
+        } else {
+
+            // Find which modules have been added
+            ArrayList<String> modulesToAdd = new ArrayList<>();
+            for (Object[] row: this.mainTable.rows) {
+                String code = (String)row[0];
+                if (!selectedContains(this.initialSelectedModules, code)) {
+                    modulesToAdd.add(code);
+                }
+            }
+
+            // Find which modules have been removed
+            ArrayList<String> modulesToRemove = new ArrayList<>();
+            for (Module m: this.initialSelectedModules) {
+                String code = m.getCode();
+                if (!tableContains(this.mainTable, code)) {
+                    modulesToRemove.add(code);
+                }
+            }
+
+            // Update the database
+            try {
+
+                for (String code: modulesToAdd) {
+                    RegistrationController.createSelectedModule(this.studentRegistrationNumber, this.currentRegistration.getPeriod(), code);
+                }
+                for (String code: modulesToRemove) {
+                    RegistrationController.removeSelectedModule(this.studentRegistrationNumber, this.currentRegistration.getPeriod(), code);
+                }
+
+            } catch (Exception err) {
+                this.rootFrame.showError("There was an error, please try again.");
+            }
+            
+
+            // Return to registrar dashboard
+            this.rootFrame.moveToRegistrarDashboard();
+
+        }
+
+    }
+
+    /**
+     * Check if an array of modules has a module code in
+     * 
+     * @param mx
+     * @param code
+     * @return
+     */
+    private Boolean selectedContains(Module[] mx, String code) {
+        for (Module m : mx) {
+            if (m.getCode().equals(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initComponents() {
@@ -302,6 +366,10 @@ class ModuleAddDropTable extends AbstractTableModel {
                         viewButton.addActionListener(e -> {
                             this.removeRow(m.getCode());
                         });
+                        tableData[i][5] = viewButton;
+                    } else {
+                        JButton viewButton = new JButton("n/a");
+                        viewButton.setEnabled(false);
                         tableData[i][5] = viewButton;
                     }
 
