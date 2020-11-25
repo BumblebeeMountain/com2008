@@ -15,7 +15,7 @@ public class ModuleOfferDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void addModuleOfferButtonActionPerformed(ActionEvent e) {
@@ -23,7 +23,7 @@ public class ModuleOfferDashboard extends JPanel {
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAdminDashboard();
     }
 
     private void initComponents() {

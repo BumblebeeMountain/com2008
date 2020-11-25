@@ -15,11 +15,11 @@ public class AddModuleOffer extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToModuleOfferDashboard();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {

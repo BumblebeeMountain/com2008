@@ -128,7 +128,10 @@ public class Main extends JFrame {
     }
 
     public void moveToModuleDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new ModuleDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddModule() {

@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import controllers.ModuleController;
+import models.Module;
 
 public class ModuleDashboard extends JPanel {
 
@@ -15,15 +20,15 @@ public class ModuleDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void addModuleButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAddModule();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAdminDashboard();
     }
 
     private void initComponents() {
@@ -56,6 +61,12 @@ public class ModuleDashboard extends JPanel {
 
         // ======== body ========
         {
+            TableCellRenderer tableRenderer;
+            moduleTable = new JTable(new JTableButtonModelModule(this.rootFrame));
+            tableRenderer = moduleTable.getDefaultRenderer(JButton.class);
+            moduleTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
+            moduleTable.addMouseListener(new JTableButtonMouseListener(moduleTable));
+
             body.setViewportView(moduleTable);
         }
         add(body, BorderLayout.CENTER);
@@ -80,3 +91,77 @@ public class ModuleDashboard extends JPanel {
     private JPanel panel1;
     private JButton addModuleButton;
 }
+
+/**
+ * Class used for putting buttons in a table
+ */
+class JTableButtonModelModule extends AbstractTableModel {
+
+    private static final long serialVersionUID = 301047396186264466L;
+
+    private Main rootFrame;
+    private Module[] offeredModules;
+
+    public JTableButtonModelModule (Main rootFrame) {
+
+        System.out.println("in jtablebuttonmodelmodule");
+        
+        this.rootFrame = rootFrame;
+
+        try {   
+
+            // Get offered modules 
+            this.offeredModules = ModuleController.getAllModules(true);
+
+            // Set the table
+            String[] columnNames = {"Code", "Name", "Credits", "Teaching Period", "Delete"};
+            Object[][] tableData = new Object[offeredModules.length][columnNames.length];
+
+            for (int i = 0; i < tableData.length; i++) {
+                Module m = this.offeredModules[i];
+                tableData[i][0] = m.getCode().toString();
+                tableData[i][1] = m.getName().toString();
+                tableData[i][2] = m.getCredits().toString();
+                tableData[i][3] = m.getTeachingPeriod().toString();
+
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.addActionListener(e -> {
+                    this.rootFrame.showMessage("You are trying to delete the module: " + m.getName().toString());
+                });
+                tableData[i][4] = deleteButton;
+
+            }
+
+            // Set into the abstract model
+            this.rows = tableData;
+            this.columns = columnNames;
+            
+        } catch (Exception e) {
+            this.rootFrame.logout(); // Error
+        }
+        
+    }
+
+    private Object[][] rows; 
+    private String[] columns; 
+
+    public String getColumnName(int column) {
+       return columns[column];
+    }
+    public int getRowCount() {
+       return rows.length;
+    }
+    public int getColumnCount() {
+       return columns.length;
+    }
+    public Object getValueAt(int row, int column) {
+       return rows[row][column];
+    }
+    public boolean isCellEditable(int row, int column) {
+       return false;
+    }
+    public Class<?> getColumnClass(int column) {
+       return getValueAt(0, column).getClass();
+    }
+
+ }
