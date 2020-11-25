@@ -119,7 +119,10 @@ public class Main extends JFrame {
     }
 
     public void moveToAddUser() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddUser(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToDepartmentDashboard() {

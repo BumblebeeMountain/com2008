@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import models.Constants.*;
+import controllers.UserController;
+import models.User;
+import controllers.StudentController;
+import exceptions.*;
 
 public class AddUser extends JPanel {
 
@@ -15,15 +20,41 @@ public class AddUser extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToUserDashboard();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        Title title = Title.valueOf((String)titleComboBox.getSelectedItem());
+        String forename = forenameBox.getText();
+        String surname = surnameBox.getText();
+        String password = String.valueOf(passwordBox.getPassword());
+
+        AccountType accountType = AccountType.valueOf((String)accountLevelComboBox.getSelectedItem());
+
+        Boolean formValid = true;
+        if (forename.equals("") || surname.equals("") || password.equals("")) {
+            this.rootFrame.showError("Please fill in the form");
+            formValid = false;
+            clear();
+        }
+
+        try {
+            if (formValid) {
+                User u = UserController.createUser(title, forename, surname, password, accountType);
+                this.rootFrame.showMessage("User " + u.getEmail() + " was created");
+                clear();
+            }
+        } catch (GeneralProcessingException ex ) {
+            this.rootFrame.showError("General error");
+        }
+    }
+
+    private void clear() {
+        this.rootFrame.moveToAddUser();
     }
 
     private void initComponents() {
@@ -45,6 +76,20 @@ public class AddUser extends JPanel {
 
         // ======== this ========
         setLayout(new BorderLayout());
+
+        Title[] titles = Title.class.getEnumConstants();
+        AccountType[] accountTypes = AccountType.class.getEnumConstants();
+
+        for (Title t : titles) {
+            titleComboBox.addItem(t.toString());
+        }
+
+        for (AccountType a : accountTypes) {
+            // Cannot create new student from this window
+            if (a != AccountType.STUDENT) {
+                accountLevelComboBox.addItem(a.toString());
+            }
+        }
 
         // ======== header ========
         {

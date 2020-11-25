@@ -23,15 +23,15 @@ public class UserDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAdminDashboard();
     }
 
     private void addUserButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAddUser();
     }
 
     private void initComponents() {
@@ -117,10 +117,6 @@ class JTableButtonModelUser extends AbstractTableModel {
             // Get the registrations
             // this.registrations = RegistrationController.getStudentRegistrations(this.registrationNumber);
             this.users = UserController.getAllUsers();
-            System.out.println(this.users.length);
-            for (User u : this.users) {
-                System.out.println(u);
-            }
 
             // Set the table
             String[] columnNames = {"Name", "Email", "Account Type", "Delete"};
