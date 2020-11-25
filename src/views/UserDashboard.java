@@ -152,7 +152,7 @@ class JTableButtonModelUser extends AbstractTableModel {
                             ex.printStackTrace();
                         }
                     }
-                    this.rootFrame.repaint();
+                    this.rootFrame.moveToUserDashboard();
                 });
                 tableData[i][3] = viewButton;
             }
