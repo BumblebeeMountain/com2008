@@ -41,7 +41,7 @@ public class ModuleGrades extends JPanel {
         for (Object[] row: this.moduleGradesTable.rows) {
             Float grade = (Float)row[3];
             Float resitGrade = (Float)row[4];
-            if (grade < 0 || grade >= 100 || resitGrade < 0 || resitGrade >= 100) {
+            if (grade < 0 || grade >= 100 || resitGrade < 0 || resitGrade > 100) {
                 this.rootFrame.showError("You have entered invalid grades, please try again.");
                 return;
             }
