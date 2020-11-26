@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import models.Constants.*;
+import controllers.DepartmentController;
+import models.Department;
+import exceptions.*;
+
 
 public class AddDepartment extends JPanel {
 
@@ -15,15 +20,39 @@ public class AddDepartment extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String departmentName = deptName.getText();
+        String departmentCode = deptCode.getText();
+
+        Boolean formValid = true;
+        if (departmentName.equals("") || departmentCode.equals("")) {
+            this.rootFrame.showError("Please fill in the form");
+            formValid = false;
+            clear();
+        }
+
+        try {
+            if (formValid) {
+                DepartmentController.createDepartment(departmentCode, departmentName);
+                this.rootFrame.showMessage("Department " + departmentName + " was created.");
+                clear();
+            }
+        } catch (ExistingRecordException ex) {
+            this.rootFrame.showError("A department already exists with this code, please try again.");
+        } catch (GeneralProcessingException ex ) {
+            this.rootFrame.showError("There was an error, please try again.");
+        }
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToDepartmentDashboard();
+    }
+
+    private void clear() {
+        this.rootFrame.moveToAddDepartment();
     }
 
     private void initComponents() {
@@ -67,7 +96,7 @@ public class AddDepartment extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- deptName ----
-            deptName.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            deptName.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(deptName, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -77,7 +106,7 @@ public class AddDepartment extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- deptCode ----
-            deptCode.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            deptCode.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(deptCode, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
