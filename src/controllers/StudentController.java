@@ -21,9 +21,9 @@ public class StudentController {
     private final static String GET_REG_BY_EMAIL_COMMAND = "SELECT registrationNumber FROM Student WHERE email = ?;";
     private final static String GET_EMAIL_BY_REG_COMMAND = "SELECT email FROM Student WHERE registrationNumber = ?;";
 
-    private final static String GET_DEGREE_CODE_FROM_REG_COMMAND = "SELECT Degree.code FROM " +
-        "((Degree INNER JOIN Registration ON Degree.code = Registration.degreeCode) " +
-        "INNER JOIN Student ON Registration.studentRegistrationNumber = Student.registrationNumber);";
+    private final static String GET_DEGREE_CODE_FROM_REG_COMMAND = "SELECT Degree.code FROM "
+            + "((Degree INNER JOIN Registration ON Degree.code = Registration.degreeCode) "
+            + "INNER JOIN Student ON Registration.studentRegistrationNumber = Student.registrationNumber);";
     private final static String REMOVE_STUDENT_BY_REG_COMMAND = "DELETE FROM Student WHERE registrationNumber = ?;";
     private final static String CREATE_STUDENT_COMMAND = "INSERT INTO Student(email, personalTutor, hasGraduated) VALUES(?, ?, false);";
 
@@ -37,31 +37,31 @@ public class StudentController {
             System.out.println("Dom " + reg2);
 
             System.out.println("all Students:");
-            for (Student s : getAllStudents() ) {
+            for (Student s : getAllStudents()) {
                 System.out.println(s);
             }
 
             graduateStudent(reg1.getRegistrationNumber());
 
             System.out.println("all Students:");
-            for (Student s : getAllStudents() ) {
+            for (Student s : getAllStudents()) {
                 System.out.println(s);
             }
 
             // try {
-            //     Student james = getStudent(reg1.getRegistrationNumber());
-            //     System.out.println(james);
+            // Student james = getStudent(reg1.getRegistrationNumber());
+            // System.out.println(james);
             // } catch (NoRecordException e) {
-            //     System.out.println("James doesn't exist");
+            // System.out.println("James doesn't exist");
             // }
 
             // try {
-            //     Student dom = getStudent(reg2.getRegistrationNumber());
-            //     System.out.println(dom);
+            // Student dom = getStudent(reg2.getRegistrationNumber());
+            // System.out.println(dom);
             // } catch (NoRecordException e) {
-            //     System.out.println("Dom doesn't exist");
+            // System.out.println("Dom doesn't exist");
             // }
-            
+
             // System.out.println("randomer exists:");
             // System.out.println(studentExists(28549505));
 
@@ -73,7 +73,7 @@ public class StudentController {
 
             // System.out.println("all Students:");
             // for (Student s : getAllStudents() ) {
-            //     System.out.println(s);
+            // System.out.println(s);
             // }
 
         } catch (Exception ex) {
@@ -83,8 +83,8 @@ public class StudentController {
     }
 
     /**
-     * getAllStudents()
-     * Function which returns a list of all students
+     * getAllStudents() Function which returns a list of all students
+     * 
      * @return Student[] - the students
      * @throws GeneralProcessingException
      */
@@ -132,10 +132,10 @@ public class StudentController {
         return students;
     }
 
-
     /**
-     * getStudent()
-     * Function which returns a student given the students registration number
+     * getStudent() Function which returns a student given the students registration
+     * number
+     * 
      * @param registrationNumber - Integer- The students registration number
      * @return Student - the student object
      * @throws GeneralProcessingException
@@ -150,7 +150,9 @@ public class StudentController {
 
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs == null || !rs.next()) { throw new NoRecordException(); }
+            if (rs == null || !rs.next()) {
+                throw new NoRecordException();
+            }
 
             int regNum = rs.getInt("registrationNumber");
             String email = rs.getString("email");
@@ -172,7 +174,7 @@ public class StudentController {
             student = new Student(email, title, forename, surname, regNum, pTutor, hasGraduated);
             return student;
 
-        } catch (SQLException ex ) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new GeneralProcessingException();
         } finally {
@@ -188,14 +190,17 @@ public class StudentController {
     }
 
     /**
-     * getStudent()
-     * Function to get a student from theri email address
+     * getStudent() Function to get a student from theri email address
+     * 
      * @param email - String - the email of the student to get
      * @return Student - the student with that email address
      * @throws GeneralProcessingException
      * @throws NoRecordException
      */
     public static Student getStudent(String email) throws GeneralProcessingException, NoRecordException {
+
+        email = email.toLowerCase().trim();
+
         PreparedStatement pstmt = null;
         try (Connection con = ConnectionManager.getConnection()) {
             pstmt = con.prepareStatement(GET_REG_BY_EMAIL_COMMAND);
@@ -203,7 +208,9 @@ public class StudentController {
 
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs == null || !rs.next()) { throw new NoRecordException(); }
+            if (rs == null || !rs.next()) {
+                throw new NoRecordException();
+            }
 
             // only get the registration number of the student
             int regNum = rs.getInt("registrationNumber");
@@ -227,18 +234,22 @@ public class StudentController {
     }
 
     /**
-     * getStudentDegree()
-     * Function that given a student registration number, returns their degree
+     * getStudentDegree() Function that given a student registration number, returns
+     * their degree
+     * 
      * @param registrationNumber - Integer - The student reg number
      * @return Degree - The students degree
      * @throws GeneralProcessingException
      * @throws NoRecordException
      */
-    public static Degree getStudentDegree(Integer registrationNumber) throws GeneralProcessingException, NoRecordException {
+    public static Degree getStudentDegree(Integer registrationNumber)
+            throws GeneralProcessingException, NoRecordException {
         PreparedStatement pstmt = null;
 
         // if no student with that reg num exists
-        if (!studentExists(registrationNumber)) { throw new NoRecordException(); }
+        if (!studentExists(registrationNumber)) {
+            throw new NoRecordException();
+        }
 
         try (Connection con = ConnectionManager.getConnection()) {
 
@@ -248,7 +259,9 @@ public class StudentController {
 
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs == null || !rs.next()) { throw new NoRecordException(); }
+            if (rs == null || !rs.next()) {
+                throw new NoRecordException();
+            }
 
             String code = rs.getString("code");
 
@@ -258,9 +271,8 @@ public class StudentController {
             } catch (NoRecordException e) {
                 return DegreeController.getDegree(code, false);
             }
-            
 
-        } catch (SQLException ex ) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new GeneralProcessingException();
         } finally {
@@ -276,27 +288,22 @@ public class StudentController {
     }
 
     /**
-     * createStudent()
-     * Function to create a student account
-     * Takes all of the users details, then creates the user account first, then creates the student account
-     * @param title - Title
-     * @param forename - String
-     * @param surname - String
-     * @param password - String
+     * createStudent() Function to create a student account Takes all of the users
+     * details, then creates the user account first, then creates the student
+     * account
+     * 
+     * @param title       - Title
+     * @param forename    - String
+     * @param surname     - String
+     * @param password    - String
      * @param accountType - AccountType
-     * @param pTutor - String - The student's personal tutor
+     * @param pTutor      - String - The student's personal tutor
      * @return Student - the newly formed student object
      * @throws GeneralProcessingException
      * @throws ExistingRecordException
      */
-    public static Student createStudent(
-            Title title,
-            String forename,
-            String surname,
-            String password,
-            AccountType accountType,
-            String pTutor
-            ) throws GeneralProcessingException {
+    public static Student createStudent(Title title, String forename, String surname, String password,
+            AccountType accountType, String pTutor) throws GeneralProcessingException {
 
         // create the user account, and get the users email
         String email = UserController.createUser(title, forename, surname, password, accountType).getEmail();
@@ -316,12 +323,14 @@ public class StudentController {
             pstmt.setString(1, email);
 
             ResultSet rs = pstmt.executeQuery();
-            if (rs == null || !rs.next()) { throw new GeneralProcessingException(); }
+            if (rs == null || !rs.next()) {
+                throw new GeneralProcessingException();
+            }
             int regNum = rs.getInt("registrationNumber");
 
             return new Student(email, title, forename, surname, regNum, pTutor, false); // Assume not graduated
 
-        } catch (SQLException ex ) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
             throw new GeneralProcessingException();
         } finally {
@@ -337,8 +346,8 @@ public class StudentController {
     }
 
     /**
-     * removeStudent()
-     * Function to remove a student from their registration number
+     * removeStudent() Function to remove a student from their registration number
+     * 
      * @param registrationNumber - Integer
      * @return void
      * @throws GeneralProcessingException
@@ -350,7 +359,8 @@ public class StudentController {
         // cannot remove a student which doesn't exist
         if (!studentExists(registrationNumber)) {
             System.out.println("apparently the student doesn't exist");
-            throw new NoRecordException(); }
+            throw new NoRecordException();
+        }
 
         try (Connection con = ConnectionManager.getConnection()) {
 
@@ -379,12 +389,11 @@ public class StudentController {
                 System.out.println("removing user with email");
                 System.out.println(email);
                 UserController.removeUser(email);
-            } catch (NoRecordException ex ) {
+            } catch (NoRecordException ex) {
                 System.out.println("no user exists?");
                 ex.printStackTrace();
                 throw new GeneralProcessingException();
             }
-
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -403,14 +412,14 @@ public class StudentController {
 
     // TODO
     // Bit of an epic so will do later
-    public static DegreeClass calculateDegreeClassification (Integer registrationNumber)
-    throws GeneralProcessingException, NoRecordException {
+    public static DegreeClass calculateDegreeClassification(Integer registrationNumber)
+            throws GeneralProcessingException, NoRecordException {
         return null;
     }
 
     /**
-     * isStudent()
-     * Function to determin if a user is a student
+     * isStudent() Function to determin if a user is a student
+     * 
      * @param user - User - the user to determine
      * @return Boolean - If the user is a student
      */
@@ -419,14 +428,15 @@ public class StudentController {
     }
 
     /**
-     * studentExists()
-     * Function that given a registration number, determins if the student exists
+     * studentExists() Function that given a registration number, determins if the
+     * student exists
+     * 
      * @param registrationNumber - Integer - The student reg number
      * @return Boolean - if the student exists
      * @throws GeneralProcessingException
      */
     public static boolean studentExists(int registrationNumber) throws GeneralProcessingException {
-        
+
         try {
             getStudent(registrationNumber);
         } catch (NoRecordException e) {
@@ -441,12 +451,11 @@ public class StudentController {
 
     /**
      * Graduate a given student
+     * 
      * @param registrationNumber
      * @throws GeneralProcessingException
      */
-    public static void graduateStudent(
-            Integer registrationNumber
-            ) throws GeneralProcessingException {
+    public static void graduateStudent(Integer registrationNumber) throws GeneralProcessingException {
 
         // Variables
         PreparedStatement pstmt = null;
@@ -467,8 +476,9 @@ public class StudentController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }

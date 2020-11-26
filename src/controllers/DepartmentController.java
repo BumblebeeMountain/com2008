@@ -38,12 +38,12 @@ public class DepartmentController {
             try {
                 createDegreeDepartment("COM", "COMU01", true);
             } catch (ExistingRecordException e) {
-            System.out.println("COM/COM001 has already been inserted");
+                System.out.println("COM/COM001 has already been inserted");
             }
 
             try {
                 createDegreeDepartment("BIO", "COMU01", false);
-                } catch (ExistingRecordException e) {
+            } catch (ExistingRecordException e) {
                 System.out.println("BIO/COM001 has already been inserted");
             }
 
@@ -124,6 +124,8 @@ public class DepartmentController {
      */
     public static Department getDepartment(String departmentCode) throws GeneralProcessingException, NoRecordException {
 
+        departmentCode = departmentCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -185,6 +187,8 @@ public class DepartmentController {
     public static void createDepartment(String departmentCode, String departmentName)
             throws GeneralProcessingException, ExistingRecordException {
 
+        departmentCode = departmentCode.toUpperCase();
+
         // Check for an exisiting department
         Boolean departmentExists = true;
         try {
@@ -236,6 +240,8 @@ public class DepartmentController {
      */
     public static void removeDepartment(String departmentCode) throws GeneralProcessingException {
 
+        departmentCode = departmentCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
 
@@ -277,6 +283,9 @@ public class DepartmentController {
      */
     private static Department getDegreeDepartment(String departmentCode, String degreeCode)
             throws GeneralProcessingException, NoRecordException {
+
+        departmentCode = departmentCode.toUpperCase();
+        degreeCode = degreeCode.toUpperCase();
 
         // Variables
         PreparedStatement pstmt = null;
@@ -342,6 +351,9 @@ public class DepartmentController {
     public static void createDegreeDepartment(String departmentCode, String degreeCode, Boolean lead)
             throws GeneralProcessingException, ExistingRecordException {
 
+        departmentCode = departmentCode.toUpperCase();
+        degreeCode = degreeCode.toUpperCase();
+
         // Check for an exisiting department link
         Boolean departmentLinkExists = true;
         try {
@@ -396,6 +408,9 @@ public class DepartmentController {
      */
     public static void removeDegreeDepartment(String departmentCode, String degreeCode)
             throws GeneralProcessingException {
+
+        departmentCode = departmentCode.toUpperCase();
+        degreeCode = degreeCode.toUpperCase();
 
         // Variables
         PreparedStatement pstmt = null;
