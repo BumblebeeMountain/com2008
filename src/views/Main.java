@@ -120,11 +120,17 @@ public class Main extends JFrame {
     }
 
     public void moveToDepartmentDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new DepartmentDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddDepartment() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddDepartment(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToModuleDashboard() {

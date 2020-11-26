@@ -36,12 +36,14 @@ public class AddDepartment extends JPanel {
 
         try {
             if (formValid) {
-                Department d = DepartmentController.createDepartment(departmentCode, departmentName);
-                this.rootFrame.showMessage("Department " + d.getName() + " was created");
+                DepartmentController.createDepartment(departmentCode, departmentName);
+                this.rootFrame.showMessage("Department " + departmentName + " was created.");
                 clear();
             }
+        } catch (ExistingRecordException ex) {
+            this.rootFrame.showError("A department already exists with this code, please try again.");
         } catch (GeneralProcessingException ex ) {
-            this.rootFrame.showError("General error");
+            this.rootFrame.showError("There was an error, please try again.");
         }
     }
 
@@ -94,7 +96,7 @@ public class AddDepartment extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- deptName ----
-            deptName.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            deptName.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(deptName, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -104,7 +106,7 @@ public class AddDepartment extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- deptCode ----
-            deptCode.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            deptCode.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(deptCode, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 

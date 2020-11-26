@@ -17,6 +17,7 @@ public class DepartmentDashboard extends JPanel {
     public DepartmentDashboard(Main rootFrame) {
         this.rootFrame = rootFrame;
         initComponents();
+        this.deptTable.getTableHeader().setReorderingAllowed(false);
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
@@ -120,6 +121,15 @@ class JTableButtonModelDepartment extends AbstractTableModel {
                 tableData[i][1] = d.getCode().toString();
                 
                 JButton viewButton = new JButton("Delete");
+                viewButton.addActionListener(e -> {
+                    try {
+                        DepartmentController.removeDepartment(d.getCode());
+                        this.rootFrame.showMessage(d.getCode() + " deleted.");
+                        this.rootFrame.moveToDepartmentDashboard();
+                    } catch (Exception ex) {
+                        this.rootFrame.showError("There was an error, please try again.");
+                    } 
+                });
                 tableData[i][2] = viewButton;
             }
 
