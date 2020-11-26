@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import models.Department;
+import controllers.DepartmentController;
 
 public class DepartmentDashboard extends JPanel {
 
@@ -15,15 +20,15 @@ public class DepartmentDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAdminDashboard();
     }
 
     private void addDeptButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToAddDepartment();
     }
 
     private void initComponents() {
@@ -56,6 +61,13 @@ public class DepartmentDashboard extends JPanel {
 
         // ======== body ========
         {
+            
+            TableCellRenderer tableRenderer;
+            deptTable = new JTable(new JTableButtonModelDepartment(this.rootFrame));
+            tableRenderer = deptTable.getDefaultRenderer(JButton.class);
+            deptTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
+            deptTable.addMouseListener(new JTableButtonMouseListener(deptTable));
+
             body.setViewportView(deptTable);
         }
         add(body, BorderLayout.CENTER);
@@ -80,3 +92,68 @@ public class DepartmentDashboard extends JPanel {
     private JPanel panel1;
     private JButton addDeptButton;
 }
+/**
+ * Class used for putting buttons in a table
+ */
+class JTableButtonModelDepartment extends AbstractTableModel {
+
+    private static final long serialVersionUID = 301047396186264466L;
+
+    private Main rootFrame;
+    private Department[] departments;
+
+    public JTableButtonModelDepartment (Main rootFrame) {
+
+        this.rootFrame = rootFrame;
+
+        try {   
+
+            // Get the departments
+            this.departments = DepartmentController.getAllDepartments();
+
+            // Set the table
+            String[] columnNames = {"Department Name", "Department Code", "Delete"};
+            Object[][] tableData = new Object[departments.length][columnNames.length];
+            for (int i = 0; i < tableData.length; i++) {
+                Department d = this.departments[i];
+                tableData[i][0] = d.getName().toString();
+                tableData[i][1] = d.getCode().toString();
+                
+                JButton viewButton = new JButton("Delete");
+                tableData[i][2] = viewButton;
+            }
+
+            // Set into the abstract model
+            this.rows = tableData;
+            this.columns = columnNames;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.rootFrame.logout(); // Error
+        }
+        
+    }
+
+    private Object[][] rows; 
+    private String[] columns; 
+
+    public String getColumnName(int column) {
+       return columns[column];
+    }
+    public int getRowCount() {
+       return rows.length;
+    }
+    public int getColumnCount() {
+       return columns.length;
+    }
+    public Object getValueAt(int row, int column) {
+       return rows[row][column];
+    }
+    public boolean isCellEditable(int row, int column) {
+       return false;
+    }
+    public Class<?> getColumnClass(int column) {
+       return getValueAt(0, column).getClass();
+    }
+
+ }
