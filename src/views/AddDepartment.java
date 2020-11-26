@@ -3,6 +3,11 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import models.Constants.*;
+import controllers.DepartmentController;
+import models.Department;
+import exceptions.*;
+
 
 public class AddDepartment extends JPanel {
 
@@ -15,15 +20,37 @@ public class AddDepartment extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String departmentName = deptName.getText();
+        String departmentCode = deptCode.getText();
+
+        Boolean formValid = true;
+        if (departmentName.equals("") || departmentCode.equals("")) {
+            this.rootFrame.showError("Please fill in the form");
+            formValid = false;
+            clear();
+        }
+
+        try {
+            if (formValid) {
+                Department d = DepartmentController.createDepartment(departmentCode, departmentName);
+                this.rootFrame.showMessage("Department " + d.getName() + " was created");
+                clear();
+            }
+        } catch (GeneralProcessingException ex ) {
+            this.rootFrame.showError("General error");
+        }
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToDepartmentDashboard();
+    }
+
+    private void clear() {
+        this.rootFrame.moveToAddDepartment();
     }
 
     private void initComponents() {
