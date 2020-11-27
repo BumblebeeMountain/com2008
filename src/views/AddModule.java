@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.ModuleController;
+import exceptions.ExistingRecordException;
+import exceptions.GeneralProcessingException;
+
 public class AddModule extends JPanel {
 
     private static final long serialVersionUID = -917324455397999555L;
@@ -23,7 +27,22 @@ public class AddModule extends JPanel {
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String name = moduleName.getText();
+        String code = moduleCode.getText();
+        Integer credits = Integer.valueOf(moduleCredits.getText());
+        
+        String periodOfTeaching = String.valueOf(teachingPeriod.getSelectedItem());
+
+        try {
+
+            ModuleController.createModule(code, name, credits, periodOfTeaching);
+
+        } catch (ExistingRecordException err) {
+            rootFrame.showError("This module already exists.");
+        } catch (GeneralProcessingException err) {
+            rootFrame.showError("An error occured.");
+        }
+
     }
 
     private void initComponents() {
@@ -38,7 +57,8 @@ public class AddModule extends JPanel {
         label3 = new JLabel();
         moduleCredits = new JTextField();
         label4 = new JLabel();
-        teachingPeriod = new JComboBox<String>();
+        String[] periods = {"AUTUMN", "SPRING", "AUTUMN~SPRING"};
+        teachingPeriod = new JComboBox<String>(periods);
         submitButton = new JButton();
 
         // ======== this ========

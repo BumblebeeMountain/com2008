@@ -135,7 +135,10 @@ public class Main extends JFrame {
     }
 
     public void moveToAddModule() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddModule(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToDegreeDashboard() {
