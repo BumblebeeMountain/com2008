@@ -161,9 +161,7 @@ public class ModuleAddDrop extends JPanel {
                 this.rootFrame.showError("There was an error, please try again.");
             }
             
-
-            // Return to registrar dashboard
-            this.rootFrame.moveToRegistrarDashboard();
+            this.rootFrame.showMessage("Module choices have been saved.");
 
         }
 

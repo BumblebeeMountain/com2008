@@ -37,13 +37,21 @@ public class ModuleGrades extends JPanel {
 
     private void saveButtonActionPerformed(ActionEvent e) {
         
+        if (this.saveGrades()) {
+            this.rootFrame.showMessage("Grades saved.");
+        }
+        
+    }
+
+    private Boolean saveGrades () {
+
         // Validate the data in the rows
         for (Object[] row: this.moduleGradesTable.rows) {
             Float grade = (Float)row[3];
             Float resitGrade = (Float)row[4];
             if (grade < 0 || grade >= 100 || resitGrade < 0 || resitGrade > 100) {
                 this.rootFrame.showError("You have entered invalid grades, please try again.");
-                return;
+                return false;
             }
         }
 
@@ -61,11 +69,13 @@ public class ModuleGrades extends JPanel {
                 }
             }
 
-            this.rootFrame.moveToTeacherDashboard();
+            return true;
 
         } catch (Exception err) {
             this.rootFrame.showError("There was an error, please try again.");
         }
+
+        return false;
 
     }
 

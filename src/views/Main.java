@@ -36,7 +36,7 @@ public class Main extends JFrame {
      * @param message
      */
     public void showError(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -45,7 +45,7 @@ public class Main extends JFrame {
      * @param message
      */
     public void showMessage(String message) {
-        JOptionPane.showMessageDialog(null, message);
+        JOptionPane.showMessageDialog(this, message);
     }
 
     // Move to functions (Screen transitions) =================================
