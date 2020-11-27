@@ -229,19 +229,24 @@ class JTableButtonModel extends AbstractTableModel {
             this.registrations = RegistrationController.getStudentRegistrations(this.registrationNumber);
 
             // Set the table
-            String[] columnNames = {"Start Year", "Period", "Level", "View"};
+            String[] columnNames = {"Start Year", "Period", "Level", "Overall Grade (%)", "View"};
             Object[][] tableData = new Object[registrations.length][columnNames.length];
             for (int i = 0; i < tableData.length; i++) {
                 Registration r = this.registrations[i];
                 tableData[i][0] = r.getStartYear().toString();
                 tableData[i][1] = r.getPeriod().toString();
                 tableData[i][2] = r.getLevel().toString();
+
+                if (i < tableData.length - 1)
+                    tableData[i][3] = RegistrationController.calculateOverallGrade(r.getRegistrationNumber(), r.getPeriod()) + " %";
+                else
+                    tableData[i][3] = "n/a"; 
                 
                 JButton viewButton = new JButton("View");
                 viewButton.addActionListener(e -> {
                     this.rootFrame.moveToRegistrationDetails(this.registrationNumber, r.getPeriod().toString().charAt(0));
                 });
-                tableData[i][3] = viewButton;
+                tableData[i][4] = viewButton;
             }
 
             // Set into the abstract model

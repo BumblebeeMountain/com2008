@@ -176,7 +176,7 @@ class ModuleGradesTable extends AbstractTableModel {
 
         try {   
 
-            String[] columnNames = {"Module Code", "Module Name", "Credits", "Grade", "Resit Grade"};
+            String[] columnNames = {"Module Code", "Module Name", "Credits", "Grade (%)", "Resit Grade (%)"};
             Registration r = RegistrationController.getMostRecentRegistration(this.registrationNumber);
             SelectedModule[] modules = r.getSelectedModules();
             this.rootPanel.initialSelectedModules = modules; // For use later on

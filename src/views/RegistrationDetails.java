@@ -79,7 +79,7 @@ public class RegistrationDetails extends JPanel {
 
         // ======== scrollPane1 ========
         {
-            Object[] columnNames = {"Module Code", "Module Name", "Credits", "Grade", "Resit Grade"};
+            Object[] columnNames = {"Module Code", "Module Name", "Credits", "Grade (%)", "Resit Grade (%)"};
             try {
                 SelectedModule[] modules = RegistrationController.getStudentRegistration(this.registrationNumber, this.registrationPeriod).getSelectedModules();
                 Object[][] rowData = new Object[modules.length][columnNames.length];
