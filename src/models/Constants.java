@@ -36,6 +36,12 @@ public class Constants {
         FAIL
     }
 
+    public static enum PassLevel {
+        PASS,
+        FAIL,
+        CONCEDED_PASS
+    }
+
     public static String emailHost = "sheffield.ac.uk";
 
 }

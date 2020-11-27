@@ -14,7 +14,7 @@ import models.Registration;
 import models.Student;
 
 public class StudentRecord extends JPanel {
-    
+
     // Instance variables
     private static final long serialVersionUID = -1855081097969207983L;
     private Main rootFrame;
@@ -38,7 +38,8 @@ public class StudentRecord extends JPanel {
             this.degree = DegreeController.getDegree(this.firstRegistration.getDegreeCode(), true);
 
             // Set the right labels
-            this.name.setText(this.student.getTitle() + " " + this.student.getForename() + " " + this.student.getSurname());
+            this.name.setText(
+                    this.student.getTitle() + " " + this.student.getForename() + " " + this.student.getSurname());
             this.regNumber.setText(this.student.getRegistrationNumber().toString());
             this.degreeName.setText(this.firstRegistration.getDegreeCode() + " - " + this.degree.getName());
             this.startYear.setText(this.firstRegistration.getStartYear().toString());
@@ -218,18 +219,18 @@ class JTableButtonModel extends AbstractTableModel {
     private Integer registrationNumber;
     private Registration[] registrations;
 
-    public JTableButtonModel (Main rootFrame, Integer registrationNumber) {
+    public JTableButtonModel(Main rootFrame, Integer registrationNumber) {
 
         this.rootFrame = rootFrame;
         this.registrationNumber = registrationNumber;
 
-        try {   
+        try {
 
             // Get the registrations
             this.registrations = RegistrationController.getStudentRegistrations(this.registrationNumber);
 
             // Set the table
-            String[] columnNames = {"Start Year", "Period", "Level", "Overall Grade (%)", "View"};
+            String[] columnNames = { "Start Year", "Period", "Level", "Grade (%) / Pass Level", "View" };
             Object[][] tableData = new Object[registrations.length][columnNames.length];
             for (int i = 0; i < tableData.length; i++) {
                 Registration r = this.registrations[i];
@@ -238,13 +239,15 @@ class JTableButtonModel extends AbstractTableModel {
                 tableData[i][2] = r.getLevel().toString();
 
                 if (i < tableData.length - 1)
-                    tableData[i][3] = RegistrationController.calculateOverallGrade(r.getRegistrationNumber(), r.getPeriod()) + " %";
+                    tableData[i][3] = RegistrationController.calculateOverallGrade(r.getRegistrationNumber(), r.getPeriod()) + " % / "
+                            + RegistrationController.calculatePassLevel(r.getRegistrationNumber(), r.getPeriod());
                 else
-                    tableData[i][3] = "n/a"; 
-                
+                    tableData[i][3] = "n/a";
+
                 JButton viewButton = new JButton("View");
                 viewButton.addActionListener(e -> {
-                    this.rootFrame.moveToRegistrationDetails(this.registrationNumber, r.getPeriod().toString().charAt(0));
+                    this.rootFrame.moveToRegistrationDetails(this.registrationNumber,
+                            r.getPeriod().toString().charAt(0));
                 });
                 tableData[i][4] = viewButton;
             }
@@ -256,29 +259,34 @@ class JTableButtonModel extends AbstractTableModel {
         } catch (Exception e) {
             this.rootFrame.logout(); // Error
         }
-        
+
     }
 
-    private Object[][] rows; 
-    private String[] columns; 
+    private Object[][] rows;
+    private String[] columns;
 
     public String getColumnName(int column) {
-       return columns[column];
-    }
-    public int getRowCount() {
-       return rows.length;
-    }
-    public int getColumnCount() {
-       return columns.length;
-    }
-    public Object getValueAt(int row, int column) {
-       return rows[row][column];
-    }
-    public boolean isCellEditable(int row, int column) {
-       return false;
-    }
-    public Class<?> getColumnClass(int column) {
-       return getValueAt(0, column).getClass();
+        return columns[column];
     }
 
- }
+    public int getRowCount() {
+        return rows.length;
+    }
+
+    public int getColumnCount() {
+        return columns.length;
+    }
+
+    public Object getValueAt(int row, int column) {
+        return rows[row][column];
+    }
+
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
+    public Class<?> getColumnClass(int column) {
+        return getValueAt(0, column).getClass();
+    }
+
+}

@@ -17,7 +17,7 @@ public class Main extends JFrame {
         setTitle("University Management System");
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-        setSize(800, 500);
+        setSize(1200, 700);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 

@@ -7,8 +7,10 @@ import javax.swing.table.AbstractTableModel;
 
 import controllers.ModuleController;
 import controllers.RegistrationController;
+import controllers.StudentController;
 import models.Registration;
 import models.SelectedModule;
+import models.Constants.PassLevel;
 
 public class ModuleGrades extends JPanel {
 
@@ -72,7 +74,7 @@ public class ModuleGrades extends JPanel {
             return true;
 
         } catch (Exception err) {
-            this.rootFrame.showError("There was an error, please try again.");
+            this.rootFrame.showError("There was an error, please try again. Please make sure that the student has enrolled on all relevant modules.");
         }
 
         return false;
@@ -80,7 +82,107 @@ public class ModuleGrades extends JPanel {
     }
 
     private void registerNextButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        
+        if (this.saveGrades()) { // If saving grades was successful
+            
+            try {
+
+                // Get full year grade
+                Float grade = RegistrationController.calculateOverallGrade(this.studentRegistrationNumber, this.currentPeriod);
+
+                // Get pass level
+                PassLevel pl = RegistrationController.calculatePassLevel(this.studentRegistrationNumber, this.currentPeriod);
+
+                // Get theoretical next level
+                Character nextLevel = RegistrationController.getNextProgressingLevel(this.studentRegistrationNumber);
+
+                // Is this currently their resit year
+                Boolean currentlyOnResit = false;
+                Registration currentReg = RegistrationController.getStudentRegistration(this.studentRegistrationNumber, this.currentPeriod);
+                if ((int)this.currentPeriod > (int)'A') {
+                    Registration prevReg = RegistrationController.getStudentRegistration(this.studentRegistrationNumber, (char)(this.currentPeriod - 1));
+                    if (currentReg.getLevel().equals(prevReg.getLevel())) {
+                        currentlyOnResit = true;
+                    }
+                }
+
+                // If on fourth year we need to not allow a resit
+                if (currentReg.getLevel().equals('4')) {
+                    currentlyOnResit = true; // If pass - fine, if not they will graduate - let other function calculate classification
+                }
+
+                // If they passed move them onto next year / graduate
+                if (pl == PassLevel.PASS || pl == PassLevel.CONCEDED_PASS) {
+
+                    // if next level = G then we need to graduate them
+                    if (nextLevel.equals('G')) {
+
+                        StudentController.graduateStudent(this.studentRegistrationNumber); // Graduate the student
+                        this.rootFrame.showMessage(
+                            "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                            "Progressing to: Graduation" 
+                        );
+                        this.rootFrame.moveToTeacherDashboard();
+                        return;
+
+                    } else {
+
+                        RegistrationController.generateNextRegistration(this.studentRegistrationNumber, nextLevel); // Gen next registration
+                        this.rootFrame.showMessage(
+                            "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                            "Progressing to level: " + nextLevel
+                        );
+                        this.rootFrame.moveToTeacherDashboard();
+                        return;
+
+                    }
+                    
+                }
+
+                // If they failed but they haven't resit this year yet
+                if (pl == PassLevel.FAIL && !currentlyOnResit) {
+
+                    RegistrationController.generateNextRegistration(this.studentRegistrationNumber, currentReg.getLevel()); // Gen same level
+                    
+                    // Copy all modules over
+                    for (SelectedModule m: RegistrationController.getStudentRegistration(this.studentRegistrationNumber, this.currentPeriod).getSelectedModules()) {
+                        RegistrationController.createSelectedModule(this.studentRegistrationNumber, (char)(this.currentPeriod + 1), m.getCode());
+                        
+                        Float firstGrade = m.getFirstAttemptResult();
+                        Float secondGrade = m.getSecondAttemptResult();
+                        if (secondGrade > 40) secondGrade = 40f; // flattening
+                        
+                        Float maxGrade = Math.max(firstGrade, secondGrade); // Get max grade
+                        if (maxGrade >= (0.9 * 40)) { // If they passed this module then copy grade over
+                            RegistrationController.updateFirstGrade(this.studentRegistrationNumber, (char)(this.currentPeriod + 1), m.getCode(), maxGrade);
+                        }
+
+                    }
+
+                    this.rootFrame.showMessage(
+                        "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                        "Resitting level: " + nextLevel
+                    );
+                    this.rootFrame.moveToTeacherDashboard();
+                    return;
+
+                }
+
+                // Fail - on resit - graduate with fail
+                StudentController.graduateStudent(this.studentRegistrationNumber); // Graduate with fail
+                this.rootFrame.showMessage(
+                    "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                    "Progressing to: Graduation" 
+                );
+                this.rootFrame.moveToTeacherDashboard();
+
+
+            } catch (Exception err) {
+                this.rootFrame.showError("There was an error, please try again. Please make sure that the student has enrolled on all relevant modules. ");
+            }
+
+        }
+
     }
 
     private void initComponents() {
