@@ -161,7 +161,7 @@ public class ModuleGrades extends JPanel {
 
                     this.rootFrame.showMessage(
                         "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
-                        "Resitting level: " + nextLevel
+                        "Resitting level: " + currentReg.getLevel()
                     );
                     this.rootFrame.moveToTeacherDashboard();
                     return;

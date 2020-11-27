@@ -33,7 +33,12 @@ public class RegistrarDashboard extends JPanel {
         } else {
             try {
                 Student student = StudentController.getStudent(Integer.valueOf(registrationNumber));
-                this.rootFrame.moveToModuleAddDrop(student.getRegistrationNumber());
+                if (!student.getHasGraduated()) {
+                    this.rootFrame.moveToModuleAddDrop(student.getRegistrationNumber());
+                } else {
+                    this.rootFrame.showMessage("This student has graduated, please try again.");
+                }
+                
             } catch (Exception err) {
                 rootFrame.showError("Invalid registration number. Please try again.");
             }

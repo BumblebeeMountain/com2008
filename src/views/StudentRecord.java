@@ -229,6 +229,9 @@ class JTableButtonModel extends AbstractTableModel {
             // Get the registrations
             this.registrations = RegistrationController.getStudentRegistrations(this.registrationNumber);
 
+            // Get the student
+            Student student = StudentController.getStudent(this.registrationNumber);
+
             // Set the table
             String[] columnNames = { "Start Year", "Period", "Level", "Grade (%) / Pass Level", "View" };
             Object[][] tableData = new Object[registrations.length][columnNames.length];
@@ -238,7 +241,7 @@ class JTableButtonModel extends AbstractTableModel {
                 tableData[i][1] = r.getPeriod().toString();
                 tableData[i][2] = r.getLevel().toString();
 
-                if (i < tableData.length - 1)
+                if (i < tableData.length - 1 || student.getHasGraduated())
                     tableData[i][3] = RegistrationController.calculateOverallGrade(r.getRegistrationNumber(), r.getPeriod()) + " % / "
                             + RegistrationController.calculatePassLevel(r.getRegistrationNumber(), r.getPeriod());
                 else
