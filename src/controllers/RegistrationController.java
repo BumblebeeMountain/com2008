@@ -879,13 +879,18 @@ public class RegistrationController {
 
             // Get a total max grade for all modules
             Double total = 0d;
+            Integer n = 0; // Number of split grades
+
             for (SelectedModule m : modules) {
-                Float maxGrade = Math.max(m.getFirstAttemptResult(), m.getSecondAttemptResult());
-                total += maxGrade;
+                
+                Float maxGrade = Math.max(m.getFirstAttemptResult(), m.getSecondAttemptResult()); // Get max grade
+                Integer splits = m.getCredits() / 10; // Weight splits
+                n += splits;
+                total += maxGrade * splits;
             }
 
             DecimalFormat df = new DecimalFormat("#.#");
-            Float overallGrade = Float.valueOf(df.format(total / numberOfModules));
+            Float overallGrade = Float.valueOf(df.format(total / n));
 
             return overallGrade;
 

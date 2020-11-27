@@ -10,11 +10,18 @@ import models.Constants;
 import models.Student;
 
 public class TemplateData {
-    
-    public static void main (String[] args) {
+
+    public static void main(String[] args) {
+
+        // data1();
+        data2();
+
+    }
+
+    public static void data1() {
 
         // Create some departments
-        try {   
+        try {
             DepartmentController.createDepartment("COM", "Computer Science");
             DepartmentController.createDepartment("ENG", "Engineering");
             DepartmentController.createDepartment("BIO", "Biology");
@@ -25,9 +32,9 @@ public class TemplateData {
         // Create some degrees
         try {
             DegreeController.createDegree("COMU01", "Computer Science", false, 3);
-            DepartmentController.createDegreeDepartment("COM", "COMU01", true);
-            DegreeController.createDegree("COMU02", "Computer Science w/ Year In Industry", true, 3);
-            DepartmentController.createDegreeDepartment("COM", "COMU02", true);
+            DepartmentController.createDegreeDepartment("COM", "COMU01", false);
+            DegreeController.createDegree("COMU02", "Computer Science w/ Year In Industry", false, 3);
+            DepartmentController.createDegreeDepartment("COM", "COMU02", false);
             DepartmentController.createDegreeDepartment("ENG", "COMU02", false);
         } catch (Exception e) {
             System.out.println("There was an error with degree creation: " + e);
@@ -35,23 +42,23 @@ public class TemplateData {
 
         // Create some modules
         try {
-            ModuleController.createModule("COM1001", "Intro to software engineering 1", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1002", "Intro to software engineering 2", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1003", "Intro to software engineering 3", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1004", "Intro to software engineering 4", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1005", "Intro to software engineering 5", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1006", "Intro to software engineering 6", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("COM1007", "Intro to software engineering 7", 20, "AUTUMN~SPRING");
+            ModuleController.createModule("COM1001", "Intro to software engineering 1", 20, "AUTUMN");
+            ModuleController.createModule("COM1002", "Intro to software engineering 2", 20, "AUTUMN");
+            ModuleController.createModule("COM1003", "Intro to software engineering 3", 20, "AUTUMN");
+            ModuleController.createModule("COM1004", "Intro to software engineering 4", 20, "AUTUMN");
+            ModuleController.createModule("COM1005", "Intro to software engineering 5", 20, "AUTUMN");
+            ModuleController.createModule("COM1006", "Intro to software engineering 6", 20, "AUTUMN");
+            ModuleController.createModule("COM1007", "Intro to software engineering 7", 20, "AUTUMN");
         } catch (Exception e) {
             System.out.println("There was an error with module creation: " + e);
         }
 
         // Link some modules
         try {
-            DegreeController.createDegreeModule("COMU01", "COM1001", true, "1");
-            DegreeController.createDegreeModule("COMU01", "COM1002", true, "1");
-            DegreeController.createDegreeModule("COMU01", "COM1003", true, "1");
-            DegreeController.createDegreeModule("COMU01", "COM1004", true, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1001", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1002", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1003", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1004", false, "1");
             DegreeController.createDegreeModule("COMU01", "COM1005", false, "1");
             DegreeController.createDegreeModule("COMU01", "COM1006", false, "1");
             DegreeController.createDegreeModule("COMU01", "COM1007", false, "1");
@@ -62,15 +69,18 @@ public class TemplateData {
         // Insert some users
         try {
             UserController.createUser(Constants.Title.MR, "Brian", "Smith", "password", Constants.AccountType.TEACHER);
-            UserController.createUser(Constants.Title.MR, "James", "Smith", "password", Constants.AccountType.REGISTRAR);
-            UserController.createUser(Constants.Title.MR, "David", "Grey", "password", Constants.AccountType.ADMINISTRATOR);
+            UserController.createUser(Constants.Title.MR, "James", "Smith", "password",
+                    Constants.AccountType.REGISTRAR);
+            UserController.createUser(Constants.Title.MR, "David", "Grey", "password",
+                    Constants.AccountType.ADMINISTRATOR);
         } catch (Exception e) {
             System.out.println("There was an error with user creation: " + e);
         }
 
         // Create a student
         try {
-            Student s = StudentController.createStudent(Constants.Title.MR, "Dominic", "Barter", "password", Constants.AccountType.STUDENT, "Dawn Walker");
+            Student s = StudentController.createStudent(Constants.Title.MR, "Dominic", "Barter", "password",
+                    Constants.AccountType.STUDENT, "Dawn Walker");
             RegistrationController.createInitialRegistration(s.getRegistrationNumber(), "COMU01");
         } catch (Exception e) {
             System.out.println("There was an error with user creation: " + e);
@@ -79,13 +89,32 @@ public class TemplateData {
         // try {
 
         // } catch (Exception e) {
-        //     System.out.println("There was an error with user creation: " + e);
+        // System.out.println("There was an error with user creation: " + e);
         // }
 
     }
 
+    public static void data2() {
 
+        try {
+            ModuleController.createModule("COM1010", "Intro to software engineering 10", 10, "AUTUMN");
+            ModuleController.createModule("COM1011", "Intro to software engineering 11", 10, "AUTUMN");
+            ModuleController.createModule("COM1012", "Intro to software engineering 12", 10, "AUTUMN");
+            ModuleController.createModule("COM1013", "Intro to software engineering 13", 10, "AUTUMN");
+        } catch (Exception e) {
+            System.out.println("There was an error with module creation: " + e);
+        }
 
+        // Link some modules
+        try {
+            DegreeController.createDegreeModule("COMU01", "COM1010", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1011", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1012", false, "1");
+            DegreeController.createDegreeModule("COMU01", "COM1013", false, "1");
+        } catch (Exception e) {
+            System.out.println("There was an error with module linking: " + e);
+        }
 
+    }
 
 }
