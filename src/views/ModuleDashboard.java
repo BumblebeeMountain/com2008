@@ -104,8 +104,6 @@ class JTableButtonModelModule extends AbstractTableModel {
 
     public JTableButtonModelModule (Main rootFrame) {
 
-        System.out.println("in jtablebuttonmodelmodule");
-        
         this.rootFrame = rootFrame;
 
         try {   
