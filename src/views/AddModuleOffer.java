@@ -33,6 +33,8 @@ public class AddModuleOffer extends JPanel {
 
             // DegreeController.createDegreeModule(degCode, modCode, isCore, level);
 
+        } catch (Exception ex) {
+
         }
     }
 
@@ -121,7 +123,5 @@ public class AddModuleOffer extends JPanel {
     private JLabel label3;
     private JComboBox<String> levelComboBox;
     private JCheckBox isCoreModule;
-    private JLabel label3;
-    private JTextField level;
     private JButton submitButton;
 }
