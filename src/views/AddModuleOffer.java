@@ -32,9 +32,11 @@ public class AddModuleOffer extends JPanel {
         goBackButton = new JButton();
         body = new JPanel();
         label1 = new JLabel();
-        moduleCode = new JComboBox<>();
+        moduleCode = new JComboBox<String>();
         label2 = new JLabel();
-        degreeCode = new JComboBox<>();
+        degreeCode = new JComboBox<String>();
+        label3 = new JLabel();
+        levelComboBox = new JComboBox<String>();
         isCoreModule = new JCheckBox();
         submitButton = new JButton();
 
@@ -76,16 +78,23 @@ public class AddModuleOffer extends JPanel {
             body.add(degreeCode, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
+            // ---- label3 ----
+            label3.setText("Level:");
+            body.add(label3, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                    GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
+            body.add(levelComboBox, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+                    GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
+
             // ---- isCoreModule ----
             isCoreModule.setText("Core Module");
             isCoreModule.setSelected(true);
-            body.add(isCoreModule, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+            body.add(isCoreModule, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- submitButton ----
             submitButton.setText("Submit");
             submitButton.addActionListener(e -> submitButtonActionPerformed(e));
-            body.add(submitButton, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
+            body.add(submitButton, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
         }
         add(body, BorderLayout.CENTER);
@@ -99,6 +108,8 @@ public class AddModuleOffer extends JPanel {
     private JComboBox<String> moduleCode;
     private JLabel label2;
     private JComboBox<String> degreeCode;
+    private JLabel label3;
+    private JComboBox<String> levelComboBox;
     private JCheckBox isCoreModule;
     private JButton submitButton;
 }
