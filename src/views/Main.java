@@ -157,7 +157,10 @@ public class Main extends JFrame {
     }
 
     public void moveToAddModuleOffer() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddModuleOffer(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
 }

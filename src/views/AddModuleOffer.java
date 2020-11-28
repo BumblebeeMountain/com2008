@@ -2,9 +2,18 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
+import com.sun.xml.internal.ws.api.server.Module;
+
 import controllers.DegreeController;
+import controllers.ModuleController;
+import exceptions.ExistingRecordException;
+import exceptions.GeneralProcessingException;
+import models.Degree;
+import models.DegreeModule;
 
 public class AddModuleOffer extends JPanel {
 
@@ -28,13 +37,16 @@ public class AddModuleOffer extends JPanel {
         String modCode = String.valueOf(moduleCode.getSelectedItem());
         String degCode = String.valueOf(degreeCode.getSelectedItem());
         Boolean isCore = Boolean.valueOf(isCoreModule.getText());
+        String modLevel = String.valueOf(levelComboBox.getSelectedItem());
 
         try {
 
-            // DegreeController.createDegreeModule(degCode, modCode, isCore, level);
+            DegreeController.createDegreeModule(degCode, modCode, isCore, modLevel);
 
-        } catch (Exception ex) {
-
+        } catch (ExistingRecordException err) {
+            rootFrame.showError("This module offer already exists.");
+        } catch (Exception err) {
+            rootFrame.showError("An error occured.");
         }
     }
 
@@ -44,11 +56,48 @@ public class AddModuleOffer extends JPanel {
         goBackButton = new JButton();
         body = new JPanel();
         label1 = new JLabel();
-        moduleCode = new JComboBox<String>();
+
+        DegreeModule[] offeredModules = new DegreeModule[1];
+
+        try {
+            // Gets all degree modules
+            offeredModules = DegreeController.getAllDegreeModules();
+
+        } catch (GeneralProcessingException err) {
+            rootFrame.showError("An error occured.");
+        }
+
+        String[] offModuleCodes = new String[offeredModules.length];
+
+        for (int i = 0; i < offModuleCodes.length; i++) {
+            // Gets the name of all of these modules
+            offModuleCodes[i] = offeredModules[i].getCode();
+        }
+
+        moduleCode = new JComboBox<String>(offModuleCodes);
         label2 = new JLabel();
-        degreeCode = new JComboBox<String>();
+
+        Degree[] offeredDegrees = new Degree[1];
+
+        try {
+            // Gets all offered degrees
+            offeredDegrees = DegreeController.getAllDegrees(true);
+
+        } catch (GeneralProcessingException err) {
+            rootFrame.showError("An error occured.");
+        }
+
+        String[] offDegreeCodes = new String[offeredDegrees.length];
+
+        for (int i = 0; i < offDegreeCodes.length; i++) {
+            // Gets the name of all of these modules
+            offDegreeCodes[i] = offeredDegrees[i].getCode();
+        }
+
+        degreeCode = new JComboBox<String>(offDegreeCodes);
         label3 = new JLabel();
-        levelComboBox = new JComboBox<String>();
+        String[] levels = {"U", "P"};
+        levelComboBox = new JComboBox<String>(levels);
         isCoreModule = new JCheckBox();
         submitButton = new JButton();
 
@@ -110,6 +159,18 @@ public class AddModuleOffer extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
         }
         add(body, BorderLayout.CENTER);
+
+        // private String[] getAllModuleCode() {
+        //     // Gets all offered modules
+        //     Module[] offeredModules = ModuleController.getAllModules(true);
+
+        //     // Gets the name of all of these modules
+        //     String[] offModuleNames = new String[offeredModules.length];
+
+        //     for (int i = 0; i < offModuleNames.length; i++) {
+        //         offModuleNames[i] = offeredModules[i].getName();
+        //     }
+        // }
     }
 
     private JPanel header;
