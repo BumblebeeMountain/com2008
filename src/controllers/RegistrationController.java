@@ -86,6 +86,35 @@ public class RegistrationController {
 
     }
 
+    public static void removeRegistration(Integer registrationNumber) throws GeneralProcessingException {
+        PreparedStatement pstmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            deleteSelectedModulesFromRegNum(registrationNumber);
+
+            pstmt = con.prepareStatement("DELETE * FROM Registration WHERE studentRegistrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            throw new GeneralProcessingException();
+        } catch (GeneralProcessingException ex ) {
+            throw ex;
+        }
+    }
+
+    public static void deleteSelectedModulesFromRegNum(Integer registrationNumber) throws GeneralProcessingException {
+        PreparedStatement pstmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+            pstmt = con.prepareStatement("DELETE * FROM SelectedModule WHERE studentRegistrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw new GeneralProcessingException();
+        }
+
+    }
+
     /**
      * Gets all the student registrations
      * 
