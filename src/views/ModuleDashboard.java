@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import controllers.ModuleController;
+import exceptions.GeneralProcessingException;
 import models.Module;
 
 public class ModuleDashboard extends JPanel {
@@ -104,8 +105,6 @@ class JTableButtonModelModule extends AbstractTableModel {
 
     public JTableButtonModelModule (Main rootFrame) {
 
-        System.out.println("in jtablebuttonmodelmodule");
-        
         this.rootFrame = rootFrame;
 
         try {   
@@ -126,7 +125,14 @@ class JTableButtonModelModule extends AbstractTableModel {
 
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.addActionListener(e -> {
-                    this.rootFrame.showMessage("You are trying to delete the module: " + m.getName().toString());
+                    // this.rootFrame.showMessage("You are trying to delete the module: " + m.getName().toString());
+                    try {
+                        ModuleController.removeModule(m.getCode().toString());
+                        System.out.println("module code: " + m.getCode().toString());
+                    } catch (GeneralProcessingException err) {
+                        this.rootFrame.showMessage("An error occured.");
+                    }
+                    
                 });
                 tableData[i][4] = deleteButton;
 

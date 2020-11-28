@@ -32,7 +32,7 @@ public class ModuleController {
                 System.out.println("Maybe try a different module!");
             }
 
-            // Change this value to delete a department
+            // Change this value to delete a module
             removeModule("COM1002");
 
             // Output all the current modules

@@ -35,7 +35,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void moduleOfferDashButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToModuleOfferDashboard();
     }
 
     private void initComponents() {
