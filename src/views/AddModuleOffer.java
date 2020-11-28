@@ -96,7 +96,7 @@ public class AddModuleOffer extends JPanel {
 
         degreeCode = new JComboBox<String>(offDegreeCodes);
         label3 = new JLabel();
-        String[] levels = {"U", "P"};
+        String[] levels = {"1", "2", "3", "4", "P"};
         levelComboBox = new JComboBox<String>(levels);
         isCoreModule = new JCheckBox();
         submitButton = new JButton();
