@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.DegreeController;
+
 public class AddModuleOffer extends JPanel {
 
     private static final long serialVersionUID = 4558153664567909648L;
@@ -23,7 +25,15 @@ public class AddModuleOffer extends JPanel {
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String modCode = String.valueOf(moduleCode.getSelectedItem());
+        String degCode = String.valueOf(degreeCode.getSelectedItem());
+        Boolean isCore = Boolean.valueOf(isCoreModule.getText());
+
+        try {
+
+            // DegreeController.createDegreeModule(degCode, modCode, isCore, level);
+
+        }
     }
 
     private void initComponents() {
@@ -100,5 +110,7 @@ public class AddModuleOffer extends JPanel {
     private JLabel label2;
     private JComboBox<String> degreeCode;
     private JCheckBox isCoreModule;
+    private JLabel label3;
+    private JTextField level;
     private JButton submitButton;
 }
