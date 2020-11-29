@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.RegistrationController;
+import models.Registration;
+import models.SelectedModule;
+
 public class RegistrationDetails extends JPanel {
 
     private static final long serialVersionUID = 2001232095172440708L;
@@ -16,14 +20,27 @@ public class RegistrationDetails extends JPanel {
         this.registrationNumber = registrationNumber;
         this.registrationPeriod = registrationPeriod;
         initComponents();
+    
+        // Fill in the labels
+        try {
+            Registration reg = RegistrationController.getStudentRegistration(registrationNumber, registrationPeriod);
+            year.setText(reg.getStartYear().toString());
+            level.setText(reg.getLevel().toString());
+            period.setText(reg.getPeriod().toString());
+        } catch (Exception e) {
+            this.rootFrame.moveToStudentRecord(this.registrationNumber); // Errored
+        }
+
+        moduleTable.getTableHeader().setReorderingAllowed(false);
+
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToStudentRecord(this.registrationNumber);
     }
 
     private void initComponents() {
@@ -62,6 +79,23 @@ public class RegistrationDetails extends JPanel {
 
         // ======== scrollPane1 ========
         {
+            Object[] columnNames = {"Module Code", "Module Name", "Credits", "Grade (%)", "Resit Grade (%)"};
+            try {
+                SelectedModule[] modules = RegistrationController.getStudentRegistration(this.registrationNumber, this.registrationPeriod).getSelectedModules();
+                Object[][] rowData = new Object[modules.length][columnNames.length];
+                for (int i = 0; i < modules.length; i++) {
+                    SelectedModule m = modules[i];
+                    rowData[i][0] = m.getCode();
+                    rowData[i][1] = m.getName();
+                    rowData[i][2] = m.getCredits();
+                    rowData[i][3] = m.getFirstAttemptResult();
+                    rowData[i][4] = m.getSecondAttemptResult();
+                }
+                moduleTable = new JTable(rowData, columnNames);
+            } catch (Exception e) {
+                this.rootFrame.moveToStudentRecord(this.registrationNumber); return;
+            }
+            
             scrollPane1.setViewportView(moduleTable);
         }
         add(scrollPane1, BorderLayout.CENTER);
@@ -73,13 +107,14 @@ public class RegistrationDetails extends JPanel {
             ((GridBagLayout) panel2.getLayout()).rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0E-4 };
 
             // ---- label1 ----
-            label1.setText("Start Year:");
+            label1.setText("Start Year:   ");
             label1.setFont(new Font("Tahoma", Font.BOLD, 11));
             panel2.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- year ----
             year.setText("year");
+            year.setFont(new Font("Tahoma", Font.PLAIN, 11));
             panel2.add(year, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -91,6 +126,7 @@ public class RegistrationDetails extends JPanel {
 
             // ---- level ----
             level.setText("level");
+            level.setFont(new Font("Tahoma", Font.PLAIN, 11));
             panel2.add(level, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -102,6 +138,7 @@ public class RegistrationDetails extends JPanel {
 
             // ---- period ----
             period.setText("period");
+            period.setFont(new Font("Tahoma", Font.PLAIN, 11));
             panel2.add(period, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         }
