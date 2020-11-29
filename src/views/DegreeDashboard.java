@@ -71,6 +71,7 @@ public class DegreeDashboard extends JPanel {
             degreeTable = new JTable(new JTableButtonModelDegree(this.rootFrame));
             tableRenderer = degreeTable.getDefaultRenderer(JButton.class);
             degreeTable.setDefaultRenderer(JButton.class, new JTableButtonRenderer(tableRenderer));
+            degreeTable.addMouseListener(new JTableButtonMouseListener(degreeTable)); // <--- You were missing this line
             body.setViewportView(degreeTable);
         }
         add(body, BorderLayout.CENTER);
@@ -126,15 +127,9 @@ class JTableButtonModelDegree extends AbstractTableModel {
                 
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.addActionListener(e -> {
-                    // try {
-                    //     System.out.println("deleting degree");
-                    //     DegreeController.removeDegree(d.getCode());
-                    // } catch (GeneralProcessingException ex) {
-                    //     ex.printStackTrace();
-                        // this.rootFrame.showError("Degree is not found");
-                    // } catch (Exception ex) {
-                        // ex.printStackTrace();
-                    // }
+                    
+                    System.out.println("Trying to delete: " + d.getCode());
+
                     this.deleteButtonClicked(d);
                     this.rootFrame.moveToDegreeDashboard();
                 });
