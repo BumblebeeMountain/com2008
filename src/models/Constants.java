@@ -33,7 +33,9 @@ public class Constants {
         MERIT,
         PASS_NON_HONOURS,
         PASS,
-        FAIL
+        FAIL,
+        PG_DIP,
+        PG_CERT
     }
 
     public static enum PassLevel {

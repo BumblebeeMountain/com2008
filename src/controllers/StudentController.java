@@ -5,9 +5,11 @@ import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Degree;
 import models.Registration;
+import models.SelectedModule;
 import models.Student;
 import models.User;
 import models.Constants.DegreeClass;
+import models.Constants.PassLevel;
 import models.Constants.AccountType;
 import models.Constants.Title;
 import database.ConnectionManager;
@@ -426,14 +428,100 @@ public class StudentController {
             Registration[] registrations = RegistrationController.getStudentRegistrations(registrationNumber);
 
             // Didn't complete
-            if (!registrations[registrations.length - 1].getLevel().equals((char)degree.getMaxLevel())) { // Levels not equal
+            if (!registrations[registrations.length - 1].getLevel().equals((char) degree.getMaxLevel())) { // Levels not equal
                 return DegreeClass.FAIL;
             }
 
             // Single year courses
-            
+            if (degree.getCode().charAt(3) == 'P') { // Post grad one year course
+
+                Float weightedGrade = RegistrationController.calculateOverallGrade(registrations[registrations.length - 1]);
+                PassLevel pl = RegistrationController.calculatePassLevel(registrations[registrations.length - 1]);
+
+                // Clear pass
+                if (pl == PassLevel.PASS) {
+                    if (weightedGrade >= 69.5) {
+                        return DegreeClass.DISTINCTION;
+                    } else if (weightedGrade >= 59.5) {
+                        return DegreeClass.MERIT;
+                    } else if (weightedGrade >= 49.5) {
+                        return DegreeClass.PASS;
+                    }
+                }
+
+                // Failed dissertation
+                Boolean failedDissertation = false;
+                Integer passedCredits = 0;
+                for (SelectedModule m: registrations[registrations.length - 1].getSelectedModules()) {
+                    
+                    Boolean passedModule = false;
+
+                    Float firstGrade = m.getFirstAttemptResult();
+                    Float secondGrade = m.getSecondAttemptResult();
+                    if (secondGrade > 50) secondGrade = 50f; // flattening
+                    Float maxGrade = Math.max(firstGrade, secondGrade); // Get max grade
+                    if (maxGrade >= 50 * 0.9f) passedModule = true; // Have they passed
+
+                    if (m.getCredits().equals(60) && passedModule.equals(false)) {
+                        failedDissertation = true;
+                        continue;
+                    } 
+
+                    if (passedModule && !m.getCredits().equals(60)) { // Dissertation doesn't count to taught module credit count
+                        passedCredits += m.getCredits();
+                    }
+
+                }
+
+                // Check if only dissertation failed
+                if (failedDissertation && passedCredits.equals(120)) { // 180 - 60
+                    return DegreeClass.PG_DIP;
+                }
+
+                // Only passed 60+ credits
+                if (passedCredits >= 60) {
+                    return DegreeClass.PG_CERT;
+                }
+
+                // Otherwise fail
+                return DegreeClass.FAIL;
+
+            }
+
+            // 4 years masters where they didn't fail at final year
+            if (degree.getMaxLevel() == 4 && RegistrationController.calculatePassLevel(registrations[registrations.length - 1]) != PassLevel.FAIL) {
+
+                Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
+                Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
+                Float fourthScore = RegistrationController.calculateOverallGrade(bestFourth(registrations));
+                Float fullScore = (secondScore + (thirdScore * 2) + (fourthScore * 2)) / 5;
+
+                if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS;
+                else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND;
+                else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND;
+                else return DegreeClass.FAIL;
+
+            }
 
             // Multi year courses
+            if (degree.getMaxLevel() == 3) {
+                Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
+                Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
+                Float fullScore = (secondScore + (thirdScore * 2)) / 3;
+
+                // If had to resit 3'rd year - non honours pass
+                if (resitThirdYear(registrations)) {
+                    if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS;
+                    else return DegreeClass.FAIL;
+                } else {
+                    if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS;
+                    else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND;
+                    else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND;
+                    else if (fullScore >= 44.5) return DegreeClass.THIRD_CLASS;
+                    else if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS;
+                    else return DegreeClass.FAIL;
+                }
+            }
 
         } catch (Exception e) {
             throw new GeneralProcessingException();
@@ -443,8 +531,37 @@ public class StudentController {
 
     }
 
+    private static Registration bestSecond (Registration[] rx) {
+        for (int i = rx.length - 1; i >= 0; i--) {
+            if (rx[i].getLevel().equals('2')) return rx[i];
+        }
+        return null;
+    }
+
+    private static Registration bestThird (Registration[] rx) {
+        for (int i = rx.length - 1; i >= 0; i--) {
+            if (rx[i].getLevel().equals('3')) return rx[i];
+        }
+        return null;
+    }
+
+    private static Registration bestFourth (Registration[] rx) {
+        for (int i = rx.length - 1; i >= 0; i--) {
+            if (rx[i].getLevel().equals('4')) return rx[i];
+        }
+        return null;
+    }
+
+    private static Boolean resitThirdYear (Registration[] rx) {
+        Integer count = 0;
+        for (Registration r: rx) {
+            if (r.getLevel().equals('3')) count += 1;
+        }
+        return count.equals(2); // If two third years - they resit it
+    }
+
     /**
-     * isStudent() Function to determin if a user is a student
+     * isStudent() Function to determine if a user is a student
      * 
      * @param user - User - the user to determine
      * @return Boolean - If the user is a student
