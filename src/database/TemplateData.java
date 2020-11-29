@@ -3,11 +3,8 @@ package database;
 import controllers.DegreeController;
 import controllers.DepartmentController;
 import controllers.ModuleController;
-import controllers.RegistrationController;
-import controllers.StudentController;
 import controllers.UserController;
 import models.Constants;
-import models.Student;
 
 public class TemplateData {
 
@@ -42,8 +39,8 @@ public class TemplateData {
 
         // Create some degrees
         try {
-            DegreeController.createDegree("BUSU01", "MSc in Business Administration", false, 4);
-            DepartmentController.createDegreeDepartment("BUS", "BUSU01", true);
+            DegreeController.createDegree("BUSP01", "MSc in Business Administration", false, 4);
+            DepartmentController.createDegreeDepartment("BUS", "BUSP01", true);
 
             DegreeController.createDegree("COMU01", "MEng Software Engineering with a Year in Industry", true, 4);
             DepartmentController.createDegreeDepartment("COM", "COMU01", true);
@@ -56,11 +53,6 @@ public class TemplateData {
             DegreeController.createDegree("PSYU01", "MPsy Cognitive Science", false, 4);
             DepartmentController.createDegreeDepartment("PSY", "PSYU01", true);
             DepartmentController.createDegreeDepartment("COM", "PSYU01", false);
-
-            // One year degree for testing
-            DegreeController.createDegree("PSYP01", "MPsy Cognitive Science", false, 4);
-            DepartmentController.createDegreeDepartment("PSY", "PSYP01", true);
-            DepartmentController.createDegreeDepartment("COM", "PSYP01", false);
         } catch (Exception e) {
             System.out.println("There was an error with degree creation: " + e);
         }
@@ -68,36 +60,7 @@ public class TemplateData {
         // Create some modules
         try {
 
-            // BUSU01
-
-            ModuleController.createModule("BUS1001", "Accounting and Finance for Managers", 20, "AUTUMN~SPRING"); // Year 1
-            ModuleController.createModule("BUS1002", "Business Management in Context", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS1003", "Management Themes and Perspectives", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS1004", "Business Economics", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS1005", "Introduction to Behaviour at Work", 20, "AUTUMN~SPRING");
-
-            ModuleController.createModule("BUS1010", "Analysis for Decision Making A", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS1011", "Analysis for Decision Making B", 20, "AUTUMN~SPRING");
-
-
-            ModuleController.createModule("BUS2001", "Business Strategy", 20, "AUTUMN~SPRING"); // Year 2
-            ModuleController.createModule("BUS2002", "Essentials of Marketing", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS2003", "Organisational Behaviour", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS2004", "Principles of Operations Management", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS2005", "Business Intelligence", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS2006", "Business Statistics", 20, "AUTUMN~SPRING");
-
-
-            ModuleController.createModule("BUS3001", "Corporate Social Responsibility", 20, "AUTUMN~SPRING"); // Year 3
-            ModuleController.createModule("BUS3002", "Digital Marketing", 20, "AUTUMN~SPRING");
-
-            ModuleController.createModule("BUS3010", "International Marketing", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS3011", "New Venture Creation", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS3012", "Work-Related Health and Well-Being", 20, "AUTUMN~SPRING");
-            ModuleController.createModule("BUS3013", "Managing complex projects", 20, "AUTUMN~SPRING");
-            
-            ModuleController.createModule("BUS3100", "Dissertation Project", 40, "AUTUMN~SPRING");
-
+            // BUSP01
 
             ModuleController.createModule("BUS4001", "Accounting and Finance", 15, "AUTUMN~SPRING"); // Year 4
             ModuleController.createModule("BUS4002", "Managing Organisational Behaviour", 15, "AUTUMN~SPRING");
@@ -183,7 +146,7 @@ public class TemplateData {
 
             ModuleController.createModule("COM3200", "Dissertation Project", 40, "AUTUMN~SPRING");
 
-            // PSYU01 & PSYP01
+            // PSYU01
 
             ModuleController.createModule("PSY1001", "Research Methods in Psychology", 20, "AUTUMN~SPRING"); // Year 1
             ModuleController.createModule("PSY1002", "Preparing for University Psychology", 20, "AUTUMN~SPRING");
@@ -234,47 +197,19 @@ public class TemplateData {
         // Link some modules
         try {
 
-            // BUSU01
-            DegreeController.createDegreeModule("BUSU01", "BUS1001", true, "1"); // Year 1
-            DegreeController.createDegreeModule("BUSU01", "BUS1002", true, "1");
-            DegreeController.createDegreeModule("BUSU01", "BUS1003", true, "1");
-            DegreeController.createDegreeModule("BUSU01", "BUS1004", true, "1");
-            DegreeController.createDegreeModule("BUSU01", "BUS1005", true, "1");
+            // BUSP01
 
-            DegreeController.createDegreeModule("BUSU01", "BUS1010", false, "1");
-            DegreeController.createDegreeModule("BUSU01", "BUS1011", false, "1");
+            DegreeController.createDegreeModule("BUSP01", "BUS4001", true, "4"); // Year 4
+            DegreeController.createDegreeModule("BUSP01", "BUS4002", true, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4003", true, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4004", true, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4005", true, "4");
 
+            DegreeController.createDegreeModule("BUSP01", "BUS4010", false, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4011", false, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4012", false, "4");
 
-            DegreeController.createDegreeModule("BUSU01", "BUS2001", true, "2"); // Year 2
-            DegreeController.createDegreeModule("BUSU01", "BUS2002", true, "2");
-            DegreeController.createDegreeModule("BUSU01", "BUS2003", true, "2");
-            DegreeController.createDegreeModule("BUSU01", "BUS2004", true, "2");
-            DegreeController.createDegreeModule("BUSU01", "BUS2005", true, "2");
-            DegreeController.createDegreeModule("BUSU01", "BUS2006", true, "2");
-
-
-            DegreeController.createDegreeModule("BUSU01", "BUS3001", true, "3"); // Year 3
-            DegreeController.createDegreeModule("BUSU01", "BUS3002", true, "3");
-
-            DegreeController.createDegreeModule("BUSU01", "BUS3010", false, "3");
-            DegreeController.createDegreeModule("BUSU01", "BUS3011", false, "3");
-            DegreeController.createDegreeModule("BUSU01", "BUS3012", false, "3");
-            DegreeController.createDegreeModule("BUSU01", "BUS3013", false, "3");
-
-            DegreeController.createDegreeModule("BUSU01", "BUS3100", true, "3");
-            
-
-            DegreeController.createDegreeModule("BUSU01", "BUS4001", true, "4"); // Year 4
-            DegreeController.createDegreeModule("BUSU01", "BUS4002", true, "4");
-            DegreeController.createDegreeModule("BUSU01", "BUS4003", true, "4");
-            DegreeController.createDegreeModule("BUSU01", "BUS4004", true, "4");
-            DegreeController.createDegreeModule("BUSU01", "BUS4005", true, "4");
-
-            DegreeController.createDegreeModule("BUSU01", "BUS4010", false, "4");
-            DegreeController.createDegreeModule("BUSU01", "BUS4011", false, "4");
-            DegreeController.createDegreeModule("BUSU01", "BUS4012", false, "4");
-
-            DegreeController.createDegreeModule("BUSU01", "BUS4100", true, "4");
+            DegreeController.createDegreeModule("BUSP01", "BUS4100", true, "4");
 
             // COMU01
             DegreeController.createDegreeModule("COMU01", "COM1001", true, "1"); // Year 1
@@ -295,7 +230,7 @@ public class TemplateData {
 
 
             DegreeController.createDegreeModule("COMU01", "COM3001", true, "3"); // Year 3
-            DegreeController.createDegreeModule("COMU01", "COM3001", true, "3");
+            DegreeController.createDegreeModule("COMU01", "COM3002", true, "3");
 
             DegreeController.createDegreeModule("COMU01", "COM3010", false, "3");
             DegreeController.createDegreeModule("COMU01", "COM3011", false, "3");
@@ -387,19 +322,6 @@ public class TemplateData {
             DegreeController.createDegreeModule("PSYU01", "PSY4012", false, "4");
 
             DegreeController.createDegreeModule("PSYU01", "PSY4100", true, "4");
-
-            // PSYP01
-            DegreeController.createDegreeModule("PSYP01", "PSY4001", true, "4"); // Year 4
-            DegreeController.createDegreeModule("PSYP01", "PSY4002", true, "4");
-            DegreeController.createDegreeModule("PSYP01", "PSY4003", true, "4");
-            DegreeController.createDegreeModule("PSYP01", "PSY4004", true, "4");
-            DegreeController.createDegreeModule("PSYP01", "PSY4005", true, "4");
-
-            DegreeController.createDegreeModule("PSYP01", "PSY4010", false, "4");
-            DegreeController.createDegreeModule("PSYP01", "PSY4011", false, "4");
-            DegreeController.createDegreeModule("PSYP01", "PSY4012", false, "4");
-
-            DegreeController.createDegreeModule("PSYP01", "PSY4100", true, "4");
 
         } catch (Exception e) {
             System.out.println("There was an error with module linking: " + e);

@@ -123,9 +123,9 @@ public class ModuleAddDrop extends JPanel {
     private void submitButtonActionPerformed(ActionEvent e) {
         
         // Check the credit count
-        Integer requiredCredits = Integer.valueOf(this.currentRegistration.getLevel().toString()) >= 4 ? 180 : 120;
+        Integer requiredCredits = Integer.valueOf(this.currentRegistration.getLevel().toString()).equals(4) ? 180 : 120;
 
-        if (!(Integer.valueOf(this.numberOfCredits.getText()) == requiredCredits)) {
+        if (!(Integer.valueOf(this.numberOfCredits.getText()).equals(requiredCredits))) {
             this.rootFrame.showError("Please select modules that add up to " + requiredCredits + " credits.");
         } else {
 
