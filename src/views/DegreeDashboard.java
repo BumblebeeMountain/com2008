@@ -148,7 +148,12 @@ class JTableButtonModelDegree extends AbstractTableModel {
     }
 
     private void deleteButtonClicked(Degree d) {
-        System.out.println("Degree " + d.getCode() + " to be deleted");
+        try {
+            DegreeController.removeDegree(d.getCode());
+        } catch (GeneralProcessingException ex ) {
+            ex.printStackTrace();
+            this.rootFrame.showError("Error deleting that degree");
+        }
     }
 
     private Object[][] rows; 
