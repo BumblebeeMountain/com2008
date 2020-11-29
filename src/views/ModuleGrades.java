@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
-import controllers.ModuleController;
 import controllers.RegistrationController;
 import controllers.StudentController;
 import models.Registration;
@@ -123,7 +122,7 @@ public class ModuleGrades extends JPanel {
 
                         StudentController.graduateStudent(this.studentRegistrationNumber); // Graduate the student
                         this.rootFrame.showMessage(
-                            "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                            "Student achieved: " + pl + " at " + grade + " %" + System.lineSeparator() +
                             "Progressing to: Graduation" 
                         );
                         this.rootFrame.moveToTeacherDashboard();
@@ -133,7 +132,7 @@ public class ModuleGrades extends JPanel {
 
                         RegistrationController.generateNextRegistration(this.studentRegistrationNumber, nextLevel); // Gen next registration
                         this.rootFrame.showMessage(
-                            "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                            "Student achieved: " + pl + " at " + grade + " %"  + System.lineSeparator() +
                             "Progressing to level: " + nextLevel
                         );
                         this.rootFrame.moveToTeacherDashboard();
@@ -164,7 +163,7 @@ public class ModuleGrades extends JPanel {
                     }
 
                     this.rootFrame.showMessage(
-                        "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                        "Student achieved: " + pl + " at " + grade + " %"  + System.lineSeparator() +
                         "Resitting level: " + currentReg.getLevel()
                     );
                     this.rootFrame.moveToTeacherDashboard();
@@ -175,7 +174,7 @@ public class ModuleGrades extends JPanel {
                 // Fail - on resit - graduate with fail
                 StudentController.graduateStudent(this.studentRegistrationNumber); // Graduate with fail
                 this.rootFrame.showMessage(
-                    "Student achieved: " + pl + " at " + grade + System.lineSeparator() +
+                    "Student achieved: " + pl + " at " + grade + " %"  + System.lineSeparator() +
                     "Progressing to: Graduation" 
                 );
                 this.rootFrame.moveToTeacherDashboard();
