@@ -47,10 +47,10 @@ public class UserController {
 
             createUser(
                 Constants.Title.MR,
-                "Bob",
-                "Smith",
+                "David",
+                "Grey",
                 "password",
-                Constants.AccountType.TEACHER
+                Constants.AccountType.ADMINISTRATOR
             ).getEmail();
 
             System.out.println("all users now: ");
