@@ -4,6 +4,7 @@ import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import exceptions.NoRecordException;
 import models.Degree;
+import models.Registration;
 import models.Student;
 import models.User;
 import models.Constants.DegreeClass;
@@ -410,11 +411,36 @@ public class StudentController {
         }
     }
 
-    // TODO
-    // Bit of an epic so will do later
+    /**
+     * Calculate the degree classification of a student
+     */
     public static DegreeClass calculateDegreeClassification(Integer registrationNumber)
             throws GeneralProcessingException, NoRecordException {
-        return null;
+
+        try {
+
+            // Get their degree
+            Degree degree = getStudentDegree(registrationNumber);
+
+            // Get their registrations
+            Registration[] registrations = RegistrationController.getStudentRegistrations(registrationNumber);
+
+            // Didn't complete
+            if (!registrations[registrations.length - 1].getLevel().equals((char)degree.getMaxLevel())) { // Levels not equal
+                return DegreeClass.FAIL;
+            }
+
+            // Single year courses
+            
+
+            // Multi year courses
+
+        } catch (Exception e) {
+            throw new GeneralProcessingException();
+        }
+
+        return DegreeClass.FAIL; // Default - fail
+
     }
 
     /**

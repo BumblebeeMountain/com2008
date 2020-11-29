@@ -912,6 +912,52 @@ public class RegistrationController {
     }
 
     /**
+     * Calculate the overall grade - overloaded
+     */
+    public static Float calculateOverallGrade(Registration reg)
+            throws NoRecordException {
+
+        try {
+
+            // First pull out all the selected modules
+            SelectedModule[] modules = reg.getSelectedModules();
+            Integer numberOfModules = modules.length;
+
+            // Guard against no records
+            if (numberOfModules == 0)
+                throw new NoRecordException();
+
+            // Get a total max grade for all modules
+            Double total = 0d;
+            Integer n = 0; // Number of split grades
+
+            // The passmark
+            Float passMark = reg.getLevel().equals('4') ? 50f : 40f;
+
+            for (SelectedModule m : modules) {
+
+                Float firstGrade = m.getFirstAttemptResult();
+                Float secondGrade = m.getSecondAttemptResult();
+                if (secondGrade > passMark) secondGrade = passMark; // flattening
+                
+                Float maxGrade = Math.max(firstGrade, secondGrade); // Get max grade
+                Integer splits = m.getCredits() / 10; // Weight splits
+                n += splits;
+                total += maxGrade * splits;
+            }
+
+            DecimalFormat df = new DecimalFormat("#.#");
+            Float overallGrade = Float.valueOf(df.format(total / n));
+
+            return overallGrade;
+
+        } catch (NoRecordException e) {
+            throw e;
+        } 
+
+    }
+
+    /**
      * Calculate the pass level for a given level of study
      */
     public static PassLevel calculatePassLevel (Integer registrationNumber, Character period) throws GeneralProcessingException, NoRecordException {
@@ -961,7 +1007,7 @@ public class RegistrationController {
             }
 
             // Get overall grade
-            Float overallGrade = calculateOverallGrade(registrationNumber, period);
+            Float overallGrade = calculateOverallGrade(reg);
 
             if (overallGrade < passMark) { // Not met average
                 return PassLevel.FAIL;
@@ -978,6 +1024,71 @@ public class RegistrationController {
         } catch (GeneralProcessingException e) {
             throw e;
         }
+
+    }
+
+    /**
+     * Calculate the pass level for a given level of study - overloaded
+     */
+    public static PassLevel calculatePassLevel (Registration reg) throws NoRecordException {
+
+        try {
+
+            if (reg.getLevel().equals('P')) { // if on placement they will always pass
+                return PassLevel.PASS;
+            }
+
+            SelectedModule[] modules = reg.getSelectedModules();
+            Integer numberOfModules = modules.length;
+
+            // Guard against no records
+            if (numberOfModules == 0)
+                throw new NoRecordException();
+
+            // Pass mark
+            Integer passMark = reg.getLevel().equals('4') ? 50 : 40;
+            Float passMarkConceded = 0.9f * passMark;
+
+            // Work out if they are a fail or conceded pass
+            Integer nearPasses = 0;
+            for (SelectedModule m: modules) {
+
+                Float firstGrade = m.getFirstAttemptResult();
+                Float secondGrade = m.getSecondAttemptResult();
+                if (secondGrade > 40) secondGrade = 40f; // flattening
+                
+                Float maxGrade = Math.max(firstGrade, secondGrade); // Get max grade
+
+                if (maxGrade < passMarkConceded) { // If anything has failed - they fail
+                    return PassLevel.FAIL;
+                }
+
+                if (maxGrade < passMark) { // One near pass
+                    nearPasses += 1;
+                }
+
+                if (nearPasses > 1) { // More than one near pass they fail
+                    return PassLevel.FAIL;
+                } 
+
+            }
+
+            // Get overall grade
+            Float overallGrade = calculateOverallGrade(reg);
+
+            if (overallGrade < passMark) { // Not met average
+                return PassLevel.FAIL;
+            }
+
+            if (nearPasses > 0) { // Conceded pass
+                return PassLevel.CONCEDED_PASS;
+            }
+
+            return PassLevel.PASS; // Pass
+
+        } catch (NoRecordException e) {
+            throw e;
+        } 
 
     }
 
