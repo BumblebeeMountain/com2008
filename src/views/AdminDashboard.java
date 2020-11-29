@@ -27,7 +27,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void degreeDashButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToDegreeDashboard();
     }
 
     private void departmentDashButtonActionPerformed(ActionEvent e) {

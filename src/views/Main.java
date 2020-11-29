@@ -142,11 +142,17 @@ public class Main extends JFrame {
     }
 
     public void moveToDegreeDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new DegreeDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddDegree() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddDegree(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToModuleOfferDashboard() {
