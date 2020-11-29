@@ -112,14 +112,15 @@ class JTableButtonModeDegreeModule extends AbstractTableModel {
             this.degreeModules = DegreeController.getAllDegreeModules();
 
             // Set the table
-            String[] columnNames = { "Name", "Degree Offered On", "Core"};
+            String[] columnNames = {"Module Code" ,"Name", "Degree Offered On", "Core"};
             Object[][] tableData = new Object[degreeModules.length][columnNames.length];
 
             for (int i = 0; i < tableData.length; i++) {
                 DegreeModule m = this.degreeModules[i];
-                tableData[i][0] = m.getName().toString();
-                tableData[i][1] = m.getDegreeCode().toString();
-                tableData[i][2] = m.getIsCore().toString();
+                tableData[i][0] = m.getCode().toString();
+                tableData[i][1] = m.getName().toString();
+                tableData[i][2] = m.getDegreeCode().toString();
+                tableData[i][3] = m.getIsCore().toString();
 
             }
 

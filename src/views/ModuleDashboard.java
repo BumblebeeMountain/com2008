@@ -125,15 +125,18 @@ class JTableButtonModelModule extends AbstractTableModel {
 
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.addActionListener(e -> {
+                    System.out.println("inside action listener");
                     // this.rootFrame.showMessage("You are trying to delete the module: " + m.getName().toString());
                     try {
                         ModuleController.removeModule(m.getCode().toString());
-                        System.out.println("module code: " + m.getCode().toString());
+                        System.out.println("Module code: " + m.getCode().toString());
                     } catch (GeneralProcessingException err) {
-                        this.rootFrame.showMessage("An error occured.");
+                        rootFrame.showError("An error occured.");
+                        err.printStackTrace();
                     }
                     
                 });
+
                 tableData[i][4] = deleteButton;
 
             }

@@ -20,20 +20,20 @@ public class ModuleController {
 
             // Example showing that duplicates cannot be made
             try {
-                createModule("COM1001", "Software Engineering", 20, "AUTUMN~SPRING");
+                createModule("PSY1111", "Test Psycho Module", 20, "AUTUMN~SPRING");
             } catch (ExistingRecordException e) {
                 System.out.println("COM1001 has already been inserted");
             }
 
-            // Change these values to insert a new module
-            try {
-                createModule("COM1003", "Intro to CS 2", 20, "AUTUMN~SPRING");
-            } catch (ExistingRecordException e) {
-                System.out.println("Maybe try a different module!");
-            }
+            // // Change these values to insert a new module
+            // try {
+            //     createModule("COM1003", "Intro to CS 2", 20, "AUTUMN~SPRING");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("Maybe try a different module!");
+            // }
 
             // Change this value to delete a module
-            removeModule("COM1002");
+            removeModule("PSY1090");
 
             // Output all the current modules
             Module[] arr = getAllModules(true);

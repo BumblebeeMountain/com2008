@@ -36,6 +36,7 @@ public class AddModule extends JPanel {
         try {
 
             ModuleController.createModule(code, name, credits, periodOfTeaching);
+            rootFrame.showMessage("Module added.");
 
         } catch (ExistingRecordException err) {
             rootFrame.showError("This module already exists.");

@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.sun.xml.internal.ws.api.server.Module;
-
 import controllers.DegreeController;
 import controllers.ModuleController;
 import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import models.Degree;
+import models.Module;
 import models.DegreeModule;
+
 
 public class AddModuleOffer extends JPanel {
 
@@ -57,11 +57,11 @@ public class AddModuleOffer extends JPanel {
         body = new JPanel();
         label1 = new JLabel();
 
-        DegreeModule[] offeredModules = new DegreeModule[1];
+        Module[] offeredModules = new Module[1];
 
         try {
-            // Gets all degree modules
-            offeredModules = DegreeController.getAllDegreeModules();
+            // Gets all offered modules
+            offeredModules = ModuleController.getAllModules(true);
 
         } catch (GeneralProcessingException err) {
             rootFrame.showError("An error occured.");
