@@ -147,7 +147,7 @@ public class DegreeController {
             if (onlyOfferedDegrees) {
                 pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = true;");
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Degree;");
             }
 
             // Execute the query
@@ -226,7 +226,7 @@ public class DegreeController {
                 pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = true;");
                 pstmt.setString(1, degreeCode);
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ?;");
                 pstmt.setString(1, degreeCode);
             }
 

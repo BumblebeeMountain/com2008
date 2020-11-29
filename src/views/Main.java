@@ -22,8 +22,8 @@ public class Main extends JFrame {
         setResizable(false);
 
         // add(new Login(this)); // Initial screen
-        // add(new TeacherDashboard(this));
-        add (new RegistrarDashboard(this));
+        add(new TeacherDashboard(this));
+        // add (new RegistrarDashboard(this));
 
         setVisible(true); // Show
 

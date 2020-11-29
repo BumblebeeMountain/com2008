@@ -66,7 +66,7 @@ public class ModuleController {
             if (onlyOfferedModules) {
                 pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = true");
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = false");
+                pstmt = con.prepareStatement("SELECT * FROM Module");
             }
 
             // Execute the query
@@ -130,7 +130,7 @@ public class ModuleController {
                 pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = true;");
                 pstmt.setString(1, moduleCode);
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ?;");
                 pstmt.setString(1, moduleCode);
             }
 

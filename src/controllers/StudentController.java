@@ -421,19 +421,24 @@ public class StudentController {
 
         try {
 
-            // Get their degree
-            Degree degree = getStudentDegree(registrationNumber);
-
             // Get their registrations
             Registration[] registrations = RegistrationController.getStudentRegistrations(registrationNumber);
+            System.out.println("Student registrations: " + registrations.length);
+
+            // Get their degree
+            Degree degree = DegreeController.getDegree(registrations[0].getDegreeCode(), false);
+            System.out.println("Student degree: " + degree);
 
             // Didn't complete
-            if (!registrations[registrations.length - 1].getLevel().equals((char) degree.getMaxLevel())) { // Levels not equal
+            if (!registrations[registrations.length - 1].getLevel().equals((char)degree.getMaxLevel())) { // Levels not equal
+                System.out.println("Direct fail");
                 return DegreeClass.FAIL;
             }
 
             // Single year courses
             if (degree.getCode().charAt(3) == 'P') { // Post grad one year course
+
+                System.out.println("One year course");
 
                 Float weightedGrade = RegistrationController.calculateOverallGrade(registrations[registrations.length - 1]);
                 PassLevel pl = RegistrationController.calculatePassLevel(registrations[registrations.length - 1]);
@@ -491,6 +496,8 @@ public class StudentController {
             // 4 years masters where they didn't fail at final year
             if (degree.getMaxLevel() == 4 && RegistrationController.calculatePassLevel(registrations[registrations.length - 1]) != PassLevel.FAIL) {
 
+                System.out.println("4 year masters with pass at 4'th level");
+
                 Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
                 Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
                 Float fourthScore = RegistrationController.calculateOverallGrade(bestFourth(registrations));
@@ -505,6 +512,9 @@ public class StudentController {
 
             // Multi year courses
             if (degree.getMaxLevel() == 3) {
+
+                System.out.println("3 year course");
+
                 Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
                 Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
                 Float fullScore = (secondScore + (thirdScore * 2)) / 3;
@@ -524,6 +534,7 @@ public class StudentController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralProcessingException();
         }
 

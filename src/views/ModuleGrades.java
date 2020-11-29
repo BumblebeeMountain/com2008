@@ -89,12 +89,15 @@ public class ModuleGrades extends JPanel {
 
                 // Get full year grade
                 Float grade = RegistrationController.calculateOverallGrade(this.studentRegistrationNumber, this.currentPeriod);
+                System.out.println("Overall grade: " + grade);
 
                 // Get pass level
                 PassLevel pl = RegistrationController.calculatePassLevel(this.studentRegistrationNumber, this.currentPeriod);
+                System.out.println("Pass level: " + pl);
 
                 // Get theoretical next level
                 Character nextLevel = RegistrationController.getNextProgressingLevel(this.studentRegistrationNumber);
+                System.out.println("Next level: " + nextLevel);
 
                 // Is this currently their resit year
                 Boolean currentlyOnResit = false;
@@ -105,6 +108,7 @@ public class ModuleGrades extends JPanel {
                         currentlyOnResit = true;
                     }
                 }
+                System.out.println("Currently on resit: " + currentlyOnResit);
 
                 // If on fourth year we need to not allow a resit
                 if (currentReg.getLevel().equals('4')) {
