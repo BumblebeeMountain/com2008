@@ -123,7 +123,12 @@ public class ModuleAddDrop extends JPanel {
     private void submitButtonActionPerformed(ActionEvent e) {
         
         // Check the credit count
-        Integer requiredCredits = Integer.valueOf(this.currentRegistration.getLevel().toString()).equals(4) ? 180 : 120;
+        Integer requiredCredits;
+        try {
+            requiredCredits = Integer.valueOf(this.currentRegistration.getLevel().toString()).equals(4) ? 180 : 120;
+        } catch (Exception err) {
+            requiredCredits = 120; // YII - P
+        }
 
         if (!(Integer.valueOf(this.numberOfCredits.getText()).equals(requiredCredits))) {
             this.rootFrame.showError("Please select modules that add up to " + requiredCredits + " credits.");
@@ -157,11 +162,12 @@ public class ModuleAddDrop extends JPanel {
                     RegistrationController.removeSelectedModule(this.studentRegistrationNumber, this.currentRegistration.getPeriod(), code);
                 }
 
+                this.rootFrame.showMessage("Module choices have been saved.");
+                this.rootFrame.moveToModuleAddDrop(this.studentRegistrationNumber);
+
             } catch (Exception err) {
                 this.rootFrame.showError("There was an error, please try again.");
             }
-            
-            this.rootFrame.showMessage("Module choices have been saved.");
 
         }
 

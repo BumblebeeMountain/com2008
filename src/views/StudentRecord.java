@@ -45,9 +45,7 @@ public class StudentRecord extends JPanel {
             this.startYear.setText(this.firstRegistration.getStartYear().toString());
             this.personalTutor.setText(this.student.getPersonalTutor());
             if (this.student.getHasGraduated()) {
-                this.degreeClassification.setText("Graduated.");
-                System.out.println(StudentController.calculateDegreeClassification(this.registrationNumber).toString());
-                // this.degreeClassification.setText(StudentController.calculateDegreeClassification(this.registrationNumber).toString());
+                this.degreeClassification.setText(StudentController.calculateDegreeClassification(this.registrationNumber).toString());
             } else {
                 this.degreeClassification.setText("Not yet graduated.");
             }

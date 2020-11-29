@@ -429,8 +429,13 @@ public class StudentController {
             Degree degree = DegreeController.getDegree(registrations[0].getDegreeCode(), false);
             System.out.println("Student degree: " + degree);
 
+            Character maxLevel = String.valueOf(degree.getMaxLevel()).charAt(0);
+            System.out.println(maxLevel);
+            Character recentLevel = registrations[registrations.length - 1].getLevel();
+            System.out.println(recentLevel);
+
             // Didn't complete
-            if (!registrations[registrations.length - 1].getLevel().equals((char)degree.getMaxLevel())) { // Levels not equal
+            if (!maxLevel.equals(recentLevel)) { // Levels not equal
                 System.out.println("Direct fail");
                 return DegreeClass.FAIL;
             }
@@ -444,7 +449,7 @@ public class StudentController {
                 PassLevel pl = RegistrationController.calculatePassLevel(registrations[registrations.length - 1]);
 
                 // Clear pass
-                if (pl == PassLevel.PASS) {
+                if (pl == PassLevel.PASS || pl == PassLevel.CONCEDED_PASS) {
                     if (weightedGrade >= 69.5) {
                         return DegreeClass.DISTINCTION;
                     } else if (weightedGrade >= 59.5) {
@@ -503,42 +508,37 @@ public class StudentController {
                 Float fourthScore = RegistrationController.calculateOverallGrade(bestFourth(registrations));
                 Float fullScore = (secondScore + (thirdScore * 2) + (fourthScore * 2)) / 5;
 
-                if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS;
-                else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND;
-                else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND;
+                if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS_MASTERS;
+                else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND_MASTERS;
+                else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND_MASTERS;
                 else return DegreeClass.FAIL;
 
             }
 
-            // Multi year courses
-            if (degree.getMaxLevel() == 3) {
+            // Multi year courses / failed fourth year masters
+            System.out.println("3 year course");
 
-                System.out.println("3 year course");
+            Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
+            Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
+            Float fullScore = (secondScore + (thirdScore * 2)) / 3;
 
-                Float secondScore = RegistrationController.calculateOverallGrade(bestSecond(registrations));
-                Float thirdScore = RegistrationController.calculateOverallGrade(bestThird(registrations));
-                Float fullScore = (secondScore + (thirdScore * 2)) / 3;
-
-                // If had to resit 3'rd year - non honours pass
-                if (resitThirdYear(registrations)) {
-                    if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS;
-                    else return DegreeClass.FAIL;
-                } else {
-                    if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS;
-                    else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND;
-                    else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND;
-                    else if (fullScore >= 44.5) return DegreeClass.THIRD_CLASS;
-                    else if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS;
-                    else return DegreeClass.FAIL;
-                }
+            // If had to resit 3'rd year - non honours pass
+            if (resitThirdYear(registrations)) {
+                if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS_BACHELORS;
+                else return DegreeClass.FAIL;
+            } else {
+                if (fullScore >= 69.5) return DegreeClass.FIRST_CLASS_BACHELORS;
+                else if (fullScore >= 59.5) return DegreeClass.UPPER_SECOND_BACHELORS;
+                else if (fullScore >= 49.5) return DegreeClass.LOWER_SECOND_BACHELORS;
+                else if (fullScore >= 44.5) return DegreeClass.THIRD_CLASS_BACHELORS;
+                else if (fullScore >= 39.5) return DegreeClass.PASS_NON_HONOURS_BACHELORS;
+                else return DegreeClass.FAIL;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new GeneralProcessingException();
         }
-
-        return DegreeClass.FAIL; // Default - fail
 
     }
 
