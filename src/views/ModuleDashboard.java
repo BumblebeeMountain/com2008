@@ -17,6 +17,7 @@ public class ModuleDashboard extends JPanel {
     public ModuleDashboard(Main rootFrame) {
         this.rootFrame = rootFrame;
         initComponents();
+        this.moduleTable.getTableHeader().setReorderingAllowed(false);
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {

@@ -28,7 +28,7 @@ public class AddModule extends JPanel {
 
     private void submitButtonActionPerformed(ActionEvent e) {
         String name = moduleName.getText();
-        String code = moduleCode.getText();
+        String code = moduleCode.getText().toUpperCase();
         String credits = moduleCredits.getText();
         String periodOfTeaching = String.valueOf(teachingPeriod.getSelectedItem());
 
@@ -44,12 +44,17 @@ public class AddModule extends JPanel {
             return;
         }
 
+        if (!code.matches("[A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9]")) {
+            this.rootFrame.showError("Module code must be three alphabetic characters in length, followed by 4 digits.");
+            return;
+        }
+
         try {
             ModuleController.createModule(code, name, creditsI, periodOfTeaching);
             rootFrame.showMessage("Module added.");
             this.rootFrame.moveToAddModule();
         } catch (ExistingRecordException err) {
-            rootFrame.showError("This module already exists.");
+            rootFrame.showError("This module already exists / this module has previously existed and has since been archived and cannot be used.");
         } catch (GeneralProcessingException err) {
             rootFrame.showError("There was an error, please try again.");
         }
@@ -102,7 +107,7 @@ public class AddModule extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- moduleName ----
-            moduleName.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            moduleName.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(moduleName, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -112,7 +117,7 @@ public class AddModule extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- moduleCode ----
-            moduleCode.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            moduleCode.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(moduleCode, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -122,7 +127,7 @@ public class AddModule extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- moduleCredits ----
-            moduleCredits.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            moduleCredits.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(moduleCredits, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 

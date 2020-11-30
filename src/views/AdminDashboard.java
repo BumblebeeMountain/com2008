@@ -15,7 +15,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void userDashButtonActionPerformed(ActionEvent e) {

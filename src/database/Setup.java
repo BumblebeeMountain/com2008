@@ -20,7 +20,6 @@ public class Setup {
         try {
 
             dropAllTables();
-
             createUserTable();
             createStudentTable();
             createDegreeTable();
@@ -31,6 +30,9 @@ public class Setup {
             createDepartmentTable();
             createDegreeDepartmentTable();
 
+            System.out.println("Database has been cleaned. Proceeding with population.");
+
+            TemplateData.main(null);
 
         } catch (Exception ex) {
             ex.printStackTrace();

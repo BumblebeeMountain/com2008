@@ -31,12 +31,23 @@ public class AddDegree extends JPanel {
 
     private void submitButtonActionPerformed(ActionEvent e) {
         String degName = this.degreeName.getText();
-        String degCode = this.degreeCode.getText();
+        String degCode = this.degreeCode.getText().toUpperCase();
         int maxLevelSelected = Integer.valueOf(String.valueOf(this.maxLevel.getSelectedItem()));
         boolean yii = String.valueOf(this.yearIndustry.getSelectedItem()).equals("YES");
         String leadDep = String.valueOf(this.leadDept.getSelectedItem());
         String[] partnerDeps = new String[this.partnerDepSet.size()];
         partnerDeps = this.partnerDepSet.toArray(partnerDeps);
+
+        if (degName.equals("") || degCode.equals("")) {
+            this.rootFrame.showMessage("Please complete the form.");
+            return;
+        }
+
+        if (!degCode.matches(leadDep + "[U|P][0-9][0-9]")) {
+            this.rootFrame.showError("Degree code must be the lead department, a U or P, followed by two digits.");
+            return;
+        }
+
         try {
             DegreeController.createDegree(degCode, degName, yii, maxLevelSelected);
             DepartmentController.createDegreeDepartment(leadDep, degCode, true);
@@ -47,10 +58,10 @@ public class AddDegree extends JPanel {
             this.rootFrame.moveToAddDegree();
         } catch (GeneralProcessingException ex ) {
             ex.printStackTrace();
-            this.rootFrame.showError("General proceessing error");
+            this.rootFrame.showError("General processing error");
             this.rootFrame.logout();
         } catch (ExistingRecordException ex) {
-            this.rootFrame.showError("That degree already exists");
+            this.rootFrame.showError("That degree already exists / this degree has previously existed and has since been archived and cannot be used.");
         } 
     }
 
@@ -130,7 +141,7 @@ public class AddDegree extends JPanel {
         yearIndustry.addItem("NO");
         yearIndustry.addItem("YES");
 
-        for (int i=1; i<=6; i++) {
+        for (int i=1; i<=4; i++) {
             maxLevel.addItem(String.valueOf(i));
         }
 
@@ -150,14 +161,14 @@ public class AddDegree extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- degreeName ----
-            degreeName.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            degreeName.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(degreeName, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
             body.add(leadDept, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- degreeCode ----
-            degreeCode.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            degreeCode.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(degreeCode, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 5), 0, 0));
             body.add(maxLevel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,

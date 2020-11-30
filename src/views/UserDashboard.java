@@ -10,7 +10,6 @@ import models.User;
 import models.Student;
 import controllers.UserController;
 import controllers.StudentController;
-import exceptions.*;
 
 public class UserDashboard extends JPanel {
 
@@ -20,6 +19,7 @@ public class UserDashboard extends JPanel {
     public UserDashboard(Main rootFrame) {
         this.rootFrame = rootFrame;
         initComponents();
+        this.userTable.getTableHeader().setReorderingAllowed(false);
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
@@ -136,21 +136,21 @@ class JTableButtonModelUser extends AbstractTableModel {
                             System.out.println("That user is a student");
                             System.out.println("Deleting student: " + s.getEmail());
                             StudentController.removeStudent(s.getRegistrationNumber());
-                        } catch (GeneralProcessingException ex) {
+                            this.rootFrame.showMessage("Student deleted.");
+                        } catch (Exception ex) {
                             ex.printStackTrace();
-                        } catch (NoRecordException ex) {
-                            ex.printStackTrace();
-                        }
+                            this.rootFrame.showError("There was an error, please try again.");
+                        } 
                     } else {
                         try {
                             System.out.println("User is not student");
                             System.out.println("Deleting user: " + u.getEmail());
                             UserController.removeUser(u.getEmail());
-                        } catch (GeneralProcessingException ex) {
+                            this.rootFrame.showMessage("User deleted.");
+                        } catch (Exception ex) {
                             ex.printStackTrace();
-                        } catch (NoRecordException ex) {
-                            ex.printStackTrace();
-                        }
+                            this.rootFrame.showError("There was an error, please try again.");
+                        } 
                     }
                     this.rootFrame.moveToUserDashboard();
                 });

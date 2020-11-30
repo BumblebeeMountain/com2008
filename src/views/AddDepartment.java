@@ -2,6 +2,7 @@ package views;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import controllers.DepartmentController;
 import exceptions.*;
@@ -23,11 +24,17 @@ public class AddDepartment extends JPanel {
 
     private void submitButtonActionPerformed(ActionEvent e) {
         String departmentName = deptName.getText();
-        String departmentCode = deptCode.getText();
+        String departmentCode = deptCode.getText().toUpperCase();
 
         Boolean formValid = true;
         if (departmentName.equals("") || departmentCode.equals("")) {
             this.rootFrame.showError("Please fill in the form");
+            formValid = false;
+            clear();
+        }
+
+        if (!departmentCode.matches("[A-Z][A-Z][A-Z]")) {
+            this.rootFrame.showError("Department code must be three alphabetic characters in length.");
             formValid = false;
             clear();
         }

@@ -124,7 +124,7 @@ public class AddUser extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- forenameBox ----
-            forenameBox.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            forenameBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(forenameBox, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
@@ -134,7 +134,7 @@ public class AddUser extends JPanel {
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 
             // ---- surnameBox ----
-            surnameBox.setFont(new Font("Tahoma", Font.ITALIC, 10));
+            surnameBox.setFont(new Font("Tahoma", Font.PLAIN, 10));
             body.add(surnameBox, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
                     GridBagConstraints.BOTH, new Insets(0, 0, 5, 0), 0, 0));
 

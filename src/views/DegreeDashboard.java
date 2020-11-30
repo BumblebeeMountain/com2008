@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import models.Degree;
+import models.Department;
 import controllers.DegreeController;
 import exceptions.*;
 
@@ -18,6 +19,7 @@ public class DegreeDashboard extends JPanel {
     public DegreeDashboard(Main rootFrame) {
         this.rootFrame = rootFrame;
         initComponents();
+        this.degreeTable.getTableHeader().setReorderingAllowed(false);
     }
 
     private void addDegreeButtonActionPerformed(ActionEvent e) {
@@ -114,22 +116,23 @@ class JTableButtonModelDegree extends AbstractTableModel {
             this.degrees = DegreeController.getAllDegrees(true);
 
             // Set the table
-            String[] columnNames = {"Degree Name", "Degree Code", "Delete"};
+            String[] columnNames = {"Degree Name", "Degree Code", "Lead Department", "Partner Departments", "Delete"};
             Object[][] tableData = new Object[degrees.length][columnNames.length];
             for (int i = 0; i < tableData.length; i++) {
                 Degree d = this.degrees[i];
                 tableData[i][0] = d.getName().toString();
                 tableData[i][1] = d.getCode().toString();
+                tableData[i][2] = d.getLeadDepartment().getCode();
+                tableData[i][3] = formatPartners(d.getPartnerDepartments());
                 
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.addActionListener(e -> {
                     
                     System.out.println("Trying to delete: " + d.getCode());
-
                     this.deleteButtonClicked(d);
                     this.rootFrame.moveToDegreeDashboard();
                 });
-                tableData[i][2] = deleteButton;
+                tableData[i][4] = deleteButton;
             }
 
             // Set into the abstract model
@@ -143,9 +146,18 @@ class JTableButtonModelDegree extends AbstractTableModel {
         
     }
 
+    private String formatPartners (Department[] px) {
+        String out = "";
+        for (Department d: px) {
+            out += d.getCode() + ", ";
+        }
+        return out;
+    }
+
     private void deleteButtonClicked(Degree d) {
         try {
             DegreeController.removeDegree(d.getCode());
+            this.rootFrame.showMessage("Degree deleted.");
         } catch (GeneralProcessingException ex ) {
             ex.printStackTrace();
             this.rootFrame.showError("Error deleting that degree");

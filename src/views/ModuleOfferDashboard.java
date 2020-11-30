@@ -17,6 +17,7 @@ public class ModuleOfferDashboard extends JPanel {
     public ModuleOfferDashboard(Main rootFrame) {
         this.rootFrame = rootFrame;
         initComponents();
+        this.moduleOfferTable.getTableHeader().setReorderingAllowed(false);
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
