@@ -33,10 +33,6 @@ public class DegreeDashboard extends JPanel {
         this.rootFrame.logout();
     }
 
-    private void deleteDegreeButtonActionPerformed(ActionEvent e) {
-        System.out.println("Delete degree button clicked");
-    }
-
     private void initComponents() {
         header = new JPanel();
         logoutButton = new JButton();

@@ -6,7 +6,6 @@ import javax.swing.*;
 
 import java.util.TreeSet;
 
-import models.Degree;
 import models.Department;
 import controllers.DegreeController;
 import controllers.DepartmentController;

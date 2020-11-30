@@ -6,7 +6,6 @@ import javax.swing.*;
 import models.Constants.*;
 import controllers.UserController;
 import models.User;
-import controllers.StudentController;
 import exceptions.*;
 
 public class AddUser extends JPanel {

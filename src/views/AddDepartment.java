@@ -3,9 +3,7 @@ package views;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import models.Constants.*;
 import controllers.DepartmentController;
-import models.Department;
 import exceptions.*;
 
 
