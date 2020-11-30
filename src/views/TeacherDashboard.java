@@ -39,14 +39,18 @@ public class TeacherDashboard extends JPanel {
 
     private void updateGradesButtonActionPerformed(ActionEvent e) {
         
-        System.out.println("Module add drop");
         String registrationNumber = registrationNumberBox.getText();
         if (registrationNumber.equals("")) {
             rootFrame.showError("Please complete the form.");
         } else {
             try {
                 Student student = StudentController.getStudent(Integer.valueOf(registrationNumber));
-                this.rootFrame.moveToModuleGradingScreen(student.getRegistrationNumber());
+                if (!student.getHasGraduated()) {
+                    this.rootFrame.moveToModuleGradingScreen(student.getRegistrationNumber());
+                } else {
+                    this.rootFrame.showMessage("This student has graduated, please try again.");
+                }
+                
             } catch (Exception err) {
                 rootFrame.showError("Invalid registration number. Please try again.");
             }

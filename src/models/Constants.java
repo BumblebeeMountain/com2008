@@ -25,15 +25,26 @@ public class Constants {
     }
 
     public static enum DegreeClass {
-        FIRST_CLASS,
-        UPPER_SECOND,
-        LOWER_SECOND,
-        THIRD_CLASS,
+        FIRST_CLASS_BACHELORS,
+        UPPER_SECOND_BACHELORS,
+        LOWER_SECOND_BACHELORS,
+        THIRD_CLASS_BACHELORS,
+        PASS_NON_HONOURS_BACHELORS,
+        FIRST_CLASS_MASTERS,
+        UPPER_SECOND_MASTERS,
+        LOWER_SECOND_MASTERS,
         DISTINCTION,
         MERIT,
-        PASS_NON_HONOURS,
         PASS,
-        FAIL
+        FAIL,
+        PG_DIP,
+        PG_CERT
+    }
+
+    public static enum PassLevel {
+        PASS,
+        FAIL,
+        CONCEDED_PASS
     }
 
     public static String emailHost = "sheffield.ac.uk";

@@ -60,7 +60,7 @@ public class StudentSignUp extends JPanel {
                 rootFrame.showMessage(
                         "Student has been registered:" + System.lineSeparator() + "Email: " + student.getEmail()
                                 + System.lineSeparator() + "Registration Number: " + student.getRegistrationNumber());
-                rootFrame.moveToRegistrarDashboard();
+                rootFrame.moveToStudentSignUp();
             } catch (Exception err) {
                 rootFrame.showError("There was an error. Please try again.");
             }
