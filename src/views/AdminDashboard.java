@@ -31,7 +31,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void departmentDashButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToDepartmentDashboard();
     }
 
     private void moduleOfferDashButtonActionPerformed(ActionEvent e) {

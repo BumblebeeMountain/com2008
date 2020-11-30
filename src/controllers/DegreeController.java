@@ -66,11 +66,11 @@ public class DegreeController {
             // removeDegree("COMU01");
 
             // try {
-            //     Degree[] allDegrees = getAllDegrees(false);
-            //     for (Degree d : allDegrees)
-            //         System.out.println(d);
+            // Degree[] allDegrees = getAllDegrees(false);
+            // for (Degree d : allDegrees)
+            // System.out.println(d);
             // } catch (GeneralProcessingException er) {
-            //     System.out.println("Couldn't print out all degrees.");
+            // System.out.println("Couldn't print out all degrees.");
             // }
 
             // DEGREE MODULE ========================================
@@ -147,9 +147,8 @@ public class DegreeController {
             if (onlyOfferedDegrees) {
                 pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = true;");
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Degree;");
             }
-            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -202,7 +201,11 @@ public class DegreeController {
      * @throws NoRecordException
      */
 
-    public static Degree getDegree(String degreeCode, Boolean onlyOfferedDegrees) throws GeneralProcessingException, NoRecordException {
+    public static Degree getDegree(String degreeCode, Boolean onlyOfferedDegrees)
+            throws GeneralProcessingException, NoRecordException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -223,10 +226,9 @@ public class DegreeController {
                 pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = true;");
                 pstmt.setString(1, degreeCode);
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ? AND currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Degree WHERE code = ?;");
                 pstmt.setString(1, degreeCode);
             }
-            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -266,7 +268,8 @@ public class DegreeController {
         }
 
         // Return a new degree object
-        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments, currentlyOffered);
+        return new Degree(name, code, hasYearInIndustry, maxLevel, leadDepartment, partnerDepartments,
+                currentlyOffered);
 
     }
 
@@ -280,6 +283,8 @@ public class DegreeController {
      */
     public static void createDegree(String degreeCode, String degreeName, Boolean hasYearInIndustry, Integer maxLevel)
             throws GeneralProcessingException, ExistingRecordException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
 
         // Check for an exisiting degree
         Boolean degreeExists = true;
@@ -337,6 +342,8 @@ public class DegreeController {
      */
     public static void removeDegree(String degreeCode) throws GeneralProcessingException {
 
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+
         // Variables
         PreparedStatement pstmt = null;
 
@@ -379,6 +386,10 @@ public class DegreeController {
      */
     private static DegreeModule getDegreeModule(String degreeCode, String moduleCode)
             throws GeneralProcessingException, NoRecordException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+        moduleCode = moduleCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -490,7 +501,8 @@ public class DegreeController {
                 level = res.getString("level").charAt(0);
                 currentlyOffered = res.getBoolean("currentlyOffered");
 
-                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, currentlyOffered, degCode, isCore, level));
+                degreeModules.add(new DegreeModule(modName, modCode, modCredits, teachPeriod, currentlyOffered, degCode,
+                        isCore, level));
             }
 
         } catch (Exception e) { // Catch general exception
@@ -528,6 +540,9 @@ public class DegreeController {
      */
     public static void createDegreeModule(String degreeCode, String moduleCode, Boolean core, String level)
             throws GeneralProcessingException, ExistingRecordException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+        moduleCode = moduleCode.toUpperCase();
 
         // Check for an exisiting department link
         Boolean moduleLinkExists = true;
@@ -583,6 +598,10 @@ public class DegreeController {
      * @throws GeneralProcessingException
      */
     public static void removeDegreeModule(String degreeCode, String moduleCode) throws GeneralProcessingException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+        moduleCode = moduleCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
 
@@ -621,6 +640,9 @@ public class DegreeController {
      * @throws GeneralProcessingException
      */
     public static void removeDegreeModule(String moduleCode) throws GeneralProcessingException {
+
+        moduleCode = moduleCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
 
@@ -653,6 +675,8 @@ public class DegreeController {
     // This is private as it is only for internal checks
     private static Department getLeadDepartment(String degreeCode)
             throws GeneralProcessingException, NoRecordException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
 
         // Variables
         PreparedStatement pstmt = null;
@@ -708,6 +732,9 @@ public class DegreeController {
 
     // This is private as it is only for internal checks
     private static Department[] getPartnerDepartments(String degreeCode) throws GeneralProcessingException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -760,6 +787,8 @@ public class DegreeController {
     }
 
     public static Module[] getCoreModules(String degreeCode, Character level) throws GeneralProcessingException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
 
         // Variables
         PreparedStatement pstmt = null;
@@ -822,6 +851,8 @@ public class DegreeController {
     }
 
     public static Module[] getOptionalModules(String degreeCode, Character level) throws GeneralProcessingException {
+
+        degreeCode = degreeCode.toUpperCase(); // Set to upper
 
         // Variables
         PreparedStatement pstmt = null;

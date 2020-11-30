@@ -14,7 +14,7 @@ import models.Module;
 
 public class ModuleController {
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
 
         try {
 
@@ -67,9 +67,8 @@ public class ModuleController {
             if (onlyOfferedModules) {
                 pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = true");
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Module WHERE currentlyOffered = false");
+                pstmt = con.prepareStatement("SELECT * FROM Module");
             }
-            
 
             // Execute the query
             res = pstmt.executeQuery();
@@ -110,8 +109,11 @@ public class ModuleController {
     /**
      * Get a given module, if it exists
      */
-    public static Module getModule(String moduleCode, Boolean onlyOfferedModules) throws GeneralProcessingException, NoRecordException {
-        
+    public static Module getModule(String moduleCode, Boolean onlyOfferedModules)
+            throws GeneralProcessingException, NoRecordException {
+
+        moduleCode = moduleCode.toUpperCase();
+
         // Variables
         PreparedStatement pstmt = null;
         ResultSet res = null;
@@ -129,7 +131,7 @@ public class ModuleController {
                 pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = true;");
                 pstmt.setString(1, moduleCode);
             } else {
-                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ? AND currentlyOffered = false;");
+                pstmt = con.prepareStatement("SELECT * FROM Module WHERE code = ?;");
                 pstmt.setString(1, moduleCode);
             }
 
@@ -137,7 +139,8 @@ public class ModuleController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null || !res.next()) throw new NoRecordException();
+            if (res == null || !res.next())
+                throw new NoRecordException();
 
             // Filter through the output
             code = res.getString("code");
@@ -156,9 +159,11 @@ public class ModuleController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
-                if (res != null) res.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+                if (res != null)
+                    res.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }
@@ -172,6 +177,7 @@ public class ModuleController {
 
     /**
      * Creates a given module
+     * 
      * @param moduleCode
      * @param moduleName
      * @param credits
@@ -181,6 +187,8 @@ public class ModuleController {
      */
     public static void createModule(String moduleCode, String moduleName, Integer credits, String teachingPeriod)
             throws GeneralProcessingException, ExistingRecordException {
+
+        moduleCode = moduleCode.toUpperCase();
 
         // Check for an exisiting department
         Boolean moduleExists = true;
@@ -192,7 +200,8 @@ public class ModuleController {
         } catch (NoRecordException e) {
             moduleExists = false;
         }
-        if (moduleExists) throw new ExistingRecordException();
+        if (moduleExists)
+            throw new ExistingRecordException();
 
         // Variables
         PreparedStatement pstmt = null;
@@ -217,8 +226,9 @@ public class ModuleController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }
@@ -229,10 +239,13 @@ public class ModuleController {
 
     /**
      * Remove a given module
+     * 
      * @param moduleCode
      * @throws GeneralProcessingException
      */
     public static void removeModule(String moduleCode) throws GeneralProcessingException {
+
+        moduleCode = moduleCode.toUpperCase();
 
         // Variables
         PreparedStatement pstmt = null;
@@ -256,8 +269,9 @@ public class ModuleController {
 
         } finally { // Close the prepared statement
 
-            try { 
-                if (pstmt != null) pstmt.close();
+            try {
+                if (pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 throw new GeneralProcessingException();
             }

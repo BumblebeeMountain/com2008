@@ -16,8 +16,8 @@ public class Main extends JFrame {
         // Standard info about the system
         setTitle("University Management System");
         contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(1, 1));
-        setSize(800, 500);
+        contentPane.setLayout(new BorderLayout());
+        setSize(1200, 700);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -35,7 +35,7 @@ public class Main extends JFrame {
      * @param message
      */
     public void showError(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -44,7 +44,7 @@ public class Main extends JFrame {
      * @param message
      */
     public void showMessage(String message) {
-        JOptionPane.showMessageDialog(null, message);
+        JOptionPane.showMessageDialog(this, message);
     }
 
     // Move to functions (Screen transitions) =================================
@@ -68,7 +68,10 @@ public class Main extends JFrame {
     }
 
     public void moveToRegistrationDetails(Integer registrationNumber, Character period) {
-
+        contentPane.removeAll();
+        contentPane.add(new RegistrationDetails(this, registrationNumber, period));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToTeacherDashboard() {
@@ -94,7 +97,10 @@ public class Main extends JFrame {
     }
 
     public void moveToModuleAddDrop(Integer registrationNumber) {
-
+        contentPane.removeAll();
+        contentPane.add(new ModuleAddDrop(this, registrationNumber));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToStudentSignUp() {
@@ -120,11 +126,17 @@ public class Main extends JFrame {
     }
 
     public void moveToDepartmentDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new DepartmentDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddDepartment() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddDepartment(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToModuleDashboard() {
