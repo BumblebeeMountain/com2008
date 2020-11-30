@@ -3,71 +3,15 @@
     "configurations": [
         {
             "type": "java",
-<<<<<<< HEAD
-            "name": "CodeLens (Launch) - ModuleController",
-            "request": "launch",
-            "mainClass": "controllers.ModuleController",
-=======
-            "name": "CodeLens (Launch) - TemplateData",
-            "request": "launch",
-            "mainClass": "database.TemplateData",
->>>>>>> dom-pages-prepped
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-<<<<<<< HEAD
-            "name": "CodeLens (Launch) - ModuleController",
-            "request": "launch",
-            "mainClass": "controllers.ModuleController",
-            "projectName": "com2008_773e4f17"
-        },
-        {
-            "type": "java",
-=======
->>>>>>> dom-pages-prepped
-            "name": "CodeLens (Launch) - RegistrationController",
-            "request": "launch",
-            "mainClass": "controllers.RegistrationController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - DegreeController",
-            "request": "launch",
-            "mainClass": "controllers.DegreeController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
-            "name": "CodeLens (Launch) - UserController",
-            "request": "launch",
-            "mainClass": "controllers.UserController",
-            "projectName": "com2008_8b977ed9"
-        },
-        {
-            "type": "java",
             "name": "Database Setup",
             "request": "launch",
             "mainClass": "database.Setup"
         },
         {
             "type": "java",
-            "name": "Driver Test",
-            "request": "launch",
-            "mainClass": "DriverTest"
-        },
-        {
-            "type": "java",
             "name": "Main App",
             "request": "launch",
             "mainClass": "App"
-        },
-        {
-            "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}"
         }
     ]
 }
