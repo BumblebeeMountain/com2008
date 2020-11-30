@@ -190,8 +190,7 @@ public class Setup {
                         "secondAttemptResult FLOAT, " +
                         "PRIMARY KEY (moduleCode, studentRegistrationNumber, period), " +
                         "FOREIGN KEY (moduleCode) REFERENCES Module(code), " +
-                        "FOREIGN KEY (studentRegistrationNumber) REFERENCES Registration(studentRegistrationNumber), " +
-                        // "FOREIGN KEY (period) REFERENCES Registration(period) " +
+                        "FOREIGN KEY (studentRegistrationNumber) REFERENCES Registration(studentRegistrationNumber) " +
                         ");";
         createTable(command);
     }
