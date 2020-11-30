@@ -140,11 +140,17 @@ public class Main extends JFrame {
     }
 
     public void moveToModuleDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new ModuleDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddModule() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddModule(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToDegreeDashboard() {
@@ -156,11 +162,17 @@ public class Main extends JFrame {
     }
 
     public void moveToModuleOfferDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new ModuleOfferDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddModuleOffer() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddModuleOffer(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
 }

@@ -3,13 +3,29 @@
     "configurations": [
         {
             "type": "java",
+<<<<<<< HEAD
+            "name": "CodeLens (Launch) - ModuleController",
+            "request": "launch",
+            "mainClass": "controllers.ModuleController",
+=======
             "name": "CodeLens (Launch) - TemplateData",
             "request": "launch",
             "mainClass": "database.TemplateData",
+>>>>>>> dom-pages-prepped
             "projectName": "com2008_8b977ed9"
         },
         {
             "type": "java",
+<<<<<<< HEAD
+            "name": "CodeLens (Launch) - ModuleController",
+            "request": "launch",
+            "mainClass": "controllers.ModuleController",
+            "projectName": "com2008_773e4f17"
+        },
+        {
+            "type": "java",
+=======
+>>>>>>> dom-pages-prepped
             "name": "CodeLens (Launch) - RegistrationController",
             "request": "launch",
             "mainClass": "controllers.RegistrationController",

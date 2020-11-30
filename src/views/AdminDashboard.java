@@ -23,7 +23,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void moduleDashButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToModuleDashboard();
     }
 
     private void degreeDashButtonActionPerformed(ActionEvent e) {
@@ -35,7 +35,7 @@ public class AdminDashboard extends JPanel {
     }
 
     private void moduleOfferDashButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToModuleOfferDashboard();
     }
 
     private void initComponents() {

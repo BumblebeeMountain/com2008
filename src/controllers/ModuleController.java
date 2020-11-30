@@ -19,28 +19,33 @@ public class ModuleController {
         try {
 
             // Example showing that duplicates cannot be made
-            try {
-                createModule("COM1001", "Software Engineering", 20, "AUTUMN~SPRING");
-            } catch (ExistingRecordException e) {
-                System.out.println("COM1001 has already been inserted");
-            }
+            // try {
+            //     createModule("PSY1111", "Test Psycho Module", 20, "AUTUMN~SPRING");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("COM1001 has already been inserted");
+            // }
 
-            // Change these values to insert a new module
-            try {
-                createModule("COM1003", "Intro to CS 2", 20, "AUTUMN~SPRING");
-            } catch (ExistingRecordException e) {
-                System.out.println("Maybe try a different module!");
-            }
+            // // Change these values to insert a new module
+            // try {
+            //     createModule("COM1003", "Intro to CS 2", 20, "AUTUMN~SPRING");
+            // } catch (ExistingRecordException e) {
+            //     System.out.println("Maybe try a different module!");
+            // }
 
-            // Change this value to delete a department
-            removeModule("COM1002");
+            // Change this value to delete a module
+            // removeModule("PSY1090");
+
+            System.out.println(getModule("BIO1001", true));
+
+            removeModule("BIO1001");
+
+            System.out.println(getModule("BIO1001", true));
 
             // Output all the current modules
-            Module[] arr = getAllModules(true);
-            for (Module m : arr)
-                System.out.println(m);
+            // Module[] arr = getAllModules(true);
+            // for (Module m : arr) System.out.println(m);
 
-        } catch (GeneralProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -192,7 +197,7 @@ public class ModuleController {
         // Check for an exisiting department
         Boolean moduleExists = true;
         try {
-            getModule(moduleCode, true);
+            // getModule(moduleCode, true);
             getModule(moduleCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
@@ -220,6 +225,7 @@ public class ModuleController {
 
         } catch (Exception e) {
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
@@ -263,6 +269,7 @@ public class ModuleController {
 
         } catch (Exception e) { // Catch general exception
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement

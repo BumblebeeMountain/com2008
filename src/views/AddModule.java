@@ -4,6 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import controllers.ModuleController;
+import exceptions.ExistingRecordException;
+import exceptions.GeneralProcessingException;
+
 public class AddModule extends JPanel {
 
     private static final long serialVersionUID = -917324455397999555L;
@@ -15,15 +19,41 @@ public class AddModule extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToModuleDashboard();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String name = moduleName.getText();
+        String code = moduleCode.getText();
+        String credits = moduleCredits.getText();
+        String periodOfTeaching = String.valueOf(teachingPeriod.getSelectedItem());
+
+        if (name.equals("") || code.equals("") || credits.equals("") || periodOfTeaching.equals("")) { // Check
+            this.rootFrame.showError("Please complete the form");
+            return;
+        }
+
+        Integer creditsI = Integer.valueOf(credits);
+
+        if (creditsI <= 0) { // Credits guard
+            this.rootFrame.showMessage("Please enter a valid number of credits. ");
+            return;
+        }
+
+        try {
+            ModuleController.createModule(code, name, creditsI, periodOfTeaching);
+            rootFrame.showMessage("Module added.");
+            this.rootFrame.moveToAddModule();
+        } catch (ExistingRecordException err) {
+            rootFrame.showError("This module already exists.");
+        } catch (GeneralProcessingException err) {
+            rootFrame.showError("There was an error, please try again.");
+        }
+
     }
 
     private void initComponents() {
@@ -38,7 +68,8 @@ public class AddModule extends JPanel {
         label3 = new JLabel();
         moduleCredits = new JTextField();
         label4 = new JLabel();
-        teachingPeriod = new JComboBox<String>();
+        String[] periods = {"AUTUMN", "SPRING", "AUTUMN~SPRING"};
+        teachingPeriod = new JComboBox<String>(periods);
         submitButton = new JButton();
 
         // ======== this ========
