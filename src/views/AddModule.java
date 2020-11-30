@@ -29,19 +29,29 @@ public class AddModule extends JPanel {
     private void submitButtonActionPerformed(ActionEvent e) {
         String name = moduleName.getText();
         String code = moduleCode.getText();
-        Integer credits = Integer.valueOf(moduleCredits.getText());
-        
+        String credits = moduleCredits.getText();
         String periodOfTeaching = String.valueOf(teachingPeriod.getSelectedItem());
 
+        if (name.equals("") || code.equals("") || credits.equals("") || periodOfTeaching.equals("")) { // Check
+            this.rootFrame.showError("Please complete the form");
+            return;
+        }
+
+        Integer creditsI = Integer.valueOf(credits);
+
+        if (creditsI <= 0) { // Credits guard
+            this.rootFrame.showMessage("Please enter a valid number of credits. ");
+            return;
+        }
+
         try {
-
-            ModuleController.createModule(code, name, credits, periodOfTeaching);
+            ModuleController.createModule(code, name, creditsI, periodOfTeaching);
             rootFrame.showMessage("Module added.");
-
+            this.rootFrame.moveToAddModule();
         } catch (ExistingRecordException err) {
             rootFrame.showError("This module already exists.");
         } catch (GeneralProcessingException err) {
-            rootFrame.showError("An error occured.");
+            rootFrame.showError("There was an error, please try again.");
         }
 
     }
