@@ -651,7 +651,7 @@ public class DegreeController {
 
             // Prepare the sql parameters
             pstmt = con.prepareStatement("DELETE FROM DegreeModule WHERE moduleCode = ?;");
-            pstmt.setString(2, moduleCode);
+            pstmt.setString(1, moduleCode);
 
             // Execute the query
             pstmt.executeUpdate();

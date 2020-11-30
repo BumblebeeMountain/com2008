@@ -37,6 +37,10 @@ public class ModuleController {
 
             System.out.println(getModule("BIO1001", true));
 
+            removeModule("BIO1001");
+
+            System.out.println(getModule("BIO1001", true));
+
             // Output all the current modules
             // Module[] arr = getAllModules(true);
             // for (Module m : arr) System.out.println(m);
@@ -193,7 +197,7 @@ public class ModuleController {
         // Check for an exisiting department
         Boolean moduleExists = true;
         try {
-            getModule(moduleCode, true);
+            // getModule(moduleCode, true);
             getModule(moduleCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
@@ -265,6 +269,7 @@ public class ModuleController {
 
         } catch (Exception e) { // Catch general exception
 
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
