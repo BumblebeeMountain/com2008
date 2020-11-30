@@ -189,7 +189,7 @@ public class Setup {
                         "PRIMARY KEY (moduleCode, studentRegistrationNumber, period), " +
                         "FOREIGN KEY (moduleCode) REFERENCES Module(code), " +
                         "FOREIGN KEY (studentRegistrationNumber) REFERENCES Registration(studentRegistrationNumber), " +
-                        "FOREIGN KEY (period) REFERENCES Registration(period) " +
+                        // "FOREIGN KEY (period) REFERENCES Registration(period) " +
                         ");";
         createTable(command);
     }

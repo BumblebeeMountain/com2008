@@ -15,15 +15,15 @@ export CLASSPATH=$path/src/:$path/bin/:$path/lib/*;
 # delete all classfiles
 rm $(find bin/ -name *.class);
 
-# javac -d bin --release 8 src/App.java;
+javac -d bin --release 8 src/App.java;
 # javac -d bin --release 8 src/database/Setup.java;
-javac -d bin --release 8 src/controllers/UserController.java;
+# javac -d bin --release 8 src/controllers/UserController.java;
 
 # class path is both the binaries, and the lib directories
 # export CLASSPATH=$path/bin/:$path/lib/*;
 
-# java App;
+java App;
 # java database.Setup;
-java controllers.UserController;
+# java controllers.UserController;
 
 # export CLASSPATH=$path/src/;

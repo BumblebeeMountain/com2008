@@ -4,6 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.util.TreeSet;
+
+import models.Degree;
+import models.Department;
+import controllers.DegreeController;
+import controllers.DepartmentController;
+import exceptions.*;
+
 public class AddDegree extends JPanel {
 
     private static final long serialVersionUID = 7494136331052392856L;
@@ -15,19 +23,53 @@ public class AddDegree extends JPanel {
     }
 
     private void logoutButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.logout();
     }
 
     private void goBackButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        this.rootFrame.moveToDegreeDashboard();
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        String degName = this.degreeName.getText();
+        String degCode = this.degreeCode.getText();
+        int maxLevelSelected = Integer.valueOf(String.valueOf(this.maxLevel.getSelectedItem()));
+        boolean yii = String.valueOf(this.yearIndustry.getSelectedItem()).equals("YES");
+        String leadDep = String.valueOf(this.leadDept.getSelectedItem());
+        String[] partnerDeps = new String[this.partnerDepSet.size()];
+        partnerDeps = this.partnerDepSet.toArray(partnerDeps);
+        try {
+            DegreeController.createDegree(degCode, degName, yii, maxLevelSelected);
+            DepartmentController.createDegreeDepartment(leadDep, degCode, true);
+            for (String d : partnerDeps) {
+                DepartmentController.createDegreeDepartment(leadDep, d, false);
+            }
+            this.rootFrame.showMessage("Degree " + degName + " was created");
+            this.rootFrame.moveToAddDegree();
+        } catch (GeneralProcessingException ex ) {
+            ex.printStackTrace();
+            this.rootFrame.showError("General proceessing error");
+            this.rootFrame.logout();
+        } catch (ExistingRecordException ex) {
+            this.rootFrame.showError("That degree already exists");
+        } 
     }
 
     private void addPartnerButtonActionPerformed(ActionEvent e) {
-        // TODO add your code here
+        System.out.println("addPartnerButtonClicked");
+        String selectedPartner = String.valueOf(partnerDept.getSelectedItem());
+        String leadDep = String.valueOf(leadDept.getSelectedItem());
+        System.out.println(selectedPartner);
+        String newPartnerDepString = "<html>";
+        if (!this.partnerDepSet.contains(leadDep) && !leadDep.equals(selectedPartner))
+            this.partnerDepSet.add(selectedPartner);
+
+        for (String s : this.partnerDepSet) {
+            newPartnerDepString += s+"<br>";
+        }
+        newPartnerDepString += "</html>";
+
+        this.partnerDepartments.setText(newPartnerDepString);
     }
 
     private void initComponents() {
@@ -52,6 +94,7 @@ public class AddDegree extends JPanel {
         label4 = new JLabel();
         yearIndustry = new JComboBox<>();
         submitButton = new JButton();
+        partnerDepSet = new TreeSet<String>();
 
         // ======== this ========
         setLayout(new BorderLayout());
@@ -71,6 +114,26 @@ public class AddDegree extends JPanel {
             header.add(goBackButton);
         }
         add(header, BorderLayout.NORTH);
+        
+        Department[] allDeps = new Department[0];
+        try {
+            allDeps = DepartmentController.getAllDepartments();
+        } catch (GeneralProcessingException ex ) {
+            ex.printStackTrace();
+        } finally {
+            for (Department d : allDeps) {
+                String depCode = d.getCode();
+                leadDept.addItem(depCode);
+                partnerDept.addItem(depCode);
+            }
+        }
+
+        yearIndustry.addItem("NO");
+        yearIndustry.addItem("YES");
+
+        for (int i=1; i<=6; i++) {
+            maxLevel.addItem(String.valueOf(i));
+        }
 
         // ======== body ========
         {
@@ -134,7 +197,7 @@ public class AddDegree extends JPanel {
                 panel1.setLayout(new GridLayout(1, 2));
 
                 // ---- partnerDepartments ----
-                partnerDepartments.setText("partnerDepartments list");
+                partnerDepartments.setText(partnerDepartmentsList);
                 panel1.add(partnerDepartments);
             }
             body.add(panel1, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
@@ -177,4 +240,6 @@ public class AddDegree extends JPanel {
     private JLabel label4;
     private JComboBox<String> yearIndustry;
     private JButton submitButton;
+    private String partnerDepartmentsList;
+    private TreeSet<String> partnerDepSet;
 }
