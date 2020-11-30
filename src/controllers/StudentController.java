@@ -382,6 +382,9 @@ public class StudentController {
 
             pstmt.close();
 
+            // delete all the user's registrations
+            RegistrationController.removeRegistration(registrationNumber);
+
             // then delete the student account
             pstmt = con.prepareStatement(REMOVE_STUDENT_BY_REG_COMMAND);
             pstmt.setInt(1, registrationNumber);

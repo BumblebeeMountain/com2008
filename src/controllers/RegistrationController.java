@@ -87,6 +87,38 @@ public class RegistrationController {
 
     }
 
+    public static void removeRegistration(Integer registrationNumber) throws GeneralProcessingException {
+        PreparedStatement pstmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            deleteSelectedModulesFromRegNum(registrationNumber);
+
+            pstmt = con.prepareStatement("DELETE FROM Registration WHERE studentRegistrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new GeneralProcessingException();
+        } catch (GeneralProcessingException ex ) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
+
+    public static void deleteSelectedModulesFromRegNum(Integer registrationNumber) throws GeneralProcessingException {
+        PreparedStatement pstmt = null;
+        try (Connection con = ConnectionManager.getConnection()) {
+            pstmt = con.prepareStatement("DELETE FROM SelectedModule WHERE studentRegistrationNumber = ?;");
+            pstmt.setInt(1, registrationNumber);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new GeneralProcessingException();
+        }
+
+    }
+
     /**
      * Gets all the student registrations
      * 
@@ -253,7 +285,7 @@ public class RegistrationController {
             // Prepare the sql parameters
             pstmt = con.prepareStatement("INSERT INTO Registration VALUES (?, ?, ?, ?, ?);");
             pstmt.setInt(1, registrationNumber);
-            pstmt.setString(2, new Character('A').toString());
+            pstmt.setString(2, "A");
             pstmt.setString(3, initialLevelOfStudy.toString());
             pstmt.setInt(4, currentYear);
             pstmt.setString(5, degreeCode);
@@ -558,7 +590,8 @@ public class RegistrationController {
      * @return
      */
     private static Character getNextPeriod(Character c) {
-        return new Character((char) (c.charValue() + 1));
+        // return new Character((char) (c.charValue() + 1));
+        return (char) (c.charValue() + 1);
     }
 
     /**

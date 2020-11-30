@@ -118,11 +118,17 @@ public class Main extends JFrame {
     }
 
     public void moveToUserDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new UserDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddUser() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddUser(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToDepartmentDashboard() {
@@ -154,11 +160,17 @@ public class Main extends JFrame {
     }
 
     public void moveToDegreeDashboard() {
-
+        contentPane.removeAll();
+        contentPane.add(new DegreeDashboard(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToAddDegree() {
-
+        contentPane.removeAll();
+        contentPane.add(new AddDegree(this));
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public void moveToModuleOfferDashboard() {
