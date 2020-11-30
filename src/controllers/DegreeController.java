@@ -289,7 +289,6 @@ public class DegreeController {
         // Check for an exisiting degree
         Boolean degreeExists = true;
         try {
-            getDegree(degreeCode, true);
             getDegree(degreeCode, false);
         } catch (GeneralProcessingException e) {
             throw e;
