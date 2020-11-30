@@ -12,7 +12,6 @@ import exceptions.ExistingRecordException;
 import exceptions.GeneralProcessingException;
 import models.Degree;
 import models.Module;
-import models.DegreeModule;
 
 
 public class AddModuleOffer extends JPanel {
@@ -34,19 +33,22 @@ public class AddModuleOffer extends JPanel {
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
+
         String modCode = String.valueOf(moduleCode.getSelectedItem());
         String degCode = String.valueOf(degreeCode.getSelectedItem());
-        Boolean isCore = Boolean.valueOf(isCoreModule.getText());
         String modLevel = String.valueOf(levelComboBox.getSelectedItem());
+        Boolean isCore = isCoreModule.isSelected();
+
+        System.out.println("Trying to add: " + modCode + " " + degCode + " " + modLevel);
 
         try {
-
             DegreeController.createDegreeModule(degCode, modCode, isCore, modLevel);
-
+            this.rootFrame.showMessage("Module offer created.");
+            this.rootFrame.moveToAddModuleOffer();
         } catch (ExistingRecordException err) {
             rootFrame.showError("This module offer already exists.");
         } catch (Exception err) {
-            rootFrame.showError("An error occured.");
+            rootFrame.showError("An error occurred.");
         }
     }
 
@@ -64,7 +66,9 @@ public class AddModuleOffer extends JPanel {
             offeredModules = ModuleController.getAllModules(true);
 
         } catch (GeneralProcessingException err) {
-            rootFrame.showError("An error occured.");
+            rootFrame.showError("An error occurred.");
+            this.rootFrame.moveToModuleOfferDashboard();
+            return;
         }
 
         String[] offModuleCodes = new String[offeredModules.length];
@@ -84,7 +88,9 @@ public class AddModuleOffer extends JPanel {
             offeredDegrees = DegreeController.getAllDegrees(true);
 
         } catch (GeneralProcessingException err) {
-            rootFrame.showError("An error occured.");
+            rootFrame.showError("An error occurred.");
+            this.rootFrame.moveToModuleOfferDashboard();
+            return;
         }
 
         String[] offDegreeCodes = new String[offeredDegrees.length];

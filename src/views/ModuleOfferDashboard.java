@@ -112,7 +112,7 @@ class JTableButtonModeDegreeModule extends AbstractTableModel {
             this.degreeModules = DegreeController.getAllDegreeModules();
 
             // Set the table
-            String[] columnNames = {"Module Code" ,"Name", "Degree Offered On", "Core"};
+            String[] columnNames = {"Module Code" ,"Name", "Degree Offered On", "Core", "Level", "Delete"};
             Object[][] tableData = new Object[degreeModules.length][columnNames.length];
 
             for (int i = 0; i < tableData.length; i++) {
@@ -120,7 +120,22 @@ class JTableButtonModeDegreeModule extends AbstractTableModel {
                 tableData[i][0] = m.getCode().toString();
                 tableData[i][1] = m.getName().toString();
                 tableData[i][2] = m.getDegreeCode().toString();
-                tableData[i][3] = m.getIsCore().toString();
+                tableData[i][3] = m.getIsCore();
+                tableData[i][4] = m.getLevel();
+
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.addActionListener(e -> {
+                    try {
+                        DegreeController.removeDegreeModule(m.getDegreeCode(), m.getCode());
+                        this.rootFrame.showMessage("Module offer removed.");
+                        this.rootFrame.moveToModuleOfferDashboard();
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                        rootFrame.showError("There was an error, please try again.");
+                    }
+                });
+
+                tableData[i][5] = deleteButton;
 
             }
 
