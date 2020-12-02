@@ -37,7 +37,14 @@ public class AddModule extends JPanel {
             return;
         }
 
-        Integer creditsI = Integer.valueOf(credits);
+        Integer creditsI = null;
+        try {
+            creditsI = Integer.valueOf(credits);
+        } catch (Exception err) {
+            this.rootFrame.showMessage("The number of credits must be an integer value.");
+            return;
+        }
+        
 
         if (creditsI <= 0) { // Credits guard
             this.rootFrame.showMessage("Please enter a valid number of credits. ");
