@@ -696,19 +696,19 @@ public class DegreeController {
             res = pstmt.executeQuery();
 
             // If it is null - there was nothing returned
-            if (res == null || !res.next())
-                throw new NoRecordException();
+            if (res == null || !res.next()) {
+                // fix if there is no lead dep cause it was deleted
+                departCode = "N/A";
+                departName = "N/A";
+            } else {
+                // Filter through the output
+                departCode = res.getString("departmentCode");
+                departName = res.getString("name");
+            }
 
-            // Filter through the output
-            departCode = res.getString("departmentCode");
-            departName = res.getString("name");
-
-        } catch (NoRecordException e) {
-
-            throw e; // Caught and re-thrown if there are no records
 
         } catch (Exception e) { // Catch general exception
-
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement

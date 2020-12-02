@@ -127,6 +127,7 @@ class JTableButtonModelDepartment extends AbstractTableModel {
                         this.rootFrame.showMessage(d.getCode() + " deleted.");
                         this.rootFrame.moveToDepartmentDashboard();
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         this.rootFrame.showError("There was an error, please try again.");
                     } 
                 });
