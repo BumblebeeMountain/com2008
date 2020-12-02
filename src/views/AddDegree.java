@@ -30,6 +30,7 @@ public class AddDegree extends JPanel {
     }
 
     private void submitButtonActionPerformed(ActionEvent e) {
+
         String degName = this.degreeName.getText();
         String degCode = this.degreeCode.getText().toUpperCase();
         int maxLevelSelected = Integer.valueOf(String.valueOf(this.maxLevel.getSelectedItem()));
@@ -52,7 +53,7 @@ public class AddDegree extends JPanel {
             DegreeController.createDegree(degCode, degName, yii, maxLevelSelected);
             DepartmentController.createDegreeDepartment(leadDep, degCode, true);
             for (String d : partnerDeps) {
-                DepartmentController.createDegreeDepartment(leadDep, d, false);
+                DepartmentController.createDegreeDepartment(d, degCode, false);
             }
             this.rootFrame.showMessage("Degree " + degName + " was created");
             this.rootFrame.moveToAddDegree();
