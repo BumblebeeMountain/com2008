@@ -253,6 +253,8 @@ public class DepartmentController {
             pstmt.setString(1, departmentCode);
             pstmt.execute();
 
+            pstmt.close();
+
             // Finally, delete that department
             // Prepare the sql parameters
             pstmt = con.prepareStatement("DELETE FROM Department WHERE code = ?;");
@@ -261,6 +263,7 @@ public class DepartmentController {
 
 
         } catch (Exception e) { // Catch general exception
+            
             e.printStackTrace();
             throw new GeneralProcessingException();
 

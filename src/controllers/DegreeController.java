@@ -698,8 +698,8 @@ public class DegreeController {
             // If it is null - there was nothing returned
             if (res == null || !res.next()) {
                 // fix if there is no lead dep cause it was deleted
-                departCode = "N/A";
-                departName = "N/A";
+                departCode = "n/a";
+                departName = "n/";
             } else {
                 // Filter through the output
                 departCode = res.getString("departmentCode");
