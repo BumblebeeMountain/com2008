@@ -248,15 +248,20 @@ public class DepartmentController {
         // Create the connection
         try (Connection con = ConnectionManager.getConnection()) {
 
+            // remove all degreeDepartments  with that department
+            pstmt = con.prepareStatement("DELETE FROM DegreeDepartment WHERE departmentCode = ?;");
+            pstmt.setString(1, departmentCode);
+            pstmt.execute();
+
+            // Finally, delete that department
             // Prepare the sql parameters
             pstmt = con.prepareStatement("DELETE FROM Department WHERE code = ?;");
             pstmt.setString(1, departmentCode);
-
-            // Execute the query
             pstmt.executeUpdate();
 
-        } catch (Exception e) { // Catch general exception
 
+        } catch (Exception e) { // Catch general exception
+            e.printStackTrace();
             throw new GeneralProcessingException();
 
         } finally { // Close the prepared statement
@@ -427,6 +432,44 @@ public class DepartmentController {
             pstmt.executeUpdate();
 
         } catch (Exception e) { // Catch general exception
+
+            throw new GeneralProcessingException();
+
+        } finally { // Close the prepared statement
+
+            try {
+                if (pstmt != null)
+                    pstmt.close();
+            } catch (SQLException e) {
+                throw new GeneralProcessingException();
+            }
+
+        }
+
+    }
+
+    /**
+     * Removes a department / degree link
+     * 
+     * @param depCode - String - the department code
+     * @author James
+     * @throws GeneralProcessingException
+     */
+    public static void removeDegreeDepartment(String depCode) throws GeneralProcessingException {
+        depCode = depCode.toUpperCase();
+
+        // Variables
+        PreparedStatement pstmt = null;
+
+        try (Connection con = ConnectionManager.getConnection()) {
+
+            pstmt = con.prepareStatement("DELETE FROM DegreeDepartment WHERE departmentCode = ?;");
+            pstmt.setString(1, depCode);
+
+            pstmt.executeUpdate();
+
+        } catch (Exception e) { // Catch general exception
+            e.printStackTrace();
 
             throw new GeneralProcessingException();
 
