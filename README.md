@@ -15,5 +15,5 @@ Here are the credentials:
 Email | Password | User Type
 ----- | -------- | ---------
 bsmith1@sheffield.ac.uk | brianPEN21# | Teacher
-jsmith1@sheffield.a.cuk | jamesCOAT34! | Registrar
+jsmith1@sheffield.ac.uk | jamesCOAT34! | Registrar
 dgrey1@sheffield.ac.uk | davidKEYBOARD89? | Admin

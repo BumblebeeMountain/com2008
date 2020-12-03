@@ -18,10 +18,10 @@ public class TemplateData {
 
         // Insert some users
         try {
-            UserController.createUser(Constants.Title.MR, "Brian", "Smith", "password", Constants.AccountType.TEACHER);
-            UserController.createUser(Constants.Title.MR, "James", "Smith", "password",
+            UserController.createUser(Constants.Title.MR, "Brian", "Smith", "brianPEN21#", Constants.AccountType.TEACHER);
+            UserController.createUser(Constants.Title.MR, "James", "Smith", "jamesCOAT34!",
                     Constants.AccountType.REGISTRAR);
-            UserController.createUser(Constants.Title.MR, "David", "Grey", "password",
+            UserController.createUser(Constants.Title.MR, "David", "Grey", "davidKEYBOARD89?",
                     Constants.AccountType.ADMINISTRATOR);
         } catch (Exception e) {
             System.out.println("There was an error with user creation: " + e);
