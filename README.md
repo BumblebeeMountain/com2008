@@ -12,8 +12,8 @@ To be able to access the features of the system, you will need several login cre
 
 Here are the credentials:
 
-Email | Password
------ | --------
-bsmith1@sheffield.ac.uk | brianPEN21#
-jsmith1@sheffield.a.cuk | jamesCOAT34!
-dgrey1@sheffield.ac.uk | davidKEYBOARD89?
+Email | Password | User Type
+----- | -------- | ---------
+bsmith1@sheffield.ac.uk | brianPEN21# | Teacher
+jsmith1@sheffield.a.cuk | jamesCOAT34! | Registrar
+dgrey1@sheffield.ac.uk | davidKEYBOARD89? | Admin
