@@ -11,6 +11,10 @@ import models.User;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * This BCrypt module was found online at: https://mvnrepository.com/artifact/org.springframework.security/spring-security-core/5.4.1
+ * The documentation for this module can be found at: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCrypt.html
+ */
 import org.springframework.security.crypto.bcrypt.*;
 
 public class UserController {
